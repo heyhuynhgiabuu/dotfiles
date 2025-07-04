@@ -34,3 +34,6 @@ alias awsprofiles='aws configure list-profiles'
 alias gs="git status"
 alias gp="git push"
 alias gl="git pull"
+
+# Tmux
+alias tjava="~/dotfiles/scripts/tmux-java-layout.sh"
