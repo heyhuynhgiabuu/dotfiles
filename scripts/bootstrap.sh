@@ -3,6 +3,8 @@
 echo "🚀 Setting up symbolic links..."
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
+ln -sf ~/dotfiles/.config/nvim ~/.config/nvim
+
 mkdir -p ~/.zsh
 ln -sf ~/dotfiles/.zsh/aliases.zsh ~/.zsh/aliases.zsh
 ln -sf ~/dotfiles/.zsh/env.zsh ~/.zsh/env.zsh
