@@ -2,4 +2,4 @@
 .tmux/plugins/
 .tmux/plugins/
 .tmux/plugins/
-.config/nvim/nvim/
+.config/nvim/nvim
