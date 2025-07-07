@@ -53,6 +53,8 @@ alias awslogin="aws sso login; aws configure list-profiles"
 alias awsprofiles="aws configure list-profiles"
 
 # Git
+alias ga="git add"
+alias gcmsg="git commit -m"
 alias gs="git status"
 alias gp="git push"
 alias gl="git pull"
