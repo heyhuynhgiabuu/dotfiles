@@ -1,3 +1,8 @@
+# 💡 Instant Prompt — phải ở đầu tiên
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # =============================================================================
 # ⚡ PERFORMANCE & SHELL OPTIONS
 # =============================================================================
@@ -56,12 +61,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # 🔌 PLUGINS & OH-MY-ZSH
 # =============================================================================
 
-plugins=(
-  git docker docker-compose kubectl terraform aws brew
-  zsh-autosuggestions zsh-syntax-highlighting zsh-z dotenv
-)
+# plugins=(docker docker-compose kubectl terraform aws) 
+plugins=(brew zsh-autosuggestions zsh-syntax-highlighting zsh-z dotenv)
 
 source $ZSH/oh-my-zsh.sh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # =============================================================================
 # ⚙️ ZINIT
