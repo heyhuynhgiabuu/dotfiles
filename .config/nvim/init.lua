@@ -9,6 +9,7 @@
 
     -- Load LSP
     require("lsp")
+    require("lsp.lua_ls")
 
     -- Load floating term
     require("floating-term")
