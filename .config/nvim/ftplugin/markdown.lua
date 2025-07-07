@@ -19,3 +19,12 @@ vim.keymap.set('v', '<C-b>', 'c**<C-r>"**<Esc>', opts)
 -- Italic text  
 vim.keymap.set('v', '<C-i>', 'c*<C-r>"*<Esc>', opts)
 
+-- Preview Markdown
+vim.keymap.set("n", "<leader>mp", ":MarkdownPreview<CR>", { buffer = true, desc = "Preview Markdown" })
+vim.keymap.set("n", "<leader>ms", ":MarkdownPreviewStop<CR>", { buffer = true, desc = "Stop Markdown Preview" })
+
+-- Insert link
+vim.keymap.set("n", "<leader>il", ":MarkdownInsertLink<CR>", { buffer = true, desc = "Insert Link" })
+
+-- Insert image
+vim.keymap.set("n", "<leader>ii", ":MarkdownInsertImage<CR>", { buffer = true, desc = "Insert Image" })

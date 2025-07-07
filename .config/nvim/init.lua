@@ -1,11 +1,23 @@
     -- Load options
-    require("config.options")
+    require("options")
 
     -- Load keymaps
-    require("config.keymaps")
+    require("keymaps")
 
     -- Load plugins with lazy.nvim
-    require("config.lazy")
+    require("lazy-setup")
 
     -- Load LSP
-    require("config.lsp")
+    require("lsp")
+
+    -- Load floating term
+    require("floating-term")
+
+    -- Load help floating
+    require("help-floating")
+
+    -- Load snipets
+    require("snipets")
+
+    -- Load vim helpers
+    require("vim-helpers")

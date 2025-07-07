@@ -1,7 +1,6 @@
 local map = vim.keymap.set
 map("n", "<leader>w", ":w<CR>")
 map("n", "<leader>q", ":q<CR>")
-map("n", "<leader>e", ":Neotree toggle<CR>")
 
 -- Custom function to open a floating terminal
 local function open_floating_term(cmd)
@@ -39,7 +38,7 @@ vim.keymap.set("n", "<leader>fn", function()
 end, { desc = "Open or create markdown note" })
 
 -- Integrated write vietnamese at edit mode
-local im_select = require("config.im-select-helper")
+local im_select = require("im-select-helper")
 
 vim.api.nvim_create_autocmd("InsertEnter", {
     callback = im_select.on_insert_enter,
@@ -48,3 +47,15 @@ vim.api.nvim_create_autocmd("InsertEnter", {
 vim.api.nvim_create_autocmd("InsertLeave", {
     callback = im_select.on_insert_leave,
 })
+
+-- Tab as VSCode
+vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer"})
+vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc ="Prev buffer"})
+
+-- UI Git
+vim.keymap.set("n", "]g", ":Gitsigns next_hunk<CR>", { desc = "Next git hunk" })
+vim.keymap.set("n", "[g", ":Gitsigns prev_hunk<CR>", { desc = "Prev git hunk" })
+vim.keymap.set("n", "<leader>gs", ":Gitsigns stage_hunk<CR>", { desc = "Stage hunk" })
+vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
+vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "Preview hunk" })
+vim.keymap.set("n", "<leader>gb", ":Gitsigns blame_line<CR>", { desc = "Blame line" })
