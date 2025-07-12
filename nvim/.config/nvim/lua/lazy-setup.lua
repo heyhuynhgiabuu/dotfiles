@@ -1,9 +1,3 @@
--- GIAI ĐOẠN 2 - BƯỚC 2: PLUGIN NÂNG CAO
--- =====================================
---
--- File: ~/dotfiles/.config/nvim/lua/config/lazy.lua
--- Mục tiêu: Cấu hình các plugin UI, tìm kiếm, git, LSP & format nâng cao
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
