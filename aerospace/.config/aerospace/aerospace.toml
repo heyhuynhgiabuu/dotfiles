@@ -1,0 +1,80 @@
+[general]
+mod = "option"                # Phím "mod" (modifier) mặc định, thường là Option (Alt) trên Mac
+mouse_follows_focus = true    # Chuột tự động di chuyển theo cửa sổ được focus
+
+[workspaces]
+names = ["1", "2", "3", "4", "5"]  # Đặt tên cho các workspace (mặc định là số)
+
+[[keybindings]]
+key = "r"
+mods = ["mod"]
+command = "reload_config"     # Mod+r: Reload lại file cấu hình
+
+[[keybindings]]
+key = "return"
+mods = ["mod"]
+command = "launch_terminal"   # Mod+Enter: Mở terminal mặc định
+
+[[keybindings]]
+key = "d"
+mods = ["mod"]
+command = "launch_app"
+args = ["Google Chrome"]      # Mod+d: Mở Google Chrome
+
+[[keybindings]]
+key = "h"
+mods = ["mod"]
+command = "focus_left"        # Mod+h: Di chuyển focus sang cửa sổ bên trái
+
+[[keybindings]]
+key = "l"
+mods = ["mod"]
+command = "focus_right"       # Mod+l: Di chuyển focus sang cửa sổ bên phải
+
+[[keybindings]]
+key = "j"
+mods = ["mod"]
+command = "focus_down"        # Mod+j: Di chuyển focus xuống dưới
+
+[[keybindings]]
+key = "k"
+mods = ["mod"]
+command = "focus_up"          # Mod+k: Di chuyển focus lên trên
+
+[[keybindings]]
+key = "q"
+mods = ["mod"]
+command = "close_window"      # Mod+q: Đóng cửa sổ hiện tại
+
+[[keybindings]]
+key = "space"
+mods = ["mod"]
+command = "toggle_floating"   # Mod+Space: Chuyển đổi giữa floating và tiled
+
+[[keybindings]]
+key = "f"
+mods = ["mod"]
+command = "toggle_fullscreen" # Mod+f: Chuyển đổi fullscreen
+
+[[keybindings]]
+key = "r"
+mods = ["mod"]
+command = "reload_config"     # Mod+r: Reload lại file cấu hình
+
+[[keybindings]]
+key = "1"
+mods = ["mod"]
+command = "focus_workspace"
+args = [1]                    # Mod+1: Chuyển sang workspace 1
+
+# ... lặp lại cho các workspace khác (2, 3, 4, 5)
+
+[[rules]]
+app = "Google Chrome"
+workspace = 2                 # Khi mở Chrome, tự động chuyển sang workspace 2
+
+[[rules]]
+app = "iTerm2"
+workspace = 1                 # Khi mở iTerm2, tự động chuyển sang workspace 1
+
+# ... có thể thêm rules cho các app khác 

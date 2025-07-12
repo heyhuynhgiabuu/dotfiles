@@ -1,6 +1,10 @@
 # 💡 Instant Prompt — phải ở đầu tiên
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# --- Conditional block for terminal-only commands ---
+if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
+    # Initialize Powerlevel10k prompt
+    if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    fi
 fi
 
 # =============================================================================
