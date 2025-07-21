@@ -63,3 +63,8 @@ alias gcof="git fetch && git checkout $(git branch | fzf | sed "s/^..//")"
 
 # Tmux
 alias tjava="~/dotfiles/scripts/tmux-java-layout.sh"
+
+# GitHub Copilot CLI
+alias gcs="gh copilot suggest"
+alias gce="gh copilot explain"
+alias copilot="gh copilot"

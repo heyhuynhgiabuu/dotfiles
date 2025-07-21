@@ -58,3 +58,73 @@ qss() {
   fi       
 }
 bindkey -v
+
+# GitHub Copilot CLI Enhanced Functions
+
+# Interactive command suggestion with Copilot
+suggest() {
+  local input="$*"
+  if [[ -z "$input" ]]; then
+    echo "Usage: suggest <description of what you want to do>"
+    echo "Example: suggest 'find all javascript files modified in the last 7 days'"
+    return 1
+  fi
+  
+  if command -v gh >/dev/null && gh extension list | grep -q copilot; then
+    gh copilot suggest -t shell "$input"
+  else
+    echo "⚠️  GitHub Copilot CLI not installed. Install with: gh extension install github/gh-copilot"
+    return 1
+  fi
+}
+
+# Explain a command using Copilot
+explain() {
+  local cmd="$*"
+  if [[ -z "$cmd" ]]; then
+    echo "Usage: explain <command to explain>"
+    echo "Example: explain 'docker run -it --rm -v \$(pwd):/app node:16'"
+    return 1
+  fi
+  
+  if command -v gh >/dev/null && gh extension list | grep -q copilot; then
+    gh copilot explain "$cmd"
+  else
+    echo "⚠️  GitHub Copilot CLI not installed. Install with: gh extension install github/gh-copilot"
+    return 1
+  fi
+}
+
+# Smart git command suggestions using Copilot
+gitsuggest() {
+  local context="$*"
+  if [[ -z "$context" ]]; then
+    echo "Usage: gitsuggest <what you want to do with git>"
+    echo "Example: gitsuggest 'undo last commit but keep changes'"
+    return 1
+  fi
+  
+  if command -v gh >/dev/null && gh extension list | grep -q copilot; then
+    gh copilot suggest -t git "$context"
+  else
+    echo "⚠️  GitHub Copilot CLI not installed. Install with: gh extension install github/gh-copilot"
+    return 1
+  fi
+}
+
+# Kubernetes command suggestions using Copilot  
+k8ssuggest() {
+  local context="$*"
+  if [[ -z "$context" ]]; then
+    echo "Usage: k8ssuggest <what you want to do with kubectl>"
+    echo "Example: k8ssuggest 'get all pods in kube-system namespace'"
+    return 1
+  fi
+  
+  if command -v gh >/dev/null && gh extension list | grep -q copilot; then
+    gh copilot suggest -t shell "kubectl $context"
+  else
+    echo "⚠️  GitHub Copilot CLI not installed. Install with: gh extension install github/gh-copilot"
+    return 1
+  fi
+}
