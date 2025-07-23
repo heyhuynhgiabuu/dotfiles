@@ -1,0 +1,1 @@
+/Users/killerkidbo/dotfiles/nvim/.config/nvim/lua/custom/lsp-config.lua
