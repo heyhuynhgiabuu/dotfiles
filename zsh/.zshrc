@@ -16,7 +16,10 @@ export LC_ALL=en_US.UTF-8
 export EDITOR=vim
 export KUBE_EDITOR=vim
 export PAGER=less
-export LESS=-R
+export LESS=-R 
+
+# Suppress Powerlevel10k instant prompt warnings\
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 setopt prompt_subst
 setopt hist_ignore_dups

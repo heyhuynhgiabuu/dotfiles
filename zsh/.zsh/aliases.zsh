@@ -59,7 +59,16 @@ alias gs="git status"
 alias gp="git push"
 alias gl="git pull"
 alias gcof="git fetch && git checkout $(git branch | fzf | sed "s/^..//")"
-
+alias gpr='gh pr create'           
+alias gprs='gh pr status'          
+alias gpl='gh pr list'             
+alias gis='gh issue status'        
+alias gil='gh issue list'          
+alias gic='gh issue create'
+alias gclone='gh repo clone'
+alias copq='gh copilot suggest'
+alias cope='gh copilot explain'
+alias copf='gh copilot fix'
 
 # Tmux
 alias tjava="~/dotfiles/scripts/tmux-java-layout.sh"
