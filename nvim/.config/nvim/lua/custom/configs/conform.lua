@@ -5,13 +5,17 @@ local options = {
   formatters_by_ft = {
     lua = { "stylua" },
 
-    javascript = { "prettier" },
-    typescript = { "prettier" },
+    javascript = { "deno_fmt" }, -- Using deno_fmt for faster JS/TS formatting
+    typescript = { "deno_fmt" },
     javascriptreact = { "prettier" },
     typescriptreact = { "prettier" },
 
     css = { "prettier" },
     html = { "prettier" },
+    markdown = { "prettier" },
+
+    cpp = { "clang_format" },
+    c = { "clang_format" },
 
     sh = { "shfmt" },
   },
