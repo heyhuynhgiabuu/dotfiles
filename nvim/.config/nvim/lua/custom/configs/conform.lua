@@ -5,6 +5,9 @@ local options = {
   formatters_by_ft = {
     lua = { "stylua" },
 
+    -- Go
+    go = { "goimports", "gofumpt" },
+
     javascript = { "deno_fmt" }, -- Using deno_fmt for faster JS/TS formatting
     typescript = { "deno_fmt" },
     javascriptreact = { "prettier" },
