@@ -27,3 +27,6 @@ require "custom.browser-preview"
 -- Load snippets
 require "custom.snipets"
 
+-- Load Vietnamese input method helper
+require "custom.im-select-helper"
+
