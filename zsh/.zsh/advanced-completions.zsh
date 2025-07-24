@@ -149,24 +149,43 @@ bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward
 
 # =============================================================================
-# 🎨 COMPLETION STYLING
+# 🎨 ENHANCED COMPLETION STYLING
 # =============================================================================
 
-# Colorize completion menu
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# Enhanced menu selection with VS Code-like appearance
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 
-# Group matches and describe
+# VS Code-style color scheme with background highlights
+zstyle ':completion:*' list-colors \
+    'di=1;34:ln=1;36:so=1;35:ex=1;32:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+
+# Enhanced completion descriptions with VS Code-style formatting
+zstyle ':completion:*:descriptions' format '%K{blue}%F{white}%B ▶ %d %b%f%k'
+zstyle ':completion:*:messages' format '%K{magenta}%F{white}%B ◆ %d %b%f%k'
+zstyle ':completion:*:warnings' format '%K{red}%F{white}%B ✗ No matches found %b%f%k'
+zstyle ':completion:*:corrections' format '%K{yellow}%F{black}%B ◉ %d (errors: %e) %b%f%k'
+
+# Group organization with better visual separation
 zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
-zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
-zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
-zstyle ':completion:*:corrections' format $'\e[01;32m -- %d (errors: %e) --\e[0m'
-
-# Separate matches into groups
 zstyle ':completion:*' group-name ''
 
-# Preview for file completions
+# Enhanced completion menu appearance
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' format '%K{cyan}%F{black}%B — %d —%b%f%k'
+
+# Command-specific styling
+zstyle ':completion:*:*:go:*:descriptions' format '%K{green}%F{white}%B Go Commands %b%f%k'
+zstyle ':completion:*:*:docker:*:descriptions' format '%K{blue}%F{white}%B Docker Commands %b%f%k'
+zstyle ':completion:*:*:git:*:descriptions' format '%K{magenta}%F{white}%B Git Commands %b%f%k'
+
+# File completion with enhanced visuals
 zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' list-dirs-first true
+
+# Process completion styling
+zstyle ':completion:*:processes' command 'ps -au$USER'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
