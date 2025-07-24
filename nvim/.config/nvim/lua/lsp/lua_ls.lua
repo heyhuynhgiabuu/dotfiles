@@ -1,3 +1,5 @@
+-- LUA LSP Configuration - DISABLED: Using NvChad LSP setup instead
+--[[
 local lspconfig = require("lspconfig")
 lspconfig.lua_ls.setup({
   settings = {
@@ -8,3 +10,4 @@ lspconfig.lua_ls.setup({
     },
   },
 })
+--]]

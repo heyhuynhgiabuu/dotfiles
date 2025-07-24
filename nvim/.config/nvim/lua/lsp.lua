@@ -19,7 +19,8 @@ if java_root then
   })
 end
 
--- LUA LSP (for Neovim config)
+-- LUA LSP (for Neovim config) - DISABLED: Using NvChad LSP setup instead
+--[[
 lspconfig.lua_ls.setup({
   settings = {
     Lua = {
@@ -34,4 +35,5 @@ lspconfig.lua_ls.setup({
     },
   },
 })
+--]]
 

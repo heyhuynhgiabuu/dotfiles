@@ -9,7 +9,7 @@ return {
   require("plugins.fugitive"),
   require("plugins.gitsigns"),
   require("plugins.indent-blankline"),
-  require("plugins.lsp"),
+  -- require("plugins.lsp"), -- Disabled: conflicts with NvChad LSP setup
   require("plugins.lualine"),
   require("plugins.markdown-preview"),
   require("plugins.markdown"),
