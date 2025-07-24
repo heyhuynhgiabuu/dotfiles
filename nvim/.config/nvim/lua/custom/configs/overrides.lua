@@ -12,6 +12,11 @@ M.treesitter = {
     "c",
     "markdown",
     "markdown_inline",
+    -- Add Java and Go support
+    "java",
+    "go",
+    "gomod",
+    "gosum",
   },
   indent = {
     enable = true,
@@ -37,6 +42,16 @@ M.mason = {
     -- c/cpp stuff
     "clangd",
     "clang-format",
+
+    -- Go development
+    "gopls",              -- Go language server
+    "goimports",          -- Go imports formatter
+    "gofumpt",            -- Go formatter (stricter than gofmt)
+    "golangci-lint",      -- Go linter
+
+    -- Java development
+    "jdtls",              -- Java language server
+    "google-java-format", -- Java formatter
   },
 }
 

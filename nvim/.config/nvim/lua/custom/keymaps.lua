@@ -75,3 +75,42 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<leader>gT", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
   end,
 })
+
+-- Java-specific keymaps
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "java",
+  callback = function()
+    local opts = { noremap = true, silent = true, buffer = true }
+    
+    -- Java compilation and execution
+    vim.keymap.set("n", "<leader>jc", ":!javac %<CR>", vim.tbl_extend("force", opts, { desc = "Compile Java file" }))
+    vim.keymap.set("n", "<leader>jr", function()
+      local filename = vim.fn.expand("%:t:r")
+      vim.cmd("!java " .. filename)
+    end, vim.tbl_extend("force", opts, { desc = "Run Java class" }))
+    
+    -- Maven/Gradle commands
+    vim.keymap.set("n", "<leader>jm", ":!mvn compile<CR>", vim.tbl_extend("force", opts, { desc = "Maven compile" }))
+    vim.keymap.set("n", "<leader>jt", ":!mvn test<CR>", vim.tbl_extend("force", opts, { desc = "Maven test" }))
+    vim.keymap.set("n", "<leader>jg", ":!gradle build<CR>", vim.tbl_extend("force", opts, { desc = "Gradle build" }))
+    
+    -- Java-specific LSP keymaps
+    vim.keymap.set("n", "<leader>jo", function()
+      vim.lsp.buf.code_action({
+        filter = function(action)
+          return action.kind and string.match(action.kind, "source.organizeImports")
+        end,
+        apply = true,
+      })
+    end, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
+    
+    vim.keymap.set("n", "<leader>jv", function()
+      vim.lsp.buf.code_action({
+        filter = function(action)
+          return action.kind and string.match(action.kind, "quickfix")
+        end,
+        apply = true,
+      })
+    end, vim.tbl_extend("force", opts, { desc = "Apply quick fix" }))
+  end,
+})

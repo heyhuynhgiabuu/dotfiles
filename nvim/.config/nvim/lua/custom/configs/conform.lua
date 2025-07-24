@@ -8,6 +8,9 @@ local options = {
     -- Go
     go = { "goimports", "gofumpt" },
 
+    -- Java
+    java = { "google-java-format" },
+
     javascript = { "deno_fmt" }, -- Using deno_fmt for faster JS/TS formatting
     typescript = { "deno_fmt" },
     javascriptreact = { "prettier" },
