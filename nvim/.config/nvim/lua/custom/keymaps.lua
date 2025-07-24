@@ -38,6 +38,8 @@ vim.keymap.set("n", "<leader>fn", function()
 end, { desc = "Open or create markdown note" })
 
 -- Integrated write vietnamese at edit mode
+-- TODO: Install im-select-helper plugin or remove this functionality
+--[[
 local im_select = require("im-select-helper")
 
 vim.api.nvim_create_autocmd("InsertEnter", {
@@ -47,6 +49,7 @@ vim.api.nvim_create_autocmd("InsertEnter", {
 vim.api.nvim_create_autocmd("InsertLeave", {
     callback = im_select.on_insert_leave,
 })
+--]]
 
 -- Tab as VSCode
 vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer"})

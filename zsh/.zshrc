@@ -191,3 +191,19 @@ export HERD_PHP_83_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 
 # Herd injected PHP 8.2 configuration.
 export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/82/"
+
+# Go development environment
+export GOPATH=$HOME/go
+export GOROOT=$(go env GOROOT 2>/dev/null || echo "/usr/local/go")
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+
+# Go-specific aliases
+alias gor='go run .'
+alias gob='go build .'
+alias got='go test ./...'
+alias gotv='go test -v ./...'
+alias gom='go mod tidy'
+alias goi='go install'
+alias gof='gofumpt -w .'
+alias gol='golangci-lint run'
+

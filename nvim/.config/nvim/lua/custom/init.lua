@@ -26,3 +26,7 @@ require "custom.browser-preview"
 
 -- Load snippets
 require "custom.snipets"
+
+-- Load help im select
+-- TODO: Install im-select-helper plugin or remove this functionality
+-- require "custom.im-select-helper"

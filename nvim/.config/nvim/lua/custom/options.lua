@@ -10,4 +10,4 @@ o.shiftwidth = 4
 o.expandtab = true
 o.mouse = "a"
 o.clipboard = "unnamedplus"
-
+o.colorcolumn = "80"
