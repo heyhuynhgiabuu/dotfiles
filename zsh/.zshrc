@@ -246,8 +246,6 @@ fi
 [[ -f ~/.zsh/envs.zsh ]] && source ~/.zsh/envs.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
-
-# Advanced completions for VS Code-like experience
 [[ -f ~/.zsh/advanced-completions.zsh ]] && source ~/dotfiles/zsh/advanced-completions.zsh
 
 # iTerm2 Shell Integration (for enhanced completions)
@@ -257,35 +255,3 @@ fi
 if command -v github-copilot-cli >/dev/null; then
     eval "$(github-copilot-cli alias -- "$0")"
 fi
-
-
-# Add ~/.bin to PATH
-export PATH="$HOME/.bin:$PATH"
-
-
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/84/"
-
-
-# Herd injected PHP 8.3 configuration.
-export HERD_PHP_83_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/83/"
-
-
-# Herd injected PHP 8.2 configuration.
-export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/82/"
-
-# Go development environment
-export GOPATH=$HOME/go
-export GOROOT=$(go env GOROOT 2>/dev/null || echo "/usr/local/go")
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
-
-# Go-specific aliases
-alias gor='go run .'
-alias gob='go build .'
-alias got='go test ./...'
-alias gotv='go test -v ./...'
-alias gom='go mod tidy'
-alias goi='go install'
-alias gof='gofumpt -w .'
-alias gol='golangci-lint run'
-

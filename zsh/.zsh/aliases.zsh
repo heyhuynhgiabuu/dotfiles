@@ -72,3 +72,13 @@ alias copf='gh copilot fix'
 
 # Tmux
 alias tjava="~/dotfiles/scripts/tmux-java-layout.sh"
+
+# Go-specific aliases
+alias gor='go run .'
+alias gob='go build .'
+alias got='go test ./...'
+alias gotv='go test -v ./...'
+alias gom='go mod tidy'
+alias goi='go install'
+alias gof='gofumpt -w .'
+alias gol='golangci-lint run'
