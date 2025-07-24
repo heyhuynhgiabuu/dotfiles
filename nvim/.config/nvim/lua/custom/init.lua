@@ -28,5 +28,9 @@ require "custom.browser-preview"
 require "custom.snipets"
 
 -- Load Vietnamese input method helper
-require "custom.im-select-helper"
+local script_path = debug.getinfo(1).source:match("@?(.*/)") or ""
+local im_select_helper_path = script_path .. "im_select_helper.lua"
+if vim.fn.filereadable(im_select_helper_path) == 1 then
+    dofile(im_select_helper_path)
+end
 

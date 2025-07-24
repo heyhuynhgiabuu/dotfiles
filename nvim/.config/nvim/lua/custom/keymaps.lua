@@ -37,16 +37,7 @@ vim.keymap.set("n", "<leader>fn", function()
   end)
 end, { desc = "Open or create markdown note" })
 
--- Integrated Vietnamese input method switching
-local im_select = require("custom.im-select-helper")
-
-vim.api.nvim_create_autocmd("InsertEnter", {
-    callback = im_select.on_insert_enter,
-})
-
-vim.api.nvim_create_autocmd("InsertLeave", {
-    callback = im_select.on_insert_leave,
-})
+-- Vietnamese input method switching is now handled by im_select_helper.lua
 
 -- Tab as VSCode
 vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer"})

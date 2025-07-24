@@ -1,1 +1,0 @@
--- This file is no longer used - LSP configuration moved to custom/lsp-config.lua
