@@ -1,33 +1,36 @@
--- local autocmd = vim.api.nvim_create_autocmd
+-- Custom NvChad configuration theo cách cũ
+-- This file integrates your existing configs with NvChad
+
+-- Load custom configurations
+require "custom.options"
+require "custom.mappings"
+
+-- Load LSP config after plugins are ready
+vim.defer_fn(function()
+  pcall(require, "custom.lsp-config")
+end, 100)
+
+-- Load optional custom modules with error handling
+local optional_modules = {
+  "custom.floating-term",
+  "custom.help-floating",
+  "custom.snipets",
+  "custom.vim-helpers",
+  "custom.browser-preview"
+}
+
+for _, module in ipairs(optional_modules) do
+  pcall(require, module)
+end
 
 -- Auto resize panes when resizing nvim window
--- autocmd("VimResized", {
---   pattern = "*",
---   command = "tabdo wincmd =",
--- })
+local autocmd = vim.api.nvim_create_autocmd
+autocmd("VimResized", {
+  pattern = "*",
+  command = "tabdo wincmd =",
+})
 
--- Load custom options
-require "custom.options"
-
--- Load custom keymaps
-require "custom.keymaps"
-
--- Load custom vim helpers
-require "custom.vim-helpers"
-
--- Load floating terminal
-require "custom.floating-term"
-
--- Load help floating
-require "custom.help-floating"
-
--- Load browser preview
-require "custom.browser-preview"
-
--- Load snippets
-require "custom.snipets"
-
--- Load Vietnamese input method helper
+-- Load Vietnamese input method helper if available
 local script_path = debug.getinfo(1).source:match("@?(.*/)") or ""
 local im_select_helper_path = script_path .. "im_select_helper.lua"
 if vim.fn.filereadable(im_select_helper_path) == 1 then

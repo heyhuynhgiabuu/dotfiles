@@ -1,7 +1,7 @@
----@type ChadrcConfig
+-- NvChad custom configuration
 local M = {}
 
--- Path to overriding theme and highlights files
+-- Path to overriding theme and highlights files  
 local highlights = require "custom.highlights"
 
 M.ui = {
@@ -10,6 +10,21 @@ M.ui = {
 
   hl_override = highlights.override,
   hl_add = highlights.add,
+
+  -- Tabufline configuration - DISABLED to fix nil value errors
+  tabufline = {
+    show_numbers = false,
+    enabled = false, -- Disable tabufline completely
+    lazyload = false,
+  },
+
+  -- Statusline configuration
+  statusline = {
+    theme = "default", -- default/vscode/vscode_colored/minimal
+    separator_style = "default", -- default/round/block/arrow
+    order = nil,
+    modules = nil,
+  },
 
   nvdash = {
     load_on_startup = true,
@@ -47,9 +62,7 @@ M.ui = {
   },
 }
 
+-- Chỉ định custom plugins theo cách cũ
 M.plugins = "custom.plugins"
-
--- check core.mappings for table structure
-M.mappings = require "custom.mappings"
 
 return M

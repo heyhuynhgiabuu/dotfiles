@@ -51,50 +51,73 @@ vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { desc = "Reset hu
 vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "Preview hunk" })
 vim.keymap.set("n", "<leader>gb", ":Gitsigns blame_line<CR>", { desc = "Blame line" })
 
--- Go-specific keymaps (only active in Go files)
+-- Go-specific keymaps (enhanced with ray-x/go.nvim integration)
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
   callback = function()
     local opts = { buffer = true, desc = "" }
     
-    -- Go run/test commands
-    vim.keymap.set("n", "<leader>gr", ":terminal go run .<CR>", vim.tbl_extend("force", opts, { desc = "Go run" }))
-    vim.keymap.set("n", "<leader>gt", ":terminal go test ./...<CR>", vim.tbl_extend("force", opts, { desc = "Go test" }))
-    vim.keymap.set("n", "<leader>gtv", ":terminal go test -v ./...<CR>", vim.tbl_extend("force", opts, { desc = "Go test verbose" }))
-    vim.keymap.set("n", "<leader>gb", ":terminal go build .<CR>", vim.tbl_extend("force", opts, { desc = "Go build" }))
+    -- Enhanced Go run/test commands with go.nvim
+    vim.keymap.set("n", "<leader>gr", ":GoRun<CR>", vim.tbl_extend("force", opts, { desc = "Go run (go.nvim)" }))
+    vim.keymap.set("n", "<leader>gt", ":GoTest<CR>", vim.tbl_extend("force", opts, { desc = "Go test (go.nvim)" }))
+    vim.keymap.set("n", "<leader>gtf", ":GoTestFunc<CR>", vim.tbl_extend("force", opts, { desc = "Go test function" }))
+    vim.keymap.set("n", "<leader>gtv", ":GoTest -v<CR>", vim.tbl_extend("force", opts, { desc = "Go test verbose" }))
+    vim.keymap.set("n", "<leader>gb", ":GoBuild<CR>", vim.tbl_extend("force", opts, { desc = "Go build (go.nvim)" }))
     vim.keymap.set("n", "<leader>gm", ":terminal go mod tidy<CR>", vim.tbl_extend("force", opts, { desc = "Go mod tidy" }))
+    vim.keymap.set("n", "<leader>gc", ":GoCoverage<CR>", vim.tbl_extend("force", opts, { desc = "Go coverage" }))
     
-    -- Go tools
-    vim.keymap.set("n", "<leader>gf", ":!gofumpt -w %<CR>", vim.tbl_extend("force", opts, { desc = "Go format file" }))
-    vim.keymap.set("n", "<leader>gi", ":!goimports -w %<CR>", vim.tbl_extend("force", opts, { desc = "Go fix imports" }))
-    vim.keymap.set("n", "<leader>gl", ":terminal golangci-lint run<CR>", vim.tbl_extend("force", opts, { desc = "Go lint" }))
+    -- Enhanced Go tools with go.nvim
+    vim.keymap.set("n", "<leader>gf", ":GoFmt<CR>", vim.tbl_extend("force", opts, { desc = "Go format (gofumpt)" }))
+    vim.keymap.set("n", "<leader>gi", ":GoImports<CR>", vim.tbl_extend("force", opts, { desc = "Go organize imports" }))
+    vim.keymap.set("n", "<leader>gl", ":GoLint<CR>", vim.tbl_extend("force", opts, { desc = "Go lint (golangci-lint)" }))
+    vim.keymap.set("n", "<leader>gv", ":GoVet<CR>", vim.tbl_extend("force", opts, { desc = "Go vet" }))
     
-    -- Go-specific LSP keymaps
+    -- Go code generation and refactoring
+    vim.keymap.set("n", "<leader>ga", ":GoAddTag<CR>", vim.tbl_extend("force", opts, { desc = "Go add struct tags" }))
+    vim.keymap.set("n", "<leader>gA", ":GoRmTag<CR>", vim.tbl_extend("force", opts, { desc = "Go remove struct tags" }))
+    vim.keymap.set("n", "<leader>ge", ":GoIfErr<CR>", vim.tbl_extend("force", opts, { desc = "Go if err snippet" }))
+    vim.keymap.set("n", "<leader>gF", ":GoFillStruct<CR>", vim.tbl_extend("force", opts, { desc = "Go fill struct" }))
+    vim.keymap.set("n", "<leader>gp", ":GoImpl<CR>", vim.tbl_extend("force", opts, { desc = "Go implement interface" }))
+    
+    -- Go debugging
+    vim.keymap.set("n", "<leader>gD", ":GoDebug<CR>", vim.tbl_extend("force", opts, { desc = "Go debug" }))
+    vim.keymap.set("n", "<leader>gB", ":GoDbgBreakpoint<CR>", vim.tbl_extend("force", opts, { desc = "Go debug breakpoint" }))
+    
+    -- Enhanced Go-specific LSP keymaps
     vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
     vim.keymap.set("n", "<leader>gI", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
     vim.keymap.set("n", "<leader>gT", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+    vim.keymap.set("n", "<leader>gR", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Find references" }))
+    vim.keymap.set("n", "<leader>gK", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
+    vim.keymap.set("n", "<leader>gs", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
+    vim.keymap.set("n", "<leader>gn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
+    vim.keymap.set("n", "<leader>gca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code actions" }))
   end,
 })
 
--- Java-specific keymaps
+-- Java-specific keymaps (enhanced with JDTLS integration)
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "java",
   callback = function()
     local opts = { noremap = true, silent = true, buffer = true }
     
-    -- Java compilation and execution
+    -- Enhanced Java compilation and execution
     vim.keymap.set("n", "<leader>jc", ":!javac %<CR>", vim.tbl_extend("force", opts, { desc = "Compile Java file" }))
     vim.keymap.set("n", "<leader>jr", function()
       local filename = vim.fn.expand("%:t:r")
       vim.cmd("!java " .. filename)
     end, vim.tbl_extend("force", opts, { desc = "Run Java class" }))
     
-    -- Maven/Gradle commands
+    -- Enhanced Maven/Gradle commands
     vim.keymap.set("n", "<leader>jm", ":!mvn compile<CR>", vim.tbl_extend("force", opts, { desc = "Maven compile" }))
-    vim.keymap.set("n", "<leader>jt", ":!mvn test<CR>", vim.tbl_extend("force", opts, { desc = "Maven test" }))
+    vim.keymap.set("n", "<leader>jmt", ":!mvn test<CR>", vim.tbl_extend("force", opts, { desc = "Maven test" }))
+    vim.keymap.set("n", "<leader>jmp", ":!mvn package<CR>", vim.tbl_extend("force", opts, { desc = "Maven package" }))
+    vim.keymap.set("n", "<leader>jmc", ":!mvn clean<CR>", vim.tbl_extend("force", opts, { desc = "Maven clean" }))
     vim.keymap.set("n", "<leader>jg", ":!gradle build<CR>", vim.tbl_extend("force", opts, { desc = "Gradle build" }))
+    vim.keymap.set("n", "<leader>jgt", ":!gradle test<CR>", vim.tbl_extend("force", opts, { desc = "Gradle test" }))
+    vim.keymap.set("n", "<leader>jgc", ":!gradle clean<CR>", vim.tbl_extend("force", opts, { desc = "Gradle clean" }))
     
-    -- Java-specific LSP keymaps
+    -- Enhanced Java-specific LSP keymaps with JDTLS features
     vim.keymap.set("n", "<leader>jo", function()
       vim.lsp.buf.code_action({
         filter = function(action)
@@ -104,7 +127,7 @@ vim.api.nvim_create_autocmd("FileType", {
       })
     end, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
     
-    vim.keymap.set("n", "<leader>jv", function()
+    vim.keymap.set("n", "<leader>jf", function()
       vim.lsp.buf.code_action({
         filter = function(action)
           return action.kind and string.match(action.kind, "quickfix")
@@ -112,5 +135,45 @@ vim.api.nvim_create_autocmd("FileType", {
         apply = true,
       })
     end, vim.tbl_extend("force", opts, { desc = "Apply quick fix" }))
+    
+    -- Java refactoring (JDTLS specific)
+    vim.keymap.set("n", "<leader>jrv", function()
+      require('jdtls').extract_variable()
+    end, vim.tbl_extend("force", opts, { desc = "Extract variable" }))
+    
+    vim.keymap.set("v", "<leader>jrv", function()
+      require('jdtls').extract_variable(true)
+    end, vim.tbl_extend("force", opts, { desc = "Extract variable (visual)" }))
+    
+    vim.keymap.set("n", "<leader>jrc", function()
+      require('jdtls').extract_constant()
+    end, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
+    
+    vim.keymap.set("v", "<leader>jrc", function()
+      require('jdtls').extract_constant(true)
+    end, vim.tbl_extend("force", opts, { desc = "Extract constant (visual)" }))
+    
+    vim.keymap.set("v", "<leader>jrm", function()
+      require('jdtls').extract_method(true)
+    end, vim.tbl_extend("force", opts, { desc = "Extract method" }))
+    
+    -- Java testing
+    vim.keymap.set("n", "<leader>jtc", function()
+      require('jdtls').test_class()
+    end, vim.tbl_extend("force", opts, { desc = "Test class" }))
+    
+    vim.keymap.set("n", "<leader>jtm", function()
+      require('jdtls').test_nearest_method()
+    end, vim.tbl_extend("force", opts, { desc = "Test nearest method" }))
+    
+    -- Enhanced Java navigation
+    vim.keymap.set("n", "<leader>jd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+    vim.keymap.set("n", "<leader>jI", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+    vim.keymap.set("n", "<leader>jT", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+    vim.keymap.set("n", "<leader>jR", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Find references" }))
+    vim.keymap.set("n", "<leader>jK", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
+    vim.keymap.set("n", "<leader>js", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
+    vim.keymap.set("n", "<leader>jn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
+    vim.keymap.set("n", "<leader>jca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code actions" }))
   end,
 })

@@ -10,6 +10,7 @@ ln -sf ~/dotfiles/.zsh/aliases.zsh ~/.zsh/aliases.zsh
 ln -sf ~/dotfiles/.zsh/env.zsh ~/.zsh/env.zsh
 ln -sf ~/dotfiles/.zsh/functions.zsh ~/.zsh/functions.zsh
 ln -sf ~/dotfiles/.zsh/starship.zsh ~/.zsh/starship.zsh
+ln -sf ~/dotfiles/.zsh/advanced-completions.zsh ~/.zsh/advanced-completions.zsh
 
 echo "📦 Cloning TPM (Tmux Plugin Manager)..."
 if [ ! -d ~/.tmux/plugins/tpm ]; then

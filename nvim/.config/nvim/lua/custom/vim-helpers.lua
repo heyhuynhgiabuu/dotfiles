@@ -23,31 +23,8 @@ vim.keymap.set("n", "<leader>cp", function()
 	print("Copied: " .. filepath)
 end, { desc = "Copy absolute path to clipboard" })
 
--- open the current file in browser
-vim.keymap.set("n", "<leader>ob", function()
-	local file_path = vim.fn.expand("%:p") -- get the current file path
-	if file_path ~= "" then
-		local cmd
-		if vim.fn.has("mac") == 1 then
-			local firefox_installed = vim.fn.system("which /Applications/Firefox.app/Contents/MacOS/firefox")
-			if firefox_installed == "" then
-				cmd = "open -a 'Google Chrome' " .. file_path
-			else
-				cmd = "open -a 'Firefox' " .. file_path
-			end
-		else
-            local firefox_path = vim.fn.system("which firefox"):gsub("\n", "")
-            local has_firefox = firefox_path ~= ""
-            if has_firefox then
-                cmd = "google-chrome " .. file_path
-            end
-			cmd = "firefox " .. file_path
-		end
-		os.execute(cmd .. " &")
-	else
-		print("No file to open")
-	end
-end, { desc = "Open current file in browser" })
+-- Note: Browser preview function is handled by browser-preview.lua
+-- Removed duplicate <leader>ob mapping to avoid conflicts
 
 -- set language based on vim mode
 -- requires im-select https://github.com/daipeihust/im-select

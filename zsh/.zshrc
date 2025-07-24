@@ -92,6 +92,77 @@ zinit light-mode for \
   zdharma-continuum/zinit-annex-rust
 
 # =============================================================================
+# 🎯 ADVANCED COMPLETIONS
+# =============================================================================
+
+# Enhanced zinit completions with VS Code-like experience
+zinit wait lucid for \
+    OMZP::golang \
+    OMZP::docker \
+    OMZP::docker-compose \
+    OMZP::kubectl \
+    OMZP::npm \
+    OMZP::git \
+    atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+        zdharma-continuum/fast-syntax-highlighting \
+    blockf \
+        zsh-users/zsh-completions \
+    atload"!_zsh_autosuggest_start" \
+        zsh-users/zsh-autosuggestions
+
+# Modern completion system (VS Code-like menu)
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' squeeze-slashes true
+zstyle ':completion:*' verbose true
+zstyle ':completion:*' use-cache true
+zstyle ':completion:*' cache-path "$HOME/.zsh/cache"
+
+# Enhanced completion groups
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+
+# Directory completion styling
+zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
+
+# Process completion for kill command
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:*:kill:*' force-list always
+zstyle ':completion:*:*:kill:*' insert-ids single
+
+# Go completions
+if command -v go >/dev/null; then
+    compdef _go go
+    # Custom go commands completion
+    _go_custom() {
+        local -a subcmds
+        subcmds=(
+            'run:run Go program'
+            'build:build Go program'
+            'test:test packages'
+            'mod:module maintenance'
+            'get:download and install packages'
+            'install:compile and install packages'
+            'clean:remove object files'
+            'fmt:format Go source files'
+            'vet:examine Go source code'
+            'version:print Go version'
+        )
+        _describe 'go commands' subcmds
+    }
+    compdef _go_custom go
+fi
+
+# =============================================================================
 # 🧠 AUTOCOMPLETIONS
 # =============================================================================
 
@@ -169,12 +240,23 @@ if [[ -d "$HOME/miniconda3" ]]; then
 fi
 
 # =============================================================================
-# 🔁 CUSTOM FILES
+# 🔁 CUSTOM FILES & INTEGRATIONS
 # =============================================================================
 
 [[ -f ~/.zsh/envs.zsh ]] && source ~/.zsh/envs.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
+
+# Advanced completions for VS Code-like experience
+[[ -f ~/.zsh/advanced-completions.zsh ]] && source ~/dotfiles/zsh/advanced-completions.zsh
+
+# iTerm2 Shell Integration (for enhanced completions)
+[[ -f ~/.iterm2_shell_integration.zsh ]] && source ~/.iterm2_shell_integration.zsh
+
+# GitHub Copilot CLI integration (if available)
+if command -v github-copilot-cli >/dev/null; then
+    eval "$(github-copilot-cli alias -- "$0")"
+fi
 
 
 # Add ~/.bin to PATH
