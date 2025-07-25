@@ -3,19 +3,19 @@
 A personal dotfiles collection for a modern macOS
 development environment. Features:
 
-• Neovim (NvChad v2.0): Custom Lua configs, plugin
+- Neovim (NvChad v2.0): Custom Lua configs, plugin
 management, and productivity enhancements.
-• Zsh: Advanced completions, aliases, environment
+- Zsh: Advanced completions, aliases, environment
 variables, and plugin management with Zinit.
-• Tmux: Vi-style navigation, session management,
+- Tmux: Vi-style navigation, session management,
 Copilot integration, and custom layouts for Go/Java.
-• WezTerm: Themed terminal with macOS keybindings,
+- WezTerm: Themed terminal with macOS keybindings,
 workspace switching, and performance tweaks.
-• Aerospace: Window manager configuration for efficient
+- Aerospace: Window manager configuration for efficient
 workspace and app launching.
-• Scripts: Bootstrap, install, update, and workspace
+- Scripts: Bootstrap, install, update, and workspace
 automation for development workflows.
-• Docs: Guides for enhanced setup, Copilot, Go/Java,
+- Docs: Guides for enhanced setup, Copilot, Go/Java,
 and troubleshooting.
 
 Easy to install, stow-based symlinking, and designed
