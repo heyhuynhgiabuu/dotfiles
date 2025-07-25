@@ -19,6 +19,7 @@ after-startup-command = [
 
 # Workspace names - tối ưu cho backend dev workflow
 [workspace-to-monitor-force-assignment]
+0 = 'main'    # Social
 1 = 'main'    # Terminal/Development
 2 = 'main'    # Browser/Documentation  
 3 = 'main'    # IDE/Code
@@ -34,8 +35,14 @@ alt-r = 'reload-config'
 alt-enter = 'exec-and-forget open -n /Applications/iTerm.app'
 alt-c = 'exec-and-forget open -n "/Applications/Google Chrome.app"'
 alt-shift-c = 'exec-and-forget open -n "/Applications/Cursor.app/"'
+alt-x = 'exec-and-forget open -n "/Applications/Firefox.app/"'
 alt-s = 'exec-and-forget open -n "/Applications/Safari.app/"'
 alt-v = 'exec-and-forget open -n "/Applications/Visual Studio Code.app"'
+
+# Social 
+alt-d = 'exec-and-forget open -n "/Applications/Discord.app/"'
+alt-w = 'exec-and-forget open -n "/Applications/WhatsApp.app/"'
+alt-z = 'exec-and-forget open -n "/Applications/Zalo.app/"'
 
 # Navigation between windows (vim-like)
 alt-h = 'focus left'
@@ -60,7 +67,8 @@ alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
 
-# Switch to workspaces  
+# Switch to workspace-to-monitor-force-assignment
+alt-0 = 'workspace 0'
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
@@ -91,22 +99,42 @@ alt-ctrl-shift-l = 'move-node-to-monitor right'
 
 # Backend development specific shortcuts
 alt-shift-d = 'exec-and-forget open -n "/Applications/DBeaver.app"'  # DBeaver database client
-alt-d = 'exec-and-forget open -n "/Applications/MySQLWorkbench.app"'  # MySQL Workbench
-alt-m = 'exec-and-forget open -n "/Applications/Activity Monitor.app"'  # System monitoring
+alt-m = 'exec-and-forget open -n "/Applications/MySQLWorkbench.app"'  # MySQL Workbench
+alt-shift-m = 'exec-and-forget open -n "/Applications/Activity Monitor.app"'  # System monitoring
 alt-shift-s = 'exec-and-forget screencapture -i -c'  # Screenshot to clipboard
 
 # Auto-assign applications to workspaces
 [[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace 0'
+
+[[on-window-detected]]
+if.app-id = 'net.whatsapp.WhatsApp'
+run = 'move-node-to-workspace 0'
+
+[[on-window-detected]]
+if.app-id = 'com.vng.zalo'
+run = 'move-node-to-workspace 0'
+
+[[on-window-detected]]
 if.app-id = 'com.googlecode.iterm2'
-run = 'move-node-to-workspace 1'  # Terminal to workspace 1
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace 2'  # Browser to workspace 2
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
-run = 'move-node-to-workspace 3'  # VS Code to workspace 3
+run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
 if.app-id = 'com.todesktop.230313mzl4w4u92'
@@ -114,15 +142,15 @@ run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
 if.app-id = 'org.jkiss.dbeaver.core.product'
-run = 'move-node-to-workspace 4'  # DBeaver to workspace 4
+run = 'move-node-to-workspace 4'  
 
 [[on-window-detected]]
 if.app-id = 'com.oracle.workbench.MySQLWorkbench'
-run = 'move-node-to-workspace 4'  # MySQL Workbench to workspace 4
+run = 'move-node-to-workspace 4'  
 
 [[on-window-detected]]
 if.app-id = 'com.apple.ActivityMonitor'
-run = 'move-node-to-workspace 5'  # Monitoring to workspace 5
+run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
 if.app-id = 'com.docker.docker'
@@ -136,9 +164,9 @@ PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:${PATH}'
 
 # Gaps configuration - professional look
 [gaps]
-inner.horizontal = 12
-inner.vertical = 12
+inner.horizontal = 24
+inner.vertical = 24
 outer.left = 12
 outer.bottom = 12
-outer.top = 12  # Space for menu bar
+outer.top = 12
 outer.right = 12
