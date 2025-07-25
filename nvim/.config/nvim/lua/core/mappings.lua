@@ -289,6 +289,7 @@ M.telescope = {
   end,
   "Open horizontal terminal",
 },
+["<leader>tt"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
 
     ["<leader>ma"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
   },
