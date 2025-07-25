@@ -6,20 +6,46 @@ Personal dotfiles repository with stow-like organization and NvChad v2.0 integra
 
 ```
 dotfiles/
-├── nvim/                    # Neovim with NvChad v2.0 integration
-│   └── .config/nvim/lua/custom/  # Custom configurations (symlinked)
-├── zsh/                     # Zsh configuration
+├── nvim/                        # Neovim with NvChad v2.0 integration
+│   └── .config/nvim/lua/custom/ # Custom configurations (symlinked)
+│   └── .config/nvim/            # Full Neovim config (NvChad base)
+├── zsh/                         # Zsh configuration
 │   ├── .zshrc
 │   └── .zsh/
-├── tmux/                    # Tmux configuration
-│   └── .tmux.conf
-├── aerospace/               # Aerospace window manager
-├── scripts/                 # Installation and maintenance scripts
-│   ├── install.sh           # Main installation script
-│   ├── update-nvchad.sh     # NvChad update script
-│   ├── nvchad-health.sh     # Health check script
-│   └── nvchad-quick-reference.md
-└── README.md               # This file
+│       ├── advanced-completions.zsh
+│       ├── aliases.zsh
+│       ├── envs.zsh
+│       ├── functions.zsh
+│       └── starship.zsh
+├── tmux/                        # Tmux configuration
+│   ├── .tmux.conf
+│   ├── copilot-integration.conf
+│   └── tmux-autocompletion.conf
+├── aerospace/                   # Aerospace window manager
+│   └── .config/aerospace/aerospace.toml
+├── wezterm/                     # WezTerm terminal configuration
+│   └── .config/wezterm/wezterm.lua
+├── docs/                        # Documentation and guides
+│   ├── enhanced-development-setup.md
+│   ├── github-copilot-integration.md
+│   ├── go-backend-vietnamese-reference.md
+│   └── go-learning-roadmap.md
+├── scripts/                     # Installation and maintenance scripts
+│   ├── bootstrap.sh
+│   ├── dev-layout.sh
+│   ├── devops-layout.sh
+│   ├── go-new-project.sh
+│   ├── install.sh
+│   ├── note.sh
+│   ├── nvchad-quick-reference.md
+│   ├── setup-copilot.sh
+│   ├── setup-enhanced-dev.sh
+│   ├── setup-go.sh
+│   ├── tmux-go-layout.sh
+│   ├── tmux-java-layout.sh
+│   └── update-nvchad.sh
+├── AGENTS.md                    # Agent guidelines for dotfiles
+└── README.md                    # This file
 ```
 
 ## 🚀 Quick Start
@@ -58,19 +84,32 @@ dotfiles/
 ### Window Management
 - **Aerospace**: macOS window manager configuration
 
+### Terminal Emulator
+- **WezTerm**: Custom configuration for macOS, including keybindings and workspace switching
+
+### Agent Guidelines
+- **AGENTS.md**: Contributing and commit message policy for dotfiles agents
+
 ### Scripts
 - All scripts symlinked to `~/.bin` and added to PATH
 
 ## 📋 Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `install.sh` | Main installation script |
-| `update-nvchad.sh` | Update NvChad while preserving customizations |
-| `nvchad-health.sh` | Check NvChad integration health |
-| `bootstrap.sh` | System bootstrap script |
-| `note.sh` | Note-taking utility |
-| `start-dev.sh` | Development environment setup |
+| Script                | Description                                 |
+|-----------------------|---------------------------------------------|
+| `install.sh`          | Main installation script                    |
+| `bootstrap.sh`        | Stow-based symlink setup for configs        |
+| `update-nvchad.sh`    | Update NvChad while preserving customizations|
+| `dev-layout.sh`       | Tmux layout for development                 |
+| `devops-layout.sh`    | WezTerm layout for DevOps projects          |
+| `go-new-project.sh`   | Bootstrap a new Go project                  |
+| `note.sh`             | Note-taking utility (fzf + nvim + tmux)     |
+| `setup-copilot.sh`    | GitHub Copilot setup for Neovim             |
+| `setup-enhanced-dev.sh`| Enhanced Go/Java dev environment setup      |
+| `setup-go.sh`         | Go development environment setup            |
+| `tmux-go-layout.sh`   | Tmux layout for Go projects                 |
+| `tmux-java-layout.sh` | Tmux layout for Java projects               |
+| `nvchad-quick-reference.md` | NvChad quick reference guide           |
 
 ## 🔧 Customization
 
@@ -85,6 +124,13 @@ dotfiles/
 
 ### Tmux
 - Edit `tmux/.tmux.conf` for tmux settings
+- Customize additional tmux configs in `tmux/copilot-integration.conf` and `tmux/tmux-autocompletion.conf`
+
+### WezTerm
+- Edit `wezterm/.config/wezterm/wezterm.lua` for theme, font, keybindings, and workspace switching
+
+### Aerospace
+- Edit `aerospace/.config/aerospace/aerospace.toml` for window manager shortcuts, workspace assignments, and app launching
 
 ## 🔄 Maintenance
 
@@ -109,6 +155,10 @@ dotfiles/
 
 - [NvChad Integration Guide](nvim/README.md)
 - [Quick Reference](scripts/nvchad-quick-reference.md)
+- [Agent Guidelines](AGENTS.md)
+- [Enhanced Development Setup](docs/enhanced-development-setup.md)
+- [WezTerm Configuration](wezterm/.config/wezterm/wezterm.lua)
+- [Aerospace Configuration](aerospace/.config/aerospace/aerospace.toml)
 
 ## 🐛 Troubleshooting
 
