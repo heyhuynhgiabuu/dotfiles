@@ -21,6 +21,17 @@ local function open_floating_term(cmd)
     vim.cmd("terminal " .. cmd)
 end
 
+-- Custom function to open a horizontal split terminal
+local function open_horizontal_term(cmd)
+    vim.cmd("split | terminal " .. (cmd or ""))
+    vim.cmd("startinsert")
+end
+
+-- Keymap: <leader>th to open horizontal terminal
+map("n", "<leader>th", function()
+    open_horizontal_term()
+end, { desc = "Open horizontal terminal" })
+
 -- Find or create notes using the script
 map("n", "<leader>fo", function()
     open_floating_term("note")
