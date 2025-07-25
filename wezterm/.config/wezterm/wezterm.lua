@@ -25,6 +25,17 @@ config.scrollback_lines = 5000  -- Lower for memory usage
 
 -- === KEYBINDINGS ESSENTIALS ===
 config.keys = {
+  -- Copy and Paste (macOS standard)
+  {
+    key = 'c',
+    mods = 'CMD',
+    action = wezterm.action.CopyTo 'Clipboard',
+  },
+  {
+    key = 'v',
+    mods = 'CMD',
+    action = wezterm.action.PasteFrom 'Clipboard',
+  },
   -- === DELETE KEYBINDINGS (Best Practice, all Backspace-based) ===
   -- Shift+Backspace: delete to beginning of line (send Ctrl+U)
   {
