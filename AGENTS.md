@@ -8,5 +8,6 @@ This repository contains personal dotfiles. Please adhere to the following guide
 - **Modification:** When modifying an existing configuration, understand its purpose within the larger setup.
 - **New Configs:** When adding a new configuration, ensure it is self-contained and does not interfere with other tools.
 - **Commits:** Write clear and concise commit messages explaining the change.
+    - Do not include "Generated with opencode" or any agent attribution in commit messages for this repository.
 - **Dependencies:** Do not add any new dependencies without explicit permission.
 - **Testing:** Manually test any changes to ensure they work as expected.
