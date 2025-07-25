@@ -32,7 +32,7 @@ after-startup-command = [
 alt-r = 'reload-config'
 
 # Terminal và applications
-alt-enter = 'exec-and-forget open -n /Applications/iTerm.app'
+alt-enter = 'exec-and-forget open -n /Applications/WezTerm.app/'
 alt-c = 'exec-and-forget open -n "/Applications/Google Chrome.app"'
 alt-shift-c = 'exec-and-forget open -n "/Applications/Cursor.app/"'
 alt-x = 'exec-and-forget open -n "/Applications/Firefox.app/"'
@@ -100,7 +100,7 @@ alt-ctrl-shift-l = 'move-node-to-monitor right'
 # Backend development specific shortcuts
 alt-shift-d = 'exec-and-forget open -n "/Applications/DBeaver.app"'  # DBeaver database client
 alt-m = 'exec-and-forget open -n "/Applications/MySQLWorkbench.app"'  # MySQL Workbench
-alt-shift-m = 'exec-and-forget open -n "/Applications/Activity Monitor.app"'  # System monitoring
+alt-a = 'exec-and-forget open -n "/System/Applications/Utilities/Activity Monitor.app"'  # System monitoring
 alt-shift-s = 'exec-and-forget screencapture -i -c'  # Screenshot to clipboard
 
 # Auto-assign applications to workspaces
@@ -117,7 +117,7 @@ if.app-id = 'com.vng.zalo'
 run = 'move-node-to-workspace 0'
 
 [[on-window-detected]]
-if.app-id = 'com.googlecode.iterm2'
+if.app-id = 'com.github.wez.wezterm'
 run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
@@ -146,7 +146,7 @@ run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
 if.app-id = 'com.oracle.workbench.MySQLWorkbench'
-run = 'move-node-to-workspace 4'  
+run = 'move-node-to-workspace 4' 
 
 [[on-window-detected]]
 if.app-id = 'com.apple.ActivityMonitor'
