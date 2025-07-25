@@ -1,80 +1,144 @@
-[general]
-mod = "option"                # Phím "mod" (modifier) mặc định, thường là Option (Alt) trên Mac
-mouse_follows_focus = true    # Chuột tự động di chuyển theo cửa sổ được focus
+# AeroSpace Configuration for DevOps Backend Development
+# Tối ưu cho backend development với multiple terminals, IDE, browsers, và monitoring tools
 
-[workspaces]
-names = ["1", "2", "3", "4", "5"]  # Đặt tên cho các workspace (mặc định là số)
+# Cấu hình chung
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
 
-[[keybindings]]
-key = "r"
-mods = ["mod"]
-command = "reload_config"     # Mod+r: Reload lại file cấu hình
+# Mouse follows focus (hữu ích cho multi-monitor setup)
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-[[keybindings]]
-key = "return"
-mods = ["mod"]
-command = "launch_terminal"   # Mod+Enter: Mở terminal mặc định
+# Startup commands
+after-startup-command = [
+    # JankyBorders để highlight focused windows
+    'exec-and-forget borders active_color=0xff7dc4e4 inactive_color=0xff363a4f width=3.0'
+]
 
-[[keybindings]]
-key = "d"
-mods = ["mod"]
-command = "launch_app"
-args = ["Google Chrome"]      # Mod+d: Mở Google Chrome
+# Workspace names - tối ưu cho backend dev workflow
+[workspace-to-monitor-force-assignment]
+1 = 'main'    # Terminal/Development
+2 = 'main'    # Browser/Documentation  
+3 = 'main'    # IDE/Code
+4 = 'main'    # Database/Redis clients
+5 = 'main'    # Monitoring/Logs
 
-[[keybindings]]
-key = "h"
-mods = ["mod"]
-command = "focus_left"        # Mod+h: Di chuyển focus sang cửa sổ bên trái
+# Key bindings - sử dụng Option làm modifier
+[mode.main.binding]
+# Reload config
+alt-r = 'reload-config'
 
-[[keybindings]]
-key = "l"
-mods = ["mod"]
-command = "focus_right"       # Mod+l: Di chuyển focus sang cửa sổ bên phải
+# Terminal và applications
+alt-enter = 'exec-and-forget open -n /Applications/iTerm.app'
+alt-c = 'exec-and-forget open -n "/Applications/Google Chrome.app"'
+alt-shift-c = 'exec-and-forget open -n "/Applications/Cursor.app/"'
+alt-s = 'exec-and-forget open -n "/Applications/Safari.app/"'
+alt-v = 'exec-and-forget open -n "/Applications/Visual Studio Code.app"'
 
-[[keybindings]]
-key = "j"
-mods = ["mod"]
-command = "focus_down"        # Mod+j: Di chuyển focus xuống dưới
+# Navigation between windows (vim-like)
+alt-h = 'focus left'
+alt-j = 'focus down' 
+alt-k = 'focus up'
+alt-l = 'focus right'
 
-[[keybindings]]
-key = "k"
-mods = ["mod"]
-command = "focus_up"          # Mod+k: Di chuyển focus lên trên
+# Close windows
+alt-q = 'close'
+alt-shift-q = 'close-all-windows-but-current'
 
-[[keybindings]]
-key = "q"
-mods = ["mod"]
-command = "close_window"      # Mod+q: Đóng cửa sổ hiện tại
+# Layout controls
+alt-space = 'layout floating tiling'  # Toggle floating/tiling
+alt-f = 'fullscreen'
+alt-t = 'layout tiles'
+alt-shift-t = 'layout accordion'
 
-[[keybindings]]
-key = "space"
-mods = ["mod"]
-command = "toggle_floating"   # Mod+Space: Chuyển đổi giữa floating và tiled
+# Move windows between workspaces
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2' 
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
 
-[[keybindings]]
-key = "f"
-mods = ["mod"]
-command = "toggle_fullscreen" # Mod+f: Chuyển đổi fullscreen
+# Switch to workspaces  
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
 
-[[keybindings]]
-key = "r"
-mods = ["mod"]
-command = "reload_config"     # Mod+r: Reload lại file cấu hình
+# Move windows within workspace
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
 
-[[keybindings]]
-key = "1"
-mods = ["mod"]
-command = "focus_workspace"
-args = [1]                    # Mod+1: Chuyển sang workspace 1
+# Resize windows
+alt-minus = 'resize smart -50'
+alt-equal = 'resize smart +50'
 
-# ... lặp lại cho các workspace khác (2, 3, 4, 5)
+# Window arrangement - sử dụng join-with thay vì split
+alt-shift-minus = 'join-with left'
+alt-shift-equal = 'join-with right'
+alt-shift-backslash = 'join-with up'
+alt-shift-slash = 'join-with down'
 
-[[rules]]
-app = "Google Chrome"
-workspace = 2                 # Khi mở Chrome, tự động chuyển sang workspace 2
+# Monitor navigation (for multi-monitor setups)
+alt-ctrl-h = 'focus-monitor left'
+alt-ctrl-l = 'focus-monitor right'
+alt-ctrl-shift-h = 'move-node-to-monitor left'
+alt-ctrl-shift-l = 'move-node-to-monitor right'
 
-[[rules]]
-app = "iTerm2"
-workspace = 1                 # Khi mở iTerm2, tự động chuyển sang workspace 1
+# Backend development specific shortcuts
+alt-shift-d = 'exec-and-forget open -n "/Applications/DBeaver.app"'  # DBeaver database client
+alt-d = 'exec-and-forget open -n "/Applications/MySQLWorkbench.app"'  # MySQL Workbench
+alt-m = 'exec-and-forget open -n "/Applications/Activity Monitor.app"'  # System monitoring
+alt-shift-s = 'exec-and-forget screencapture -i -c'  # Screenshot to clipboard
 
-# ... có thể thêm rules cho các app khác 
+# Auto-assign applications to workspaces
+[[on-window-detected]]
+if.app-id = 'com.googlecode.iterm2'
+run = 'move-node-to-workspace 1'  # Terminal to workspace 1
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 2'  # Browser to workspace 2
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = 'move-node-to-workspace 3'  # VS Code to workspace 3
+
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'org.jkiss.dbeaver.core.product'
+run = 'move-node-to-workspace 4'  # DBeaver to workspace 4
+
+[[on-window-detected]]
+if.app-id = 'com.oracle.workbench.MySQLWorkbench'
+run = 'move-node-to-workspace 4'  # MySQL Workbench to workspace 4
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'move-node-to-workspace 5'  # Monitoring to workspace 5
+
+[[on-window-detected]]
+if.app-id = 'com.docker.docker'
+run = 'move-node-to-workspace 4'  # Docker to workspace 4
+
+# Exec environment for development tools
+[exec]
+inherit-env-vars = true
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:${PATH}'
+
+# Gaps configuration - professional look
+[gaps]
+inner.horizontal = 12
+inner.vertical = 12
+outer.left = 12
+outer.bottom = 12
+outer.top = 12  # Space for menu bar
+outer.right = 12

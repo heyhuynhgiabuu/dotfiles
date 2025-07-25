@@ -3,6 +3,15 @@ local overrides = require("custom.configs.overrides")
 ---@type NvPluginSpec[]
 local plugins = {
 
+  -- Icons support for better UI
+  {
+    "nvim-tree/nvim-web-devicons",
+    opts = {
+      override = {},
+      default = true,
+    }
+  },
+
   -- Override plugin definition options
 
   {
@@ -231,54 +240,47 @@ local plugins = {
       dofile(vim.g.base46_cache .. "whichkey")
       local wk = require("which-key")
       
-      local default_opts = {
-        plugins = { 
-          spelling = true,
-          presets = {
-            operators = false, -- adds help for operators like d, y, ...
-            motions = false, -- adds help for motions
-            text_objects = false, -- help for text objects triggered after entering an operator
-            windows = true, -- default bindings on <c-w>
-            nav = true, -- misc bindings to work with windows
-            z = true, -- bindings for folds, spelling and others prefixed with z
-            g = true, -- bindings for prefixed with g
-          },
+      -- Simple, working config
+      wk.setup({
+        window = {
+          border = "rounded",
+          position = "bottom",
+          margin = { 1, 0, 1, 0 },
+          padding = { 2, 2, 2, 2 },
+          winblend = 0
         },
+        layout = {
+          height = { min = 4, max = 25 },
+          width = { min = 20, max = 50 },
+          spacing = 3,
+          align = "left",
+        },
+        ignore_missing = true,
+        show_help = true,
+        triggers = "auto",
         triggers_blacklist = {
           i = { "j", "k" },
           v = { "j", "k" },
         },
-        window = {
-          border = "rounded", -- none, single, double, shadow
-          position = "bottom", -- bottom, top
-          margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
-          padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
-          winblend = 0
-        },
-        layout = {
-          height = { min = 4, max = 25 }, -- min and max height of the columns
-          width = { min = 20, max = 50 }, -- min and max width of the columns
-          spacing = 3, -- spacing between columns
-          align = "left", -- align columns left, center or right
-        },
-      }
+      })
       
-      wk.setup(vim.tbl_deep_extend("force", default_opts, opts or {}))
-      
-      -- Register some basic leader key descriptions
-      wk.register({
-        ["<leader>"] = {
-          f = { name = "File" },
-          l = { name = "LSP" },
-          g = { name = "Git/Go" },
-          j = { name = "Java" },
-          t = { name = "Terminal" },
-          w = { name = "Window" },
-          b = { name = "Buffer" },
-          d = { name = "Debug" },
-          s = { name = "Search" },
-          h = { name = "Help" },
-        }
+      -- Register groups using add method
+      wk.add({
+        { "<leader>f", group = "File" },
+        { "<leader>l", group = "LSP" },
+        { "<leader>g", group = "Git/Go" },
+        { "<leader>j", group = "Java" },
+        { "<leader>t", group = "Terminal" },
+        { "<leader>w", group = "Window" },
+        { "<leader>b", group = "Buffer" },
+        { "<leader>d", group = "Debug" },
+        { "<leader>s", group = "Search" },
+        { "<leader>h", group = "Help" },
+        { "<leader>c", group = "Copilot" },
+        { "<leader>v", group = "View/Visual" },
+        { "<leader>vt", desc = "Show directory tree in floating window" },
+        { "<leader>tv", desc = "New vertical terminal" },
+        { "<leader>tn", desc = "Toggle line number" },
       })
     end,
   },
