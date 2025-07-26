@@ -1,0 +1,258 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "opencode",
+  "model": "github-copilot/gpt-4.1",
+  "share": "disabled",
+  "autoshare": false,
+  "autoupdate": true,
+  "instructions": [
+    "{file:AGENTS.md}"
+  ],
+  "agent": {
+    "security-audit": {
+      "description": "Quick security scan for backend code. Finds common vulns and compliance issues.",
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "{file:agent/security-audit.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "list": false,
+        "glob": false,
+        "webfetch": false,
+        "task": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "devops-deployer": {
+      "description": "Docker, deployments, and infrastructure helper. Minimal and secure configs only.",
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "{file:agent/devops-deployer.md}",
+      "tools": {
+        "bash": true,
+        "read": true,
+        "glob": false,
+        "grep": false,
+        "webfetch": false,
+        "task": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "api-reviewer": {
+      "description": "Backend API code review focused on performance, security, and clean architecture.",
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "{file:agent/api-reviewer.md}",
+      "tools": {
+        "bash": false,
+        "write": false,
+        "list": false,
+        "glob": false,
+        "webfetch": false,
+        "task": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "docs-writer": {
+      "description": "Essential docs only. Short, practical, developer-friendly.",
+      "model": "github-copilot/gpt-4.1",
+      "prompt": "{file:agent/docs-writer.md}",
+      "tools": {
+        "bash": false,
+        "edit": true,
+        "glob": false,
+        "webfetch": false,
+        "task": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "backend-troubleshooter": {
+      "description": "Debug backend issues and analyze logs. Quick, actionable solutions.",
+      "model": "github-copilot/gpt-4.1",
+      "prompt": "{file:agent/backend-troubleshooter.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "glob": true,
+        "grep": true,
+        "webfetch": false,
+        "task": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "simple-researcher": {
+      "description": "Find code examples and solutions when obvious searches fail.",
+      "model": "github-copilot/gemini-2.5-pro",
+      "prompt": "{file:agent/simple-researcher.md}",
+      "tools": {
+        "todowrite": false,
+        "todoread": false
+      }
+    }
+  },
+  "mode": {
+    "build": {
+      "description": "Full development mode with write access",
+      "model": "github-copilot/gemini-2.5-pro",
+      "temperature": 0.3,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "patch": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "plan": {
+      "description": "Restricted mode for planning and analysis.",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.3,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "patch": false,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true
+      }
+    },
+    "daily": {
+      "description": "Daily development mode with full access using GPT-4.1 (Copilot Education).",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.3,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "patch": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "review": {
+      "description": "Code review mode - read-only analysis.",
+      "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0.2,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "patch": false,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "security": {
+      "description": "Security-focused analysis mode.",
+      "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0.1,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "patch": false,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "debug": {
+      "description": "Debugging and troubleshooting mode.",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.2,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "patch": false,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "docs": {
+      "description": "Documentation writing mode.",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.4,
+      "prompt": "{file:AGENTS.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": false,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "list": true,
+        "patch": false,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    }
+  },
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp@latest"],
+      "enabled": true,
+      "environment": {
+        "DEFAULT_MINIMUM_TOKENS": "2000"
+      }
+    },
+    "serena": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena-mcp-server", "--context", "ide-assistant", "--project", "$(pwd)", "--dashboard", "true"],
+      "enabled": false,
+      "environment": {
+        "SERENA_READ_ONLY": "true"
+      }
+    },
+    "docker-mcp-toolkit": {
+      "type": "local",
+      "command": ["docker", "mcp", "gateway", "run"],
+      "enabled": false,
+      "environment": {
+        "MCP_GITHUB_OAUTH": "true"
+      }
+    },
+    "git-context": {
+      "type": "remote",
+      "url": "https://gitmcp.io/heyhuynhgiabuu/dotfiles"
+    }
+  }
+}

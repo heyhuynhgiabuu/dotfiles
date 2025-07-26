@@ -3,3 +3,4 @@
 .tmux/plugins/
 .tmux/plugins/
 .config/nvim/nvim
+.env
