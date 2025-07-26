@@ -57,6 +57,10 @@ dotfiles/
 │   ├── tmux-java-layout.sh
 │   └── update-nvchad.sh
 ├── AGENTS.md                    # Agent guidelines for dotfiles
+├── opencode/                    # Opencode agent configs and automation settings
+│   ├── AGENTS.md                # Agent guidelines and commit policy for automation
+│   ├── agent/                   # Individual agent config files
+│   └── opencode.json            # Opencode agent and mode configuration
 └── README.md                    # This file
 ```
 
@@ -101,6 +105,9 @@ dotfiles/
 
 ### Agent Guidelines
 - **AGENTS.md**: Contributing and commit message policy for dotfiles agents
+
+### Opencode Agent Automation
+- Agent guidelines, config files, and automation settings in `opencode/` for advanced workflows
 
 ### Scripts
 - All scripts symlinked to `~/.bin` and added to PATH
