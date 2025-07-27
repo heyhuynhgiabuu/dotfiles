@@ -1,5 +1,4 @@
 # Add custom ENV values here to export
-export GOPATH="$HOME/go"
 export M2_HOME="$HOME/apache-maven-3.8.8"
 
 # Add ~/.bin to PATH
@@ -19,6 +18,7 @@ export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 
 # Go development environment
 export GOPATH=$HOME/go
-export GOROOT=$(go env GOROOT 2>/dev/null || echo "/usr/local/go")
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+# Use Homebrew Go (no need to set GOROOT manually)
+export PATH="$PATH:$GOPATH/bin"
+unset GOROOT
 
