@@ -10,11 +10,11 @@ local on_attach = function(client, bufnr)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end
 
-  -- Basic LSP keymaps
+  -- Basic LSP keymaps - fixing overlaps with which-key warnings
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts "Hover")
-  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
+  vim.keymap.set("n", "gri", vim.lsp.buf.implementation, opts "Go to implementation")
   vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts "Show signature")
   vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
   vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
@@ -22,9 +22,9 @@ local on_attach = function(client, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, opts "List workspace folders")
   vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, opts "Go to type definition")
-  vim.keymap.set("n", "<space>ra", vim.lsp.buf.rename, opts "NvRenamer")
-  vim.keymap.set({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, opts "Code action")
-  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts "Show references")
+  vim.keymap.set("n", "grn", vim.lsp.buf.rename, opts "LSP rename")
+  vim.keymap.set({ "n", "v" }, "gra", vim.lsp.buf.code_action, opts "Code action")
+  vim.keymap.set("n", "grr", vim.lsp.buf.references, opts "Show references")
 
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')

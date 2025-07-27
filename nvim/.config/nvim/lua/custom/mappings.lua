@@ -6,7 +6,8 @@ local map = vim.keymap.set
 
 -- Basic mappings
 map("n", ";", ":", { desc = "CMD enter command mode" })
-map("i", "jk", "<ESC>", { desc = "Exit insert mode" })
+-- Remove jk mapping to avoid conflict with j
+-- map("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 
 -- General navigation
 map("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })

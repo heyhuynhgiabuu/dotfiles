@@ -226,7 +226,12 @@ local plugins = {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
     config = function()
-      require("better_escape").setup()
+      require("better_escape").setup({
+        mapping = {"jk", "jj"}, -- map jk and jj to escape
+        timeout = vim.o.timeoutlen,
+        clear_empty_lines = false,
+        keys = "<Esc>",
+      })
     end,
   },
 
@@ -240,27 +245,65 @@ local plugins = {
       dofile(vim.g.base46_cache .. "whichkey")
       local wk = require("which-key")
       
-      -- Simple, working config
+      -- Updated config for which-key v3+
       wk.setup({
-        window = {
+        preset = "modern",
+        delay = 200,
+        expand = 1,
+        notify = true,
+        -- Key mappings are now configured using spec
+        spec = {},
+        -- Icons configuration
+        icons = {
+          breadcrumb = "»",
+          separator = "➜", 
+          group = "+",
+          ellipsis = "…",
+          mappings = true,
+          rules = {},
+          colors = true,
+          keys = {
+            Up = " ",
+            Down = " ",
+            Left = " ",
+            Right = " ",
+            C = "󰘴 ",
+            M = "󰘵 ",
+            D = "󰘳 ",
+            S = "󰘶 ",
+            CR = "󰌑 ",
+            Esc = "󱊷 ",
+            ScrollWheelDown = "󱕐 ",
+            ScrollWheelUp = "󱕑 ",
+            NL = "󰌑 ",
+            BS = "󰁮",
+            Space = "󱁐 ",
+            Tab = "󰌒 ",
+          },
+        },
+        win = {
           border = "rounded",
-          position = "bottom",
-          margin = { 1, 0, 1, 0 },
-          padding = { 2, 2, 2, 2 },
-          winblend = 0
+          padding = { 1, 2 },
+          wo = {
+            winblend = 0,
+          },
         },
         layout = {
-          height = { min = 4, max = 25 },
-          width = { min = 20, max = 50 },
+          width = { min = 20 },
           spacing = 3,
-          align = "left",
         },
-        ignore_missing = true,
-        show_help = true,
-        triggers = "auto",
-        triggers_blacklist = {
-          i = { "j", "k" },
-          v = { "j", "k" },
+        keys = {
+          scroll_down = "<c-d>",
+          scroll_up = "<c-u>",
+        },
+        sort = { "local", "order", "group", "alphanum", "mod" },
+        expand = 0,
+        replace = {
+          key = {
+            function(key)
+              return require("which-key.view").format(key)
+            end,
+          },
         },
       })
       
