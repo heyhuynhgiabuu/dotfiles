@@ -202,7 +202,7 @@ local plugins = {
         verbose = false,
         log_path = vim.fn.expand("$HOME") .. "/tmp/gonvim.log",
         lsp_cfg = false, -- We handle LSP config separately
-        lsp_gofumpt = true,
+        lsp_gofumpt = false, -- Disable auto-formatting to avoid conflicts
         lsp_on_attach = false, -- We handle this in lsp-config
         dap_debug = true,
       })

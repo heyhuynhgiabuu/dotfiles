@@ -1,5 +1,5 @@
 -- Enhanced LSP configuration with Go and Java optimizations
-local ok, lspconfig = pcall(require, "nvim-lspconfig")
+local ok, lspconfig = pcall(require, "lspconfig")
 if not ok then
   return
 end
@@ -78,16 +78,17 @@ lspconfig.gopls.setup {
   on_attach = function(client, bufnr)
     on_attach(client, bufnr)
     
-    -- Enable format on save for Go files
-    if client.supports_method("textDocument/formatting") then
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = vim.api.nvim_create_augroup("GoFormat", {}),
-        buffer = bufnr,
-        callback = function()
-          vim.lsp.buf.format({ bufnr = bufnr })
-        end,
-      })
-    end
+    -- Manual format only (disabled auto-format to avoid errors with incomplete code)
+    -- Use <space>fm to format manually when needed
+    -- if client.supports_method("textDocument/formatting") then
+    --   vim.api.nvim_create_autocmd("BufWritePre", {
+    --     group = vim.api.nvim_create_augroup("GoFormat", {}),
+    --     buffer = bufnr,
+    --     callback = function()
+    --       vim.lsp.buf.format({ bufnr = bufnr })
+    --     end,
+    --   })
+    -- end
   end,
   capabilities = capabilities,
   cmd = { "gopls" },

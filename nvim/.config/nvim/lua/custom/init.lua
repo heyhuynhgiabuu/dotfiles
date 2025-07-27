@@ -5,10 +5,8 @@
 require "custom.options"
 require "custom.mappings"
 
--- Load LSP config after plugins are ready
-vim.defer_fn(function()
-  pcall(require, "custom.lsp-config")
-end, 100)
+-- LSP config is now handled in plugins/configs/lspconfig.lua
+-- Custom configs can be added there if needed
 
 -- Load optional custom modules with error handling
 local optional_modules = {

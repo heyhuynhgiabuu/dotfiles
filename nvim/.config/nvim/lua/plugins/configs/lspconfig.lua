@@ -53,3 +53,43 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+-- Enhanced Go language server configuration
+lspconfig.gopls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = { "gopls" },
+  settings = {
+    gopls = {
+      -- Enhanced postfix completions for better suggestions
+      experimentalPostfixCompletions = true,
+      -- Enable all available completions
+      completeUnimported = true,
+      usePlaceholders = true,
+      deepCompletion = true,
+      -- Analysis settings
+      analyses = {
+        unusedparams = true,
+        shadow = true,
+        fieldalignment = true,
+        nilness = true,
+        useany = true,
+      },
+      staticcheck = true,
+      gofumpt = true,
+      -- Better import organization
+      ["local"] = "github.com/yourname",
+      goimports = true,
+      -- Enhanced hints
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+    },
+  },
+}
