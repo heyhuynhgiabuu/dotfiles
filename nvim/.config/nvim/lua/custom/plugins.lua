@@ -177,6 +177,23 @@ local plugins = {
           { name = "path" },
         })
       })
+      
+      -- Enhanced Command Line Completion
+      cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' }
+        }
+      })
+      
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          { name = 'cmdline' }
+        })
+      })
     end,
   },
 
@@ -755,6 +772,198 @@ local plugins = {
     end,
     event = "VeryLazy",
     cmd = { "Augment" },
+  },
+
+  -- UI Enhancement Plugins for IntelliJ-like Experience
+  
+  -- LSP Progress Notifications (shows "ServiceReady", "Configuring DAP", etc.)
+  {
+    "j-hui/fidget.nvim",
+    event = "VimEnter",
+    config = function()
+      require("fidget").setup({
+        notification = {
+          window = {
+            normal_hl = "Comment",
+            winblend = 0,
+            border = "none",
+            zindex = 45,
+            max_width = 0,
+            max_height = 0,
+            x_padding = 1,
+            y_padding = 0,
+            align = "bottom",
+            relative = "editor",
+          },
+          view = {
+            stack_upwards = false,
+            icon_separator = " ",
+            group_separator = "---",
+            group_separator_hl = "Comment",
+          },
+        },
+        progress = {
+          poll_rate = 0,
+          suppress_on_insert = false,
+          ignore_done_already = false,
+          ignore_empty_message = false,
+          clear_on_detach = function(client_id)
+            local client = vim.lsp.get_client_by_id(client_id)
+            return client and client.name or nil
+          end,
+          notification_group = function(msg)
+            return msg.lsp_client.name
+          end,
+          ignore = {},
+          display = {
+            render_limit = 16,
+            done_ttl = 3,
+            done_icon = "✓",
+            done_style = "Constant",
+            progress_ttl = math.huge,
+            progress_icon = { pattern = "dots", period = 1 },
+            progress_style = "WarningMsg",
+            group_style = "Title",
+            icon_style = "Question",
+            priority = 30,
+            skip_history = true,
+            format_message = require("fidget.progress.display").default_format_message,
+            format_annote = function(msg)
+              return msg.title
+            end,
+            format_group_name = function(group)
+              return tostring(group)
+            end,
+            overrides = {
+              rust_analyzer = { name = "rust-analyzer" },
+              jdtls = { name = "☕ Java LSP" },
+            },
+          },
+        },
+        integration = {
+          ["nvim-tree"] = {
+            enable = true,
+          },
+        },
+        logger = {
+          level = vim.log.levels.WARN,
+          max_size = 10000,
+          float_precision = 0.01,
+          path = string.format("%s/fidget.nvim.log", vim.fn.stdpath("cache")),
+        },
+      })
+    end,
+  },
+
+  -- Enhanced Notifications (replaces basic vim.notify)
+  {
+    "rcarriga/nvim-notify",
+    event = "VimEnter",
+    config = function()
+      require("notify").setup({
+        background_colour = "#000000",
+        fps = 30,
+        icons = {
+          DEBUG = "",
+          ERROR = "",
+          INFO = "",
+          TRACE = "✎",
+          WARN = ""
+        },
+        level = 2,
+        minimum_width = 50,
+        render = "compact",
+        stages = "fade_in_slide_out",
+        time_formats = {
+          notification = "%T",
+          notification_history = "%FT%T"
+        },
+        timeout = 3000,
+        top_down = true
+      })
+      
+      -- Set nvim-notify as default notification handler
+      vim.notify = require("notify")
+      
+      -- Key mapping to view notification history
+      vim.keymap.set("n", "<leader>nh", function()
+        require("notify").history()
+      end, { desc = "Show notification history" })
+      
+      -- Key mapping to dismiss all notifications
+      vim.keymap.set("n", "<leader>nd", function()
+        require("notify").dismiss({ silent = true, pending = true })
+      end, { desc = "Dismiss all notifications" })
+    end,
+  },
+
+  -- Diagnostics Panel (for validation messages and error display)
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VimEnter",
+    config = function()
+      require("trouble").setup({
+        position = "bottom",
+        height = 10,
+        width = 50,
+        icons = true,
+        mode = "workspace_diagnostics",
+        severity = nil,
+        fold_open = "",
+        fold_closed = "",
+        group = true,
+        padding = true,
+        cycle_results = true,
+        action_keys = {
+          close = "q",
+          cancel = "<esc>",
+          refresh = "r",
+          jump = { "<cr>", "<tab>" },
+          open_split = { "<c-x>" },
+          open_vsplit = { "<c-v>" },
+          open_tab = { "<c-t>" },
+          jump_close = { "o" },
+          toggle_mode = "m",
+          switch_severity = "s",
+          toggle_preview = "P",
+          hover = "K",
+          preview = "p",
+          open_code_href = "c",
+          close_folds = { "zM", "zm" },
+          open_folds = { "zR", "zr" },
+          toggle_fold = { "zA", "za" },
+          previous = "k",
+          next = "j",
+          help = "?"
+        },
+        multiline = true,
+        indent_lines = true,
+        win_config = { border = "single" },
+        auto_open = false,
+        auto_close = false,
+        auto_preview = true,
+        auto_fold = false,
+        auto_jump = { "lsp_definitions" },
+        include_declaration = true,
+        signs = {
+          error = "",
+          warning = "",
+          hint = "",
+          information = "",
+          other = "",
+        },
+        use_diagnostic_signs = true
+      })
+      
+      -- Key mappings for trouble
+      vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end, { desc = "Toggle Trouble" })
+      vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end, { desc = "Workspace Diagnostics" })
+      vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end, { desc = "Document Diagnostics" })
+      vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end, { desc = "Quickfix" })
+      vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end, { desc = "Location List" })
+      vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end, { desc = "LSP References" })
+    end,
   },
 
   -- To make a plugin not be loaded
