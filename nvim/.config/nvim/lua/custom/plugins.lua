@@ -225,7 +225,12 @@ local plugins = {
       "neovim/nvim-lspconfig",
       "mfussenegger/nvim-dap",
       {
+        "JavaHello/spring-boot.nvim",
+        commit = "218c0c26c14d99feca778e4d13f5ec3e8b1b60f0",
+      },
+      {
         "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
         config = function()
           require("dapui").setup({
             -- Enhanced DAP UI for better debugging experience
@@ -266,12 +271,8 @@ local plugins = {
       },
       {
         "williamboman/mason.nvim",
-        opts = {
-          registries = {
-            "github:nvim-java/mason-registry",
-            "github:mason-org/mason-registry",
-          },
-        },
+        -- nvim-java handles registry configuration automatically
+        -- Do not override registries here to avoid conflicts
       },
     },
     ft = { "java" },
