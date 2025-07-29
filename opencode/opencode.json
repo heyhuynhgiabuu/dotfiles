@@ -1,12 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "opencode",
-  "model": "github-copilot/gpt-4.1",
+  "model": "github-copilot/gemini-2.5-pro",
   "share": "disabled",
   "autoshare": false,
   "autoupdate": true,
   "instructions": [
-    "{file:AGENTS.md}"
+    "AGENTS.md",
+    "prompts/global-assistant.md"
   ],
   "agent": {
     "security-audit": {
@@ -16,10 +17,8 @@
       "tools": {
         "write": false,
         "edit": false,
-        "list": false,
-        "glob": false,
+        "bash": false,
         "webfetch": false,
-        "task": false,
         "todowrite": false,
         "todoread": false
       }
@@ -29,12 +28,9 @@
       "model": "github-copilot/gemini-2.5-pro",
       "prompt": "{file:agent/devops-deployer.md}",
       "tools": {
-        "bash": true,
-        "read": true,
-        "glob": false,
-        "grep": false,
+        "write": false,
+        "edit": false,
         "webfetch": false,
-        "task": false,
         "todowrite": false,
         "todoread": false
       }
@@ -44,12 +40,10 @@
       "model": "github-copilot/claude-sonnet-4",
       "prompt": "{file:agent/api-reviewer.md}",
       "tools": {
-        "bash": false,
         "write": false,
-        "list": false,
-        "glob": false,
+        "edit": false,
+        "bash": false,
         "webfetch": false,
-        "task": false,
         "todowrite": false,
         "todoread": false
       }
@@ -60,10 +54,7 @@
       "prompt": "{file:agent/docs-writer.md}",
       "tools": {
         "bash": false,
-        "edit": true,
-        "glob": false,
         "webfetch": false,
-        "task": false,
         "todowrite": false,
         "todoread": false
       }
@@ -75,10 +66,8 @@
       "tools": {
         "write": false,
         "edit": false,
-        "glob": true,
-        "grep": true,
+        "bash": false,
         "webfetch": false,
-        "task": false,
         "todowrite": false,
         "todoread": false
       }
@@ -88,6 +77,37 @@
       "model": "github-copilot/gemini-2.5-pro",
       "prompt": "{file:agent/simple-researcher.md}",
       "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "context-analyst": {
+      "description": "Analyze OpenCode context management, caching, and billing integration.",
+      "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0.2, 
+      "prompt": "{file:agent/context_analyst.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "webfetch": true,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "session-summarizer": {
+      "description": "Create concise, actionable conversation summaries for OpenCode sessions.",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.2,
+      "prompt": "{file:agent/session-summarizer.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "webfetch": false,
         "todowrite": false,
         "todoread": false
       }
@@ -100,33 +120,24 @@
       "temperature": 0.3,
       "prompt": "{file:AGENTS.md}",
       "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": true,
-        "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
       }
     },
     "plan": {
       "description": "Restricted mode for planning and analysis.",
       "model": "github-copilot/gpt-4.1",
-      "temperature": 0.3,
+      "temperature": 0.2,
       "prompt": "{file:AGENTS.md}",
       "tools": {
         "write": false,
         "edit": false,
         "bash": false,
         "patch": false,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
       }
     },
     "daily": {
@@ -135,17 +146,9 @@
       "temperature": 0.3,
       "prompt": "{file:AGENTS.md}",
       "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
-        "patch": true,
-        "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
       }
     },
     "review": {
@@ -157,12 +160,8 @@
         "write": false,
         "edit": false,
         "bash": false,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
         "patch": false,
-        "webfetch": false,
+        "webfetch": true,
         "todowrite": false,
         "todoread": false
       }
@@ -176,12 +175,8 @@
         "write": false,
         "edit": false,
         "bash": false,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
         "patch": false,
-        "webfetch": false,
+        "webfetch": true,
         "todowrite": false,
         "todoread": false
       }
@@ -194,15 +189,10 @@
       "tools": {
         "write": false,
         "edit": false,
-        "bash": true,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
         "patch": false,
-        "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
       }
     },
     "docs": {
@@ -211,17 +201,33 @@
       "temperature": 0.4,
       "prompt": "{file:AGENTS.md}",
       "tools": {
-        "write": true,
-        "edit": true,
         "bash": false,
-        "read": true,
-        "grep": true,
-        "glob": true,
-        "list": true,
         "patch": false,
-        "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
+      }
+    },
+    "enhanced": {
+      "description": "Enhanced mode with comprehensive expertise and autonomous operation",
+      "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0.3,
+      "prompt": "{file:prompts/global-assistant.md}",
+      "tools": {
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
+      }
+    },
+    "dotfiles": {
+      "description": "Specialized dotfiles development mode",
+      "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0.3,
+      "prompt": "{file:prompts/enhanced-development-assistant.md}",
+      "tools": {
+        "webfetch": true,
+        "todowrite": true,
+        "todoread": true
       }
     }
   },

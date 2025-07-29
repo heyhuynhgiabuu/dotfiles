@@ -1,0 +1,131 @@
+# AugmentCode .augmentignore
+# Global ignore patterns for all AugmentCode workspaces
+# These patterns will be applied across all projects
+
+# Build outputs and compiled files
+build/
+dist/
+target/
+out/
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+*.class
+*.jar
+*.war
+*.ear
+*.o
+*.obj
+*.lib
+*.a
+
+# Dependency directories  
+node_modules/
+bower_components/
+vendor/
+.bundle/
+.pnp/
+.pnp.js
+
+# Package managers
+package-lock.json
+yarn.lock
+Pipfile.lock
+Gemfile.lock
+composer.lock
+poetry.lock
+
+# Environment and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.key
+*.pem
+*.p12
+*.crt
+*.csr
+secrets.json
+credentials.json
+
+# Local state and secrets directories
+.local/
+**/.local/
+**/secrets.json
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.cache
+
+# IDE and editor files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+
+# Version control
+.git/
+.svn/
+.hg/
+.bzr/
+
+# Testing and coverage
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# Documentation generation
+docs/_build/
+site/
+.jekyll-cache/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Large media files (include specific ones if needed for context)
+*.mp4
+*.avi
+*.mov
+*.mp3
+*.wav
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.ico
+*.svg
+
+# Include patterns (override ignore with ! prefix if needed)
+# !important-config.json
+# !docs/api.md

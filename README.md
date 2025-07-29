@@ -8,6 +8,7 @@ development environment. Features:
 - **Tmux:** Vi-style navigation, session management, Copilot integration, and custom layouts for Go/Java.
 - **WezTerm:** Themed terminal with macOS keybindings, workspace switching, and performance tweaks.
 - **Aerospace:** Window manager configuration for efficient workspace and app launching.
+- **AugmentCode:** AI-powered code completions and context-aware chat directly in Neovim.
 - **Scripts:** Bootstrap, install, update, and workspace automation for development workflows.
 - **Docs:** Guides for enhanced setup, Copilot, Go/Java, and troubleshooting.
 
@@ -37,11 +38,17 @@ dotfiles/
 │   └── .config/aerospace/aerospace.toml
 ├── wezterm/                     # WezTerm terminal configuration
 │   └── .config/wezterm/wezterm.lua
+├── augment/                     # AugmentCode AI configuration (stow-managed)
+│   ├── .config/augment/         # Global AugmentCode settings
+│   ├── .local/share/vim-augment/ # Data and cache directory
+│   ├── .augmentignore           # Global ignore patterns
+│   └── README.md                # AugmentCode setup and usage guide
 ├── docs/                        # Documentation and guides
 │   ├── enhanced-development-setup.md
 │   ├── github-copilot-integration.md
 │   ├── go-backend-vietnamese-reference.md
-│   └── go-learning-roadmap.md
+│   ├── go-learning-roadmap.md
+│   └── augmentcode-integration.md  # AugmentCode AI setup guide
 ├── scripts/                     # Installation and maintenance scripts
 │   ├── bootstrap.sh
 │   ├── dev-layout.sh
@@ -53,6 +60,9 @@ dotfiles/
 │   ├── setup-copilot.sh
 │   ├── setup-enhanced-dev.sh
 │   ├── setup-go.sh
+│   ├── setup-augmentcode.sh     # AugmentCode AI setup automation
+│   ├── setup-augment-config.sh  # AugmentCode stow configuration
+│   ├── test-augment-config.sh   # Test AugmentCode configuration
 │   ├── tmux-go-layout.sh
 │   ├── tmux-java-layout.sh
 │   └── update-nvchad.sh
@@ -126,6 +136,7 @@ dotfiles/
 | `setup-copilot.sh`    | GitHub Copilot setup for Neovim             |
 | `setup-enhanced-dev.sh`| Enhanced Go/Java dev environment setup      |
 | `setup-go.sh`         | Go development environment setup            |
+| `setup-augmentcode.sh`| AugmentCode AI integration setup            |
 | `tmux-go-layout.sh`   | Tmux layout for Go projects                 |
 | `tmux-java-layout.sh` | Tmux layout for Java projects               |
 | `nvchad-quick-reference.md` | NvChad quick reference guide           |
@@ -176,6 +187,7 @@ dotfiles/
 - [Quick Reference](scripts/nvchad-quick-reference.md)
 - [Agent Guidelines](AGENTS.md)
 - [Enhanced Development Setup](docs/enhanced-development-setup.md)
+- [AugmentCode AI Integration](docs/augmentcode-integration.md)
 - [WezTerm Configuration](wezterm/.config/wezterm/wezterm.lua)
 - [Aerospace Configuration](aerospace/.config/aerospace/aerospace.toml)
 

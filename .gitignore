@@ -1,6 +1,11 @@
 .tmux/plugins/
-.tmux/plugins/
-.tmux/plugins/
-.tmux/plugins/
 .config/nvim/nvim
 .env
+
+# Secrets and local state (contains authentication keys)
+.local/
+**/secrets.json
+**/.local/
+
+# Deprecated files and old configurations
+deprecated/
