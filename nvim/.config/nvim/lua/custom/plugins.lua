@@ -212,12 +212,218 @@ local plugins = {
     build = ':lua require("go.install").update_all_sync()',
   },
 
-  -- Java development enhancements
+  -- Enhanced Java development with nvim-java (IntelliJ-like experience)
   {
-    "mfussenegger/nvim-jdtls",
-    ft = "java",
+    "nvim-java/nvim-java",
+    dependencies = {
+      "nvim-java/lua-async-await",
+      "nvim-java/nvim-java-refactor",
+      "nvim-java/nvim-java-core",
+      "nvim-java/nvim-java-test",
+      "nvim-java/nvim-java-dap",
+      "MunifTanjim/nui.nvim",
+      "neovim/nvim-lspconfig",
+      "mfussenegger/nvim-dap",
+      {
+        "rcarriga/nvim-dap-ui",
+        config = function()
+          require("dapui").setup({
+            -- Enhanced DAP UI for better debugging experience
+            layouts = {
+              {
+                elements = {
+                  { id = "scopes", size = 0.25 },
+                  { id = "breakpoints", size = 0.25 },
+                  { id = "stacks", size = 0.25 },
+                  { id = "watches", size = 0.25 },
+                },
+                position = "left",
+                size = 40
+              },
+              {
+                elements = {
+                  { id = "repl", size = 0.5 },
+                  { id = "console", size = 0.5 },
+                },
+                position = "bottom",
+                size = 10
+              }
+            },
+          })
+          
+          -- Auto-open/close DAP UI
+          local dap, dapui = require("dap"), require("dapui")
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open()
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close()
+          end
+          dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close()
+          end
+        end,
+      },
+      {
+        "williamboman/mason.nvim",
+        opts = {
+          registries = {
+            "github:nvim-java/mason-registry",
+            "github:mason-org/mason-registry",
+          },
+        },
+      },
+    },
+    ft = { "java" },
     config = function()
-      -- JDTLS configuration is handled by ftplugin/java.lua
+      -- Setup nvim-java BEFORE lspconfig (critical for proper initialization)
+      require("java").setup({
+        -- Enhanced configuration for better IntelliJ-like experience
+        root_markers = {
+          'settings.gradle',
+          'settings.gradle.kts', 
+          'pom.xml',
+          'build.gradle',
+          'build.gradle.kts',
+          'mvnw',
+          'gradlew',
+          '.git',
+        },
+        
+        -- Use latest stable versions
+        jdtls = {
+          version = 'v1.43.0',
+        },
+        
+        -- Enable all modern Java development features
+        java_test = {
+          enable = true,
+          version = '0.40.1',
+        },
+        
+        java_debug_adapter = {
+          enable = true,
+          version = '0.58.1',
+        },
+        
+        spring_boot_tools = {
+          enable = true,
+          version = '1.55.1',
+        },
+        
+        lombok = {
+          version = 'nightly',
+        },
+        
+        -- Auto-install JDK for convenience
+        jdk = {
+          auto_install = true,
+          version = '17.0.2', -- LTS version, good for most projects
+        },
+        
+        -- Enhanced notifications
+        notifications = {
+          dap = true,
+        },
+        
+        verification = {
+          invalid_order = true,
+          duplicate_setup_calls = true,
+          invalid_mason_registry = false,
+        },
+      })
+      
+      -- Setup lspconfig AFTER nvim-java (critical order)
+      require('lspconfig').jdtls.setup({
+        -- nvim-java handles all the JDTLS configuration automatically
+        -- You can add custom settings here if needed
+        settings = {
+          java = {
+            -- Enhanced Java settings for better IntelliJ-like experience
+            signatureHelp = { enabled = true },
+            maven = { downloadSources = true },
+            referencesCodeLens = { enabled = true },
+            references = { includeDecompiledSources = true },
+            inlayHints = {
+              parameterNames = { enabled = 'all' },
+            },
+            format = { enabled = true }, -- Enable formatting
+            saveActions = {
+              organizeImports = true,
+            },
+          },
+        },
+      })
+      
+      -- Enhanced DAP configuration for Java debugging
+      local dap = require('dap')
+      
+      -- Java-specific DAP keymaps (IntelliJ-style)
+      local keymap = vim.keymap.set
+      
+      -- === BUILD & RUN (like IntelliJ) ===
+      keymap("n", "<leader>jr", "<cmd>JavaRunnerRunMain<CR>", { desc = "Java - Run Main Class" })
+      keymap("n", "<leader>js", "<cmd>JavaRunnerStopMain<CR>", { desc = "Java - Stop Running Application" })
+      keymap("n", "<leader>jl", "<cmd>JavaRunnerToggleLogs<CR>", { desc = "Java - Toggle Logs" })
+      keymap("n", "<leader>jb", "<cmd>JavaBuildBuildWorkspace<CR>", { desc = "Java - Build Workspace" })
+      keymap("n", "<leader>jc", "<cmd>JavaBuildCleanWorkspace<CR>", { desc = "Java - Clean Workspace" })
+      
+      -- === TESTING (like IntelliJ Test Runner) ===
+      keymap("n", "<leader>jtc", "<cmd>JavaTestRunCurrentClass<CR>", { desc = "Java - Run Test Class" })
+      keymap("n", "<leader>jtm", "<cmd>JavaTestRunCurrentMethod<CR>", { desc = "Java - Run Test Method" })
+      keymap("n", "<leader>jtd", "<cmd>JavaTestDebugCurrentClass<CR>", { desc = "Java - Debug Test Class" })
+      keymap("n", "<leader>jtM", "<cmd>JavaTestDebugCurrentMethod<CR>", { desc = "Java - Debug Test Method" })
+      keymap("n", "<leader>jtr", "<cmd>JavaTestViewLastReport<CR>", { desc = "Java - View Test Report" })
+      
+      -- === REFACTORING (like IntelliJ Refactor menu) ===
+      keymap("n", "<leader>jxv", "<cmd>JavaRefactorExtractVariable<CR>", { desc = "Java - Extract Variable" })
+      keymap("v", "<leader>jxv", "<cmd>JavaRefactorExtractVariable<CR>", { desc = "Java - Extract Variable" })
+      keymap("n", "<leader>jxV", "<cmd>JavaRefactorExtractVariableAllOccurrence<CR>", { desc = "Java - Extract Variable (All)" })
+      keymap("v", "<leader>jxV", "<cmd>JavaRefactorExtractVariableAllOccurrence<CR>", { desc = "Java - Extract Variable (All)" })
+      keymap("n", "<leader>jxc", "<cmd>JavaRefactorExtractConstant<CR>", { desc = "Java - Extract Constant" })
+      keymap("v", "<leader>jxc", "<cmd>JavaRefactorExtractConstant<CR>", { desc = "Java - Extract Constant" })
+      keymap("n", "<leader>jxm", "<cmd>JavaRefactorExtractMethod<CR>", { desc = "Java - Extract Method" })
+      keymap("v", "<leader>jxm", "<cmd>JavaRefactorExtractMethod<CR>", { desc = "Java - Extract Method" })
+      keymap("n", "<leader>jxf", "<cmd>JavaRefactorExtractField<CR>", { desc = "Java - Extract Field" })
+      keymap("v", "<leader>jxf", "<cmd>JavaRefactorExtractField<CR>", { desc = "Java - Extract Field" })
+      
+      -- === DEBUGGING (like IntelliJ Debugger) ===
+      keymap("n", "<leader>jd", "<cmd>JavaDapConfig<CR>", { desc = "Java - Configure DAP" })
+      
+      -- Standard DAP controls (like IntelliJ debug toolbar)
+      keymap("n", "<F5>", function() dap.continue() end, { desc = "Debug - Continue" })
+      keymap("n", "<F6>", function() dap.step_over() end, { desc = "Debug - Step Over" })
+      keymap("n", "<F7>", function() dap.step_into() end, { desc = "Debug - Step Into" })
+      keymap("n", "<F8>", function() dap.step_out() end, { desc = "Debug - Step Out" })
+      keymap("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Debug - Toggle Breakpoint" })
+      keymap("n", "<leader>dB", function() 
+        dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) 
+      end, { desc = "Debug - Set Conditional Breakpoint" })
+      keymap("n", "<leader>dr", function() dap.repl.open() end, { desc = "Debug - Open REPL" })
+      keymap("n", "<leader>du", function() require("dapui").toggle() end, { desc = "Debug - Toggle UI" })
+      
+      -- === PROFILES & SETTINGS (like IntelliJ Run Configurations) ===
+      keymap("n", "<leader>jp", "<cmd>JavaProfile<CR>", { desc = "Java - Open Profiles" })
+      keymap("n", "<leader>jk", "<cmd>JavaSettingsChangeRuntime<CR>", { desc = "Java - Change JDK Runtime" })
+      
+      -- === QUICK ACCESS (IntelliJ-style shortcuts) ===
+      keymap("n", "<F9>", "<cmd>JavaTestRunCurrentClass<CR>", { desc = "Java - Run Tests (F9)" })
+      keymap("n", "<F10>", "<cmd>JavaRunnerRunMain<CR>", { desc = "Java - Run Main (F10)" })
+      keymap("n", "<S-F9>", "<cmd>JavaTestDebugCurrentClass<CR>", { desc = "Java - Debug Tests (Shift+F9)" })
+      keymap("n", "<S-F10>", function()
+        -- Debug main class (requires DAP setup)
+        vim.cmd("JavaDapConfig")
+        vim.defer_fn(function()
+          dap.continue()
+        end, 500)
+      end, { desc = "Java - Debug Main (Shift+F10)" })
+      
+      -- Print setup success message
+      vim.defer_fn(function()
+        print("☕ nvim-java: IntelliJ-like Java environment ready!")
+        print("📝 Use <leader>j* for Java commands | F9/F10 for quick run/test")
+        print("🐛 Use F5-F8 for debugging | <leader>db for breakpoints")
+      end, 2000)
     end,
   },
 
@@ -313,6 +519,9 @@ local plugins = {
         { "<leader>l", group = "LSP" },
         { "<leader>g", group = "Git/Go" },
         { "<leader>j", group = "Java" },
+        { "<leader>jr", group = "Java Run" },
+        { "<leader>jt", group = "Java Test" },
+        { "<leader>jx", group = "Java Refactor" },
         { "<leader>t", group = "Terminal" },
         { "<leader>w", group = "Window" },
         { "<leader>b", group = "Buffer" },
