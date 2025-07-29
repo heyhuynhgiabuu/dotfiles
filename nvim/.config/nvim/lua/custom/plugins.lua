@@ -384,7 +384,7 @@ local plugins = {
       -- Global config files: ~/.config/augment/ (symlinked from ~/dotfiles/augment/.config/augment/)
       
       -- Set official options for optimal single-AI experience
-      vim.g.augment_disable_tab_mapping = false  -- Enable Tab for clean single-AI setup
+      vim.g.augment_disable_tab_mapping = true  -- CRITICAL: Disable to avoid nvim-cmp conflicts
       vim.g.augment_suppress_version_warning = false
       vim.g.augment_node_command = "node"
       
@@ -495,29 +495,43 @@ local plugins = {
         end)
       end, { desc = "AugmentCode - Add custom folder to workspace" })
       
-      -- Primary completion acceptance - Tab is now clean and safe
-      keymap("i", "<Tab>", function()
-        if vim.fn.exists('*augment#Accept') == 1 then
-          local result = vim.fn['augment#Accept']()
-          if result and result ~= "" then
-            return result
-          end
-        end
-        return "<Tab>"
-      end, { expr = true, silent = true, desc = "AugmentCode - Accept suggestion or Tab" })
-      
-      -- Alternative: Ctrl-L (clean and available)
+      -- Completion acceptance - CONFLICT-FREE keys only
+      -- Using Ctrl-L as primary (safe, no conflicts with nvim-cmp)
       keymap("i", "<C-l>", function()
         if vim.fn.exists('*augment#Accept') == 1 then
-          return vim.fn['augment#Accept']()
+          -- Check if we're in a safe context to accept
+          if vim.fn.mode() == 'i' then
+            local result = vim.fn['augment#Accept']()
+            if result and result ~= "" then
+              return result
+            end
+          end
         end
         return ""
       end, { expr = true, silent = true, desc = "AugmentCode - Accept suggestion" })
       
-      -- Fallback: Ctrl-Y (standard vim accept key)
+      -- Alternative: Ctrl-J (safe, commonly used for acceptance)
+      keymap("i", "<C-j>", function()
+        if vim.fn.exists('*augment#Accept') == 1 then
+          if vim.fn.mode() == 'i' then
+            local result = vim.fn['augment#Accept']()
+            if result and result ~= "" then
+              return result
+            end
+          end
+        end
+        return ""
+      end, { expr = true, silent = true, desc = "AugmentCode - Accept suggestion (alt)" })
+      
+      -- Fallback: Ctrl-Y (very safe, standard vim)
       keymap("i", "<C-y>", function()
         if vim.fn.exists('*augment#Accept') == 1 then
-          return vim.fn['augment#Accept']()
+          if vim.fn.mode() == 'i' then
+            local result = vim.fn['augment#Accept']()
+            if result and result ~= "" then
+              return result
+            end
+          end
         end
         return "<C-y>"  -- Fallback to normal Ctrl-Y
       end, { expr = true, silent = true, desc = "AugmentCode - Accept suggestion or scroll up" })
@@ -525,7 +539,7 @@ local plugins = {
       -- Print startup message
       vim.defer_fn(function()
         local folders = vim.g.augment_workspace_folders or {}
-        print("🚀 AugmentCode: Primary AI ready | Tab to accept | <leader>ac for chat")
+        print("🚀 AugmentCode: Primary AI ready | Ctrl-L to accept | <leader>ac for chat")
         print(string.format("📁 Workspace: %d folders configured | <leader>aw to view", #folders))
       end, 1000)
     end,

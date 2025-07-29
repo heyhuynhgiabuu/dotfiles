@@ -27,10 +27,12 @@ This dotfiles configuration provides a clean, conflict-free dual-AI development 
 
 ### **AugmentCode Keybindings**
 ```
-Insert Mode:
-  Tab      - Accept suggestion (primary)
-  Ctrl-L   - Accept suggestion (alternative)  
+Insert Mode (Completion Acceptance):
+  Ctrl-L   - Accept suggestion (primary, safe)
+  Ctrl-J   - Accept suggestion (alternative)  
   Ctrl-Y   - Accept suggestion (fallback)
+  
+Note: Tab key reserved for nvim-cmp to prevent conflicts
 
 Normal Mode:
   <leader>ac  - Start chat
@@ -51,7 +53,7 @@ Workspace Management:
 ### **Clean Configuration Features**
 - **No Conflicts**: Removed all GitHub Copilot nvim plugins
 - **Single AI**: AugmentCode is the only AI assistant in Neovim
-- **Tab Safety**: Tab key works cleanly with both nvim-cmp and AugmentCode
+- **Tab Safety**: Tab key reserved for nvim-cmp to prevent E565 conflicts
 - **Global Config**: Settings managed via `~/.config/augment/` (symlinked)
 - **Workspace Context**: Automatic loading of workspace folders for enhanced context
 - **Dynamic Management**: Add/remove workspace folders on-the-fly
