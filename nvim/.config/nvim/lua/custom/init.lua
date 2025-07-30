@@ -5,6 +5,9 @@
 require "custom.options"
 require "custom.mappings"
 
+-- Load DAP (Debug Adapter Protocol) configuration with breakpoint hotkeys
+pcall(require, "custom.dap-config")
+
 -- LSP config is now handled in plugins/configs/lspconfig.lua
 -- Custom configs can be added there if needed
 

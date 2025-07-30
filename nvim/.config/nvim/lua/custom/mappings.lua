@@ -68,6 +68,41 @@ map("n", "<leader>cp", function()
   print("Copied: " .. filepath)
 end, { desc = "Copy file path" })
 
+-- Enhanced line number toggle
+map("n", "<leader>tn", function()
+  if vim.wo.relativenumber then
+    vim.wo.relativenumber = false
+    vim.wo.number = false
+    print("Line numbers: OFF")
+  elseif vim.wo.number then
+    vim.wo.relativenumber = true
+    print("Line numbers: RELATIVE")
+  else
+    vim.wo.number = true
+    print("Line numbers: ABSOLUTE")
+  end
+end, { desc = "Toggle line number" })
+
+-- Enhanced command-line navigation (when noice.nvim is active)
+map("c", "<C-a>", "<Home>", { desc = "Go to beginning of command line" })
+map("c", "<C-e>", "<End>", { desc = "Go to end of command line" })
+map("c", "<C-f>", "<Right>", { desc = "Move cursor right" })
+map("c", "<C-b>", "<Left>", { desc = "Move cursor left" })
+map("c", "<C-d>", "<Del>", { desc = "Delete character" })
+map("c", "<C-h>", "<BS>", { desc = "Backspace" })
+
+-- Better command-line editing
+map("c", "<C-k>", function()
+  local pos = vim.fn.getcmdpos()
+  local line = vim.fn.getcmdline()
+  return line:sub(1, pos - 1)
+end, { expr = true, desc = "Kill line from cursor" })
+
+-- Enhanced search UI keymaps
+map("n", "<leader>ss", "<cmd>lua require('spectre').toggle()<CR>", { desc = "Toggle search & replace" })
+map("n", "<leader>sw", "<cmd>lua require('spectre').open_visual({select_word=true})<CR>", { desc = "Search current word" })
+map("v", "<leader>sw", "<esc><cmd>lua require('spectre').open_visual()<CR>", { desc = "Search selection" })
+
 -- Language-specific mappings (Go) - only active in Go files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",

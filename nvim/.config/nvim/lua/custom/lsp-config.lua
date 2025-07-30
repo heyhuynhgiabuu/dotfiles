@@ -127,73 +127,11 @@ lspconfig.gopls.setup {
   },
 }
 
--- Java language server configuration with enhanced autocompletion
-lspconfig.jdtls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  cmd = { "jdtls" },
-  root_dir = function(fname)
-    return require("lspconfig.util").root_pattern("pom.xml", "build.gradle", ".git")(fname) or vim.fn.getcwd()
-  end,
-  settings = {
-    java = {
-      configuration = {
-        updateBuildConfiguration = "interactive",
-      },
-      -- Enhanced completion settings
-      completion = {
-        -- Better completions for common patterns
-        favoriteStaticMembers = {
-          "org.hamcrest.MatcherAssert.assertThat",
-          "org.hamcrest.Matchers.*",
-          "org.hamcrest.CoreMatchers.*",
-          "org.junit.jupiter.api.Assertions.*",
-          "java.util.Objects.requireNonNull",
-          "java.util.Objects.requireNonNullElse",
-          "org.mockito.Mockito.*",
-          "java.util.Collections.*",
-          "java.util.Arrays.*",
-          "java.lang.String.*",
-          "java.util.stream.Collectors.*",
-        },
-        -- Enable automatic imports
-        importOrder = {
-          "java",
-          "javax",
-          "com",
-          "org"
-        },
-        filteredTypes = {
-          "com.sun.*",
-          "io.micrometer.shaded.*",
-          "java.awt.*",
-          "jdk.*", 
-          "sun.*",
-        },
-      },
-      -- Better import management
-      sources = {
-        organizeImports = {
-          starThreshold = 9999,
-          staticStarThreshold = 9999,
-        },
-      },
-      -- Enhanced inlay hints
-      inlayHints = {
-        parameterNames = {
-          enabled = "all",
-        },
-      },
-      -- Code generation preferences  
-      codeGeneration = {
-        toString = {
-          template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
-        },
-        useBlocks = true,
-      },
-    },
-  },
-}
+-- Java language server configuration is now handled by nvim-java plugin
+-- The nvim-java plugin automatically configures JDTLS with proper extensions
+-- including java-test and java-debug-adapter for main class resolution
+-- Setup JDTLS as required by nvim-java after require('java').setup()
+lspconfig.jdtls.setup({})
 
 -- 
 -- lspconfig.pyright.setup { blabla}
