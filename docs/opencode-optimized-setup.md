@@ -23,9 +23,9 @@ dotfiles/opencode/ → ~/.config/opencode/
 - **Analysis and planning**: `plan` mode using GPT-4.1 (0 premium requests, research-enabled)
 
 #### **2. OpenCode Best Practices Integration**
-- **Tool access simplification**: Only disabled tools specified (not exhaustive true/false lists)
+- **Tool access simplification**: Only disabled tools specified (following official pattern)
 - **Autonomous operation patterns**: TodoWrite/TodoRead enabled for complex multi-step tasks
-- **Research capabilities**: WebFetch enabled across all modes for current documentation
+- **Research capabilities**: WebFetch enabled by default (all tools enabled unless disabled)
 - **File path optimization**: Simplified references using OpenCode's native resolution
 
 #### **3. Agent Configuration Optimization**
@@ -40,31 +40,26 @@ dotfiles/opencode/ → ~/.config/opencode/
 #### **Cost-Efficient Primary Modes** (GPT-4.1 - 0 Premium Requests)
 ```json
 "daily": {
-  "description": "Daily development mode with full access using GPT-4.1 (Copilot Education).",
+  "description": "Interactive development with GPT-4.1 (Free)",
   "model": "github-copilot/gpt-4.1",
   "temperature": 0.3,
-  "tools": {
-    "webfetch": true,
-    "todowrite": true,
-    "todoread": true
-  }
+  "prompt": "{file:AGENTS.md}"
 }
 ```
+
+**Note**: All tools enabled by default. OpenCode only requires explicit configuration for disabled tools.
 
 #### **Autonomous Premium Mode** (Claude Sonnet 4 - 1 Premium Request)
 ```json
 "enhanced": {
-  "description": "Enhanced dotfiles mode with comprehensive expertise and autonomous operation",
+  "description": "Critical reasoning with Claude Sonnet 4",
   "model": "github-copilot/claude-sonnet-4",
   "temperature": 0.3,
-  "prompt": "{file:prompts/global-development-prompt.md}",
-  "tools": {
-    "webfetch": true,
-    "todowrite": true,
-    "todoread": true
-  }
+  "prompt": "{file:prompts/enhanced-development-assistant.md}"
 }
 ```
+
+**Note**: All tools enabled by default unless explicitly disabled.
 
 ### **Specialized Agents**
 
@@ -138,11 +133,11 @@ Complex modes include TodoWrite/TodoRead for:
 ## Migration from Previous Setup
 
 ### **Key Changes Made**
-1. **Simplified tool access**: Removed exhaustive true/false tool listings
-2. **Enhanced research capabilities**: Added webfetch to all modes
+1. **Simplified tool access**: Removed redundant tool listings (OpenCode enables all by default)
+2. **Enhanced research capabilities**: Leveraged default tool availability
 3. **Autonomous operation**: Added TodoWrite/TodoRead for complex tasks
 4. **Cost optimization**: Prioritized GPT-4.1 for primary development
-5. **Agent tool streamlining**: Focused permissions for each agent
+5. **Agent tool streamlining**: Only specify disabled tools per OpenCode best practices
 
 ### **Breaking Changes**
 - **Enhanced mode prompt**: Now uses specialized autonomous prompt
