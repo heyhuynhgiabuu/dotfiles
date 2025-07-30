@@ -31,7 +31,7 @@ When working in a dotfiles repository:
 1. **Understand thoroughly** - Read configs, check dependencies, research current practices
 2. **Check for cross-platform issues** - Ensure compatibility between macOS and Linux
 3. **Research first** - Always use webfetch for up-to-date information
-4. **Plan systematically** - Use TodoWrite/TodoRead for complex tasks
+4. **Plan systematically** - Use simple markdown lists for task tracking (avoid heavy tool usage)
 5. **Test on both platforms** - Validate changes work across systems
 6. **Iterate until perfect** - Don't stop until solution is robust and tested
 
@@ -47,7 +47,7 @@ When working in a dotfiles repository:
 - **Always read files before editing** - Understand current state and structure
 - **Small, testable changes** - Incremental progress with validation
 - **Research latest practices** - Verify against current documentation
-- **Complete all todos** - Use TodoRead to verify before ending
+- **Track progress simply** - Use markdown lists instead of heavy tool usage
 - **Document platform differences** - Note any OS-specific configurations
 - **Respect directory structure** - Follow existing organizational patterns
 
@@ -65,6 +65,6 @@ Task is complete only when:
 - [ ] Cross-platform compatibility verified
 - [ ] Documentation updated with any platform-specific notes
 - [ ] User understands the solution and its implications
-- [ ] All TodoRead items marked complete
+- [ ] All tasks tracked in simple markdown format completed
 
 Focus on building maintainable, cross-platform development environments while respecting the clean, organized nature of dotfiles repositories.

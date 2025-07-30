@@ -62,47 +62,62 @@ When suggesting code changes, always check line count and recommend splitting if
 - **Consider cross-platform compatibility** - Ensure configs work on macOS and Linux
 
 ### Autonomous Operation Patterns
-- **Use TodoWrite/TodoRead** - Track progress on complex multi-step tasks
 - **Read before editing** - Always understand current file content and structure
 - **Iterative completion** - Work systematically until all requirements are met
 - **Validate each step** - Test changes before proceeding to next step
+- **Use simple markdown lists** - Track progress with bullet points and checkboxes
 
 ### Tool Usage Guidelines
 - **webfetch**: Always research current documentation and best practices
-- **todowrite/todoread**: Essential for complex tasks requiring multiple steps
 - **read**: Understand existing configurations before making changes
 - **bash**: Test implementations and verify functionality
 - **edit/write**: Only after thorough understanding and planning
 
-## Mode and Agent Safety Matrix
+## **Simplified Mode Safety Matrix**
 
-| Mode/Agent           | Write/Edit | Bash | Read | TodoWrite | WebFetch | Model | Safe for Prod? |
-|----------------------|:----------:|:----:|:----:|:---------:|:--------:|-------|:--------------:|
-| daily                | ✅         | ✅   | ✅   | ✅        | ✅       | GPT-4.1 | ❌             |
-| build                | ✅         | ✅   | ✅   | ✅        | ✅       | Gemini 2.5 Pro | ❌             |
-| enhanced             | ✅         | ✅   | ✅   | ✅        | ✅       | Claude Sonnet 4 | ❌             |
-| plan                 | ❌         | ❌   | ✅   | ✅        | ✅       | GPT-4.1 | ✅             |
-| review               | ❌         | ❌   | ✅   | ❌        | ✅       | Claude Sonnet 4 | ✅             |
-| security             | ❌         | ❌   | ✅   | ❌        | ✅       | Claude Sonnet 4 | ✅             |
-| debug                | ❌         | ✅   | ✅   | ✅        | ✅       | GPT-4.1 | ✅             |
-| docs                 | ✅         | ❌   | ✅   | ✅        | ✅       | GPT-4.1 | ❌             |
-| security-audit       | ❌         | ❌   | ✅   | ❌        | ❌       | Claude Sonnet 4 | ✅             |
-| devops-deployer      | ❌         | ✅   | ✅   | ❌        | ❌       | Gemini 2.5 Pro | ✅             |
-| api-reviewer         | ❌         | ❌   | ✅   | ❌        | ❌       | Claude Sonnet 4 | ✅             |
-| docs-writer          | ✅         | ❌   | ✅   | ❌        | ❌       | GPT-4.1 | ❌             |
-| backend-troubleshooter| ❌        | ❌   | ✅   | ❌        | ❌       | GPT-4.1 | ✅             |
-| simple-researcher    | ❌         | ❌   | ✅   | ❌        | ✅       | Gemini 2.5 Pro | ✅             |
-| context-analyst      | ❌         | ❌   | ✅   | ❌        | ✅       | Claude Sonnet 4 | ✅             |
-| session-summarizer   | ❌         | ❌   | ✅   | ❌        | ❌       | GPT-4.1 | ✅             |
+| Mode           | Write/Edit | Bash | Read | TodoWrite | WebFetch | Model | Cost | Primary Use |
+|----------------|:----------:|:----:|:----:|:---------:|:--------:|-------|:----:|-------------|
+| **daily**      | ✅         | ✅   | ✅   | ✅        | ✅       | GPT-4.1 | FREE | Interactive development |
+| **beast**      | ✅         | ✅   | ✅   | ✅        | ✅       | GPT-4.1 | FREE | Autonomous complex tasks |
+| **plan**       | ❌         | ❌   | ✅   | ❌        | ✅       | GPT-4.1 | FREE | Read-only analysis |
+| **build**      | ✅         | ✅   | ✅   | ❌        | ✅       | Gemini 2.5 Pro | 1x | Large codebases |
+| **enhanced**   | ✅         | ✅   | ✅   | ❌        | ✅       | Claude Sonnet 4 | 1x | Critical reasoning |
+
+**Note**: ✅ = enabled by default, ❌ = explicitly disabled. TodoWrite tools disabled in premium modes to prevent token bloat.
+
+### **Agent Tools Matrix**
+
+| Agent/Mode     | Write/Edit | Bash | Read | TodoWrite | WebFetch | Model | Safe for Prod? |
+|----------------|:----------:|:----:|:----:|:---------:|:--------:|-------|:--------------:|
+| security-audit | ❌         | ❌   | ✅   | ❌        | ❌       | Claude Sonnet 4 | ✅             |
+| devops-deployer| ❌         | ✅   | ✅   | ❌        | ❌       | GPT-4.1 | ✅             |
+| api-reviewer   | ❌         | ❌   | ✅   | ❌        | ❌       | Claude Sonnet 4 | ✅             |
+| docs-writer    | ✅         | ❌   | ✅   | ❌        | ❌       | GPT-4.1 | ❌             |
+| backend-troubleshooter| ❌  | ❌   | ✅   | ❌        | ❌       | GPT-4.1 | ✅             |
+| simple-researcher| ❌       | ❌   | ✅   | ❌        | ✅       | GPT-4.1 | ✅             |
+| context-analyst| ❌         | ❌   | ✅   | ❌        | ✅       | Claude Sonnet 4 | ✅             |
+| session-summarizer| ❌      | ❌   | ✅   | ❌        | ❌       | GPT-4.1 | ✅             |
 
 **Legend:**  
 ✅ = enabled, ❌ = disabled
 
-### Cost Optimization Strategy
-- **daily mode**: Primary development using GPT-4.1 (0 premium requests on Copilot Education)
-- **plan mode**: Planning and analysis using GPT-4.1 (0 premium requests, read-only)
-- **enhanced mode**: Complex tasks using Claude Sonnet 4 (1x premium request per session)
-- **build mode**: Alternative full-access using Claude Sonnet 4 (1x premium request per session)
+### **Cost Optimization Strategy**
+
+**Primary Workflow (FREE):**
+- **daily mode**: Interactive development, debugging, standard coding (GPT-4.1)
+- **beast mode**: Complex autonomous tasks, research, optimization (GPT-4.1)  
+- **plan mode**: Architecture planning, read-only analysis (GPT-4.1)
+
+**Premium Escalation:**
+- **build mode**: When context limit exceeded - Gemini 2.5 Pro with 2M context
+- **enhanced mode**: Critical reasoning tasks - Claude Sonnet 4 for security/architecture
+
+### GPT-4.1 Optimization Features
+- **Beast Mode v3 Integration**: Autonomous operation, reduced verbosity, enhanced research
+- **Improved Research Protocol**: Mandatory webfetch for current information, recursive link following
+- **Smart File Management**: Avoid redundant reads, efficient context gathering
+- **Markdown Task Tracking**: Simple checkboxes and bullet points for complex workflows
+- **Environment Management**: Proactive .env file creation, security best practices
 
 ### Context-Aware Operation
 - **Global config context**: `{file:AGENTS.md}` loads from `~/.config/opencode/AGENTS.md`
@@ -111,6 +126,34 @@ When suggesting code changes, always check line count and recommend splitting if
 - **Cross-platform support**: All configurations must work on both macOS and Linux
 
 Remember: We're building practical solutions for real problems, not showcasing technical expertise. Always research current best practices, use autonomous operation patterns for complex tasks, and optimize for cost efficiency while maintaining capability.
+
+## Recommended Usage Patterns
+
+### **Optimized 5-Mode Strategy**
+
+**Use these modes in order of priority for maximum cost efficiency:**
+
+### **Free GPT-4.1 Modes (80% of usage)**
+- **daily mode**: Primary development workflow - Interactive coding, debugging, standard tasks
+- **beast mode**: Autonomous complex tasks - Research, multi-step implementations, optimization
+- **plan mode**: Architecture and analysis - Read-only planning, reviews, research
+
+### **Premium Modes (20% of usage)**
+- **build mode**: Large codebases - Gemini 2.5 Pro with 2M context for massive files/projects
+- **enhanced mode**: Critical reasoning - Claude Sonnet 4 for security, architecture decisions
+
+### **Model Selection Logic**
+1. **Start with daily mode** → covers 60% of tasks (FREE)
+2. **Upgrade to beast mode** → for complex autonomous work (FREE)
+3. **Use plan mode** → for read-only analysis (FREE)
+4. **Switch to build mode** → when context limit exceeded (1x premium)
+5. **Use enhanced mode** → for critical reasoning tasks (1x premium)
+
+### **Cost Optimization Tips**
+- **Daily development**: Stick to `daily` and `beast` modes
+- **Large files**: Only use `build` mode when GPT-4.1 hits context limits
+- **Security/Architecture**: Use `enhanced` mode for critical decisions only
+- **Planning**: Always use `plan` mode for read-only analysis
 
 ## Enhanced Prompt System
 

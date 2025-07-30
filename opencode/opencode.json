@@ -1,17 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "opencode",
-  "model": "github-copilot/gemini-2.5-pro",
+  "model": "github-copilot/gpt-4.1",
   "share": "disabled",
   "autoshare": false,
   "autoupdate": true,
-  "instructions": [
-    "AGENTS.md",
-    "prompts/global-assistant.md"
-  ],
+  "instructions": [],
   "agent": {
     "security-audit": {
-      "description": "Quick security scan for backend code. Finds common vulns and compliance issues.",
+      "description": "Security scan for backend code and configs",
       "model": "github-copilot/claude-sonnet-4",
       "prompt": "{file:agent/security-audit.md}",
       "tools": {
@@ -19,24 +16,22 @@
         "edit": false,
         "bash": false,
         "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "devops-deployer": {
-      "description": "Docker, deployments, and infrastructure helper. Minimal and secure configs only.",
-      "model": "github-copilot/gemini-2.5-pro",
+      "description": "Docker and infrastructure optimization",
+      "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/devops-deployer.md}",
       "tools": {
         "write": false,
         "edit": false,
         "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "api-reviewer": {
-      "description": "Backend API code review focused on performance, security, and clean architecture.",
+      "description": "Backend API performance and architecture review",
       "model": "github-copilot/claude-sonnet-4",
       "prompt": "{file:agent/api-reviewer.md}",
       "tools": {
@@ -44,23 +39,21 @@
         "edit": false,
         "bash": false,
         "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "docs-writer": {
-      "description": "Essential docs only. Short, practical, developer-friendly.",
+      "description": "Essential developer documentation",
       "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/docs-writer.md}",
       "tools": {
         "bash": false,
         "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "backend-troubleshooter": {
-      "description": "Debug backend issues and analyze logs. Quick, actionable solutions.",
+      "description": "Debug backend issues and analyze logs",
       "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/backend-troubleshooter.md}",
       "tools": {
@@ -68,38 +61,34 @@
         "edit": false,
         "bash": false,
         "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "simple-researcher": {
-      "description": "Find code examples and solutions when obvious searches fail.",
-      "model": "github-copilot/gemini-2.5-pro",
+      "description": "Find code examples when searches fail",
+      "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/simple-researcher.md}",
       "tools": {
         "write": false,
         "edit": false,
         "bash": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "context-analyst": {
-      "description": "Analyze OpenCode context management, caching, and billing integration.",
+      "description": "Analyze OpenCode context and billing",
       "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.2, 
+      "temperature": 0.2,
       "prompt": "{file:agent/context_analyst.md}",
       "tools": {
         "write": false,
         "edit": false,
         "bash": false,
-        "webfetch": true,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     },
     "session-summarizer": {
-      "description": "Create concise, actionable conversation summaries for OpenCode sessions.",
+      "description": "Create conversation summaries",
       "model": "github-copilot/gpt-4.1",
       "temperature": 0.2,
       "prompt": "{file:agent/session-summarizer.md}",
@@ -108,126 +97,52 @@
         "edit": false,
         "bash": false,
         "webfetch": false,
-        "todowrite": false,
-        "todoread": false
+        "todowrite": false
       }
     }
   },
   "mode": {
-    "build": {
-      "description": "Full development mode with write access",
-      "model": "github-copilot/gemini-2.5-pro",
-      "temperature": 0.3,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
-      }
-    },
-    "plan": {
-      "description": "Restricted mode for planning and analysis.",
-      "model": "github-copilot/gpt-4.1",
-      "temperature": 0.2,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "patch": false,
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
-      }
-    },
     "daily": {
-      "description": "Daily development mode with full access using GPT-4.1 (Copilot Education).",
+      "description": "Interactive development with GPT-4.1 (Free)",
       "model": "github-copilot/gpt-4.1",
       "temperature": 0.3,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
-      }
+      "prompt": "{file:prompts/global-assistant.md}"
     },
-    "review": {
-      "description": "Code review mode - read-only analysis.",
-      "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.2,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "patch": false,
-        "webfetch": true,
-        "todowrite": false,
-        "todoread": false
-      }
-    },
-    "security": {
-      "description": "Security-focused analysis mode.",
-      "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.1,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "patch": false,
-        "webfetch": true,
-        "todowrite": false,
-        "todoread": false
-      }
-    },
-    "debug": {
-      "description": "Debugging and troubleshooting mode.",
+    "beast": {
+      "description": "Autonomous GPT-4.1 with Beast Mode v3 (Free)",
       "model": "github-copilot/gpt-4.1",
-      "temperature": 0.2,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "patch": false,
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
-      }
+      "temperature": 0.3,
+      "prompt": "{file:prompts/gpt-4.1-optimized.md}"
     },
-    "docs": {
-      "description": "Documentation writing mode.",
-      "model": "github-copilot/gpt-4.1",
-      "temperature": 0.4,
-      "prompt": "{file:AGENTS.md}",
-      "tools": {
-        "bash": false,
-        "patch": false,
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
-      }
-    },
-    "enhanced": {
-      "description": "Enhanced mode with comprehensive expertise and autonomous operation",
-      "model": "github-copilot/claude-sonnet-4",
+    "build": {
+      "description": "Large codebase mode with 2M context",
+      "model": "github-copilot/gemini-2.5-pro",
       "temperature": 0.3,
       "prompt": "{file:prompts/global-assistant.md}",
       "tools": {
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
+        "todowrite": false,
+        "todoread": false
       }
     },
-    "dotfiles": {
-      "description": "Specialized dotfiles development mode",
+    "enhanced": {
+      "description": "Critical reasoning with Claude Sonnet 4",
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.3,
       "prompt": "{file:prompts/enhanced-development-assistant.md}",
       "tools": {
-        "webfetch": true,
-        "todowrite": true,
-        "todoread": true
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "plan": {
+      "description": "Read-only analysis and planning",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.2,
+      "prompt": "{file:prompts/global-assistant.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
       }
     }
   },
