@@ -65,9 +65,13 @@ local plugins = {
     config = function()
       local dap, dapui = require("dap"), require("dapui")
       
-      -- Setup dap-ui with IntelliJ-like layout
+      -- Setup dap-ui with video-style layout (matching screenshot)
       dapui.setup({
-        icons = { expanded = "", collapsed = "", current_frame = "" },
+        icons = { 
+          expanded = "▾", 
+          collapsed = "▸", 
+          current_frame = "▸" 
+        },
         mappings = {
           expand = { "<CR>", "<2-LeftMouse>" },
           open = "o",
@@ -80,51 +84,61 @@ local plugins = {
         expand_lines = vim.fn.has("nvim-0.7") == 1,
         layouts = {
           {
+            -- Left sidebar - Debug information (exactly like video)
             elements = {
-              -- Elements can be strings or table with id and size keys.
-              { id = "scopes", size = 0.25 },
-              "breakpoints",
-              "stacks",
-              "watches",
+              -- Variables/Scopes at top (most important)
+              { id = "scopes", size = 0.30 },
+              -- Call stack (execution flow)
+              { id = "stacks", size = 0.30 },
+              -- Breakpoints (management)
+              { id = "breakpoints", size = 0.20 },
+              -- Watches (custom expressions)
+              { id = "watches", size = 0.20 },
             },
-            size = 40, -- 40 columns
+            size = 50, -- 50 columns width (wider for readability)
             position = "left",
           },
           {
+            -- Bottom panel - Console and REPL (like video)
             elements = {
-              "repl",
-              "console",
+              -- Console for program output (main)
+              { id = "console", size = 0.60 },
+              -- REPL for interactive debugging
+              { id = "repl", size = 0.40 },
             },
-            size = 0.25, -- 25% of total lines
+            size = 12, -- 12 lines height (fixed size, not percentage)
             position = "bottom",
           },
         },
         controls = {
           enabled = true,
-          element = "repl",
+          element = "console", -- Show controls in console area
           icons = {
-            pause = "",
-            play = "",
-            step_into = "",
-            step_over = "",
-            step_out = "",
-            step_back = "",
-            run_last = "",
-            terminate = "",
+            pause = "⏸",
+            play = "▶",
+            step_into = "⏎",
+            step_over = "⏭",
+            step_out = "⏮",
+            step_back = "b",
+            run_last = "▶▶",
+            terminate = "⏹",
           },
         },
         floating = {
           max_height = nil,
           max_width = nil,
-          border = "single",
+          border = "rounded", -- Modern rounded borders
           mappings = {
             close = { "q", "<Esc>" },
           },
         },
-        windows = { indent = 1 },
+        windows = { 
+          indent = 1 
+        },
         render = {
-          max_type_length = nil,
-          max_value_lines = 100,
+          max_type_length = nil, -- Don't truncate type information
+          max_value_lines = 100, -- Show more lines for complex values
+          indent = 1,
         }
       })
 

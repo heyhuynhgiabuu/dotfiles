@@ -344,6 +344,19 @@ if dap_ok then
   setup_dap_keymaps()
   
   -- ========================
+  -- 🚀 LOAD DEBUG ADAPTERS
+  -- ========================
+  
+  -- Load comprehensive debug adapters (Java, Go, Node.js, Python)
+  local adapters_ok, debug_adapters = pcall(require, "custom.debug-adapters")
+  if adapters_ok then
+    debug_adapters.setup()
+    vim.notify("🚀 All debug adapters loaded successfully!", vim.log.levels.INFO)
+  else
+    vim.notify("⚠️  Debug adapters module not found - using basic configuration", vim.log.levels.WARN)
+  end
+  
+  -- ========================
   -- 🎨 DEBUGGING SIGNS AND UI
   -- ========================
 
@@ -383,9 +396,13 @@ if dap_ok then
   -- Set up DAP UI if available
   local dapui_ok, dapui = pcall(require, "dapui")
   if dapui_ok then
-    -- Configure DAP UI with IntelliJ-like layout
+    -- Configure DAP UI with enhanced layout and visible labels
     dapui.setup({
-      icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
+      icons = { 
+        expanded = "▾", 
+        collapsed = "▸", 
+        current_frame = "▸" 
+      },
       mappings = {
         -- Use a table to apply multiple mappings
         expand = { "<CR>", "<2-LeftMouse>" },
@@ -399,31 +416,37 @@ if dap_ok then
       expand_lines = vim.fn.has("nvim-0.7") == 1,
       layouts = {
         {
-          -- Left side - Variables and Call Stack (like IntelliJ)
+          -- 📋 Left sidebar - All debug panels with clear organization
           elements = {
-            -- Variables first (most important for debugging)
-            { id = "scopes", size = 0.4 },
-            { id = "breakpoints", size = 0.2 },
-            { id = "stacks", size = 0.4 },
+            -- 🔍 Variables/Scopes at top (most important for debugging)
+            { id = "scopes", size = 0.25 },
+            -- 📊 Call stack next (shows execution flow)  
+            { id = "stacks", size = 0.25 },
+            -- 🔴 Breakpoints (manage pause points)
+            { id = "breakpoints", size = 0.20 },
+            -- 👁️  Watches (custom expressions to monitor)
+            { id = "watches", size = 0.15 },
+            -- 🎮 Console (with debug controls in sidebar)
+            { id = "console", size = 0.15 },
           },
-          size = 40, -- Width of the left sidebar
+          size = 55, -- Wider sidebar to accommodate 5 panels
           position = "left",
         },
         {
-          -- Bottom - Console and REPL (like IntelliJ)
+          -- 📺 Bottom - Full REPL area (logs and output with maximum space)
           elements = {
-            { id = "repl", size = 0.5 },
-            { id = "console", size = 0.5 },
+            -- 📋 REPL gets the entire bottom area for logs and output
+            { id = "repl", size = 1.0 },
           },
-          size = 0.25, -- Height of bottom panel
+          size = 15, -- Taller REPL for better log visibility
           position = "bottom",
         },
       },
       controls = {
-        -- Enable the controls (play, pause, step buttons)
+        -- Enable the controls (play, pause, step buttons) like in video
         enabled = true,
-        -- Display controls in this order
-        element = "repl",
+        -- Display controls in console area
+        element = "console",
         icons = {
           pause = "⏸",
           play = "▶",
@@ -439,23 +462,31 @@ if dap_ok then
       floating = {
         max_height = nil, -- These can be integers or a float between 0 and 1.
         max_width = nil, -- Floats will be treated as percentage of your screen.
-        border = "single", -- Border style. Can be "single", "double" or "rounded"
+        border = "rounded", -- Rounded border like modern IDEs
         mappings = {
           close = { "q", "<Esc>" },
         },
       },
+      windows = { 
+        indent = 1 
+      },
+      render = {
+        max_type_length = nil, -- Don't truncate types
+        max_value_lines = 100, -- Show more value lines
+        indent = 1,
+      }
     })
 
     -- Add keymaps for DAP UI
     vim.keymap.set("n", "<Leader>du", function()
       dapui.toggle()
-      vim.notify("🎨 Debug UI toggled", vim.log.levels.INFO)
+      vim.notify("🎨 Enhanced Debug UI toggled (5-panel sidebar + full console)", vim.log.levels.INFO)
     end, { desc = "Toggle Debug UI" })
 
     -- F4 for quick Debug UI toggle (like IDE panels)
     vim.keymap.set("n", "<F4>", function()
       dapui.toggle()
-      vim.notify("🎨 Debug UI toggled (F4)", vim.log.levels.INFO)
+      vim.notify("🎨 Enhanced Debug UI toggled (F4)", vim.log.levels.INFO)
     end, { desc = "Toggle Debug UI (F4)" })
 
     vim.keymap.set("n", "<Leader>dE", function()
@@ -494,6 +525,45 @@ if dap_ok then
   end
 
   -- ========================
+  -- 🏷️  ENHANCED PANEL IDENTIFICATION
+  -- ========================
+
+  -- Since DAP-UI hardcodes panel titles, we'll enhance the help system
+  -- and create a mapping function to help users identify panels
+  local function get_panel_description(buffer_name)
+    local panel_map = {
+      ["DAP Scopes"] = "🔍 Variables/Scopes - Current variable values and scope information",
+      ["DAP Stacks"] = "📊 Call Stack - Function call hierarchy and execution flow",
+      ["DAP Breakpoints"] = "🔴 Breakpoints - Manage pause points in your code",
+      ["DAP Watches"] = "👁️  Watches - Custom expressions to monitor during debugging", 
+      ["DAP Console"] = "🎮 Console - Debug controls and command interface (in sidebar)",
+      ["dap-repl"] = "📋 REPL - Logs, output, and interactive debugging (full bottom)"
+    }
+    return panel_map[buffer_name] or buffer_name
+  end
+
+  -- Enhanced panel identification command
+  vim.api.nvim_create_user_command('DapIdentifyPanel', function()
+    local current_buf = vim.api.nvim_get_current_buf()
+    local buf_name = vim.api.nvim_buf_get_name(current_buf)
+    local buf_type = vim.api.nvim_buf_get_option(current_buf, 'filetype')
+    
+    -- Extract just the buffer name
+    local clean_name = vim.fn.fnamemodify(buf_name, ':t')
+    if clean_name == '' then
+      clean_name = vim.api.nvim_buf_get_option(current_buf, 'buftype')
+    end
+    
+    local description = get_panel_description(clean_name)
+    vim.notify("Current panel: " .. description, vim.log.levels.INFO)
+  end, { desc = 'Identify current DAP panel' })
+
+  -- Keymap to identify current panel
+  vim.keymap.set("n", "<Leader>dI", function()
+    vim.cmd("DapIdentifyPanel")
+  end, { desc = "Identify current DAP panel" })
+
+  -- ========================
   -- 🔧 DAP EVENT LISTENERS (Automatic UI management)
   -- ========================
 
@@ -502,7 +572,7 @@ if dap_ok then
     if dapui_ok then
       dapui.open()
     end
-    vim.notify("🐛 Debug session started - UI opened automatically!", vim.log.levels.INFO)
+    vim.notify("🐛 Debug session started - Enhanced UI opened! (5-panel sidebar + full console)", vim.log.levels.INFO)
   end
 
   -- Automatically close DAP UI when debugging ends
@@ -510,14 +580,14 @@ if dap_ok then
     if dapui_ok then
       dapui.close()
     end
-    vim.notify("🏁 Debug session ended - UI closed", vim.log.levels.INFO)
+    vim.notify("🏁 Debug session ended - Enhanced UI closed", vim.log.levels.INFO)
   end
 
   dap.listeners.before.event_exited["dapui_config"] = function()
     if dapui_ok then
       dapui.close()
     end
-    vim.notify("🚪 Debug session exited - UI closed", vim.log.levels.INFO)
+    vim.notify("🚪 Debug session exited - Enhanced UI closed", vim.log.levels.INFO)
   end
 
   -- ========================
@@ -560,7 +630,22 @@ if dap_ok then
   -- Function to show debug help
   local function show_debug_help()
     local help_text = [[
-🐛 NVIM-DAP DEBUGGING QUICK REFERENCE (IntelliJ-like Experience)
+🐛 NVIM-DAP DEBUGGING QUICK REFERENCE (Enhanced Layout)
+
+🎨 ENHANCED DEBUG UI LAYOUT:
+  📋 LEFT SIDEBAR (5 Panels):
+    DAP Scopes      → 🔍 Variables/Scopes (current variable values)
+    DAP Stacks      → 📊 Call Stack (function call hierarchy)  
+    DAP Breakpoints → 🔴 Breakpoints (manage pause points)
+    DAP Watches     → 👁️  Watches (custom expressions)
+    DAP Console     → 🎮 Console (debug controls interface)
+
+  📺 BOTTOM AREA:
+    [dap-repl]      → 📋 REPL (logs, output, interactive debugging)
+
+📝 CONSOLE vs REPL EXPLAINED:
+  🎮 Console (sidebar)  → Debug controls & command interface  
+  📋 REPL (bottom)      → Logs, output & interactive debugging
 
 🔴 BREAKPOINTS (Pause execution):
   <Leader>db or  F9      → Toggle breakpoint on current line
@@ -578,43 +663,50 @@ if dap_ok then
   Shift+F11              → Step Out (exit current function)
   F6                     → Pause execution
 
-🎨 DEBUG UI (IntelliJ-like interface):
+🎨 DEBUG UI (Enhanced Layout):
   <Leader>du or F4       → Toggle Debug UI panels
   Auto-opens when debugging starts!
-  - Left panel: Variables, Breakpoints, Call Stack
-  - Bottom panel: Console, REPL
+  - Left panel: 5 stacked debug windows with labels
+  - Bottom: Full-width console for maximum output space
 
-🔍 INSPECTION (View data - IntelliJ style):
+🔍 INSPECTION (View data - Enhanced workflow):
   <Leader>dv             → Evaluate expression under cursor (hover)
   <Leader>dv (visual)    → Evaluate selected text
   <Leader>di             → Quick inspect expression (like Alt+F8)
+  <Leader>dI             → Identify current DAP panel (NEW!)
   <Leader>dE             → DAP UI evaluate under cursor
-  <Leader>dR             → Open debug console (REPL)
+  <Leader>dR             → Open REPL for logs and interactive debugging
   <Leader>ds             → Show variables in current scope
   <Leader>df             → Show call stack (frames)
   <Leader>de             → Evaluate custom expression
 
-✨ AUTOMATIC FEATURES:
+✨ ENHANCED FEATURES:
   • Variable values shown inline (next to code)
   • Debug UI opens/closes automatically
-  • Visual breakpoint indicators
-  • IntelliJ-style panels and layout
+  • Visual breakpoint indicators  
+  • REPL moved to sidebar for better workflow
+  • Console gets full bottom space for output
+  • 5-panel left sidebar for complete debug info
 
-🎯 WORKFLOW FOR BEGINNERS:
+🎯 ENHANCED WORKFLOW:
 1. Set breakpoints with <Leader>db on lines you want to pause
-2. Start debugging with F5 (UI opens automatically)
-3. When paused, variable values appear inline
-4. Use <Leader>dv to inspect variables under cursor
-5. Use F10 to step through line by line
-6. Check variable panel on left for all values
+2. Start debugging with F5 (enhanced UI opens automatically)
+3. Use the 5-panel sidebar:
+   - DAP Scopes: See current variable values
+   - DAP Stacks: Navigate call hierarchy
+   - DAP Breakpoints: Manage pause points
+   - DAP Watches: Monitor custom expressions
+   - DAP Console: Debug controls (play/pause/step buttons)
+4. Full-width REPL at bottom shows logs, output, and interactive debugging
+5. Use <Leader>dv to inspect variables under cursor
+6. Use F10 to step through line by line
 7. Use F5 to continue to next breakpoint
 8. Use Shift+F5 to stop (UI closes automatically)
 
-💡 TIP: This setup mimics IntelliJ IDEA's debugging experience!
-       Variables show inline, panels auto-manage, and inspection
-       works just like you'd expect from a modern IDE.
-]]
-    
+💡 TIP: Use <Leader>dI to identify the current panel you're in!
+       Console (sidebar) = Debug controls with buttons
+       REPL (bottom) = Logs, output & interactive debugging
+]]    
     -- Create a new buffer for help
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(help_text, '\n'))
@@ -644,10 +736,73 @@ if dap_ok then
   -- Command to show debug help
   vim.api.nvim_create_user_command('DebugHelp', show_debug_help, { desc = 'Show debugging help for beginners' })
 
+  -- Enhanced user command to show current layout info
+  vim.api.nvim_create_user_command('DebugLayout', function()
+    local layout_info = [[
+🎨 CURRENT DEBUG UI LAYOUT:
+
+📋 LEFT SIDEBAR (Width: 55 columns):
+  DAP Scopes      (25%) → 🔍 Current variable values and scope
+  DAP Stacks      (25%) → 📊 Function call hierarchy  
+  DAP Breakpoints (20%) → 🔴 Manage pause points
+  DAP Watches     (15%) → 👁️  Custom expressions to monitor
+  DAP Console     (15%) → 🎮 Debug controls & interface
+
+📺 BOTTOM AREA (Height: 15 lines):
+  [dap-repl]     (100%) → 📋 Logs, output & interactive debugging
+
+🎯 KEY DIFFERENCES:
+• Console (sidebar): Debug controls with play/pause/step buttons
+• REPL (bottom): Full-width logs, output, and interactive debugging
+
+🎯 KEY IMPROVEMENTS:
+• REPL moved to sidebar for easier access
+• Console gets full bottom width for maximum output space
+• 5-panel sidebar provides complete debug information
+• Wider sidebar (55 vs 50 cols) for better readability
+• Taller console (15 vs 12 lines) for more output
+
+Toggle with F4 or <Leader>du
+]]
+    
+    -- Create a new buffer for layout info
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(layout_info, '\n'))
+    vim.api.nvim_buf_set_option(buf, 'filetype', 'help')
+    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+    
+    -- Open in a floating window
+    local width = 70
+    local height = 25
+    local win = vim.api.nvim_open_win(buf, true, {
+      relative = 'editor',
+      width = width,
+      height = height,
+      col = (vim.o.columns - width) / 2,
+      row = (vim.o.lines - height) / 2,
+      style = 'minimal',
+      border = 'rounded',
+      title = ' 🎨 Enhanced Debug Layout ',
+      title_pos = 'center'
+    })
+    
+    -- Close with q or Escape
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(buf, 'n', '<Esc>', '<cmd>close<CR>', { noremap = true, silent = true })
+  end, { desc = 'Show current debug layout information' })
+
+  -- Command to show debug help
+  vim.api.nvim_create_user_command('DebugHelp', show_debug_help, { desc = 'Show debugging help for beginners' })
+
   -- Keymap to show debug help (use different key to avoid conflict with threads)
   vim.keymap.set("n", "<Leader>d?", show_debug_help, { desc = "Show Debug Help" })
 
-  vim.notify("🐛 IntelliJ-like debugging configured! Use <Leader>d? for help", vim.log.levels.INFO)
+  -- Keymap to show current layout info
+  vim.keymap.set("n", "<Leader>dL", function()
+    vim.cmd("DebugLayout")
+  end, { desc = "Show Enhanced Debug Layout Info" })
+
+  vim.notify("🐛 Enhanced debugging configured! Use <Leader>d? for help, <Leader>dL for layout info", vim.log.levels.INFO)
 
   -- Return the dap module for other configurations to use
   return dap
