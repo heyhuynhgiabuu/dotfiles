@@ -96,3 +96,30 @@ alias gom='go mod tidy'
 alias goi='go install'
 alias gof='gofumpt -w .'
 alias gol='golangci-lint run'
+
+# OpenCode AI aliases
+alias oc='opencode'                           # Start OpenCode in current directory
+alias ocr='opencode run'                      # Run OpenCode with direct prompt
+alias occ='opencode run --continue'           # Continue last session
+alias ocs='opencode run --share'              # Run and share session
+alias ocauth='opencode auth'                  # Manage authentication
+alias oclogin='opencode auth login'           # Login to providers
+alias oclist='opencode auth list'             # List authenticated providers
+alias oclogout='opencode auth logout'         # Logout from provider
+alias ocup='opencode upgrade'                 # Upgrade to latest version
+alias ochelp='opencode --help'                # Show help
+alias ocver='opencode --version'              # Show version
+
+# OpenCode shortcuts with modes
+alias ocplan='opencode --mode plan'           # Planning mode (read-only)
+alias ocreview='opencode --mode review'       # Review mode (read-only)
+alias ocdebug='opencode --mode debug'         # Debug mode
+alias ocdocs='opencode --mode docs'           # Documentation mode
+alias ocenhanced='opencode --mode enhanced'   # Enhanced mode (Claude Sonnet 4)
+alias ocbuild='opencode --mode build'         # Build mode (Gemini 2.5 Pro)
+
+# OpenCode quick commands
+alias ocq='opencode run'                      # Quick run alias
+alias ocexplain='opencode run "Explain"'      # Quick explain
+alias ocfix='opencode run "Fix this code"'    # Quick fix
+alias octest='opencode run "Write tests for"' # Quick test generation

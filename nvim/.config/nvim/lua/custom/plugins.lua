@@ -3,6 +3,203 @@ local overrides = require("custom.configs.overrides")
 ---@type NvPluginSpec[]
 local plugins = {
 
+  -- nvim-nio (required dependency for nvim-dap-ui)
+  {
+    "nvim-neotest/nvim-nio",
+    lazy = false,
+  },
+
+  -- neoconf.nvim for professional LSP configuration management
+  -- CRITICAL: Must be loaded BEFORE nvim-lspconfig
+  {
+    "folke/neoconf.nvim",
+    cmd = "Neoconf",
+    config = function()
+      require("neoconf").setup({
+        -- import existing settings from other plugins
+        import = {
+          vscode = true, -- local .vscode/settings.json
+          coc = false,   -- global/local coc-settings.json (disabled - we don't use coc)
+          nlsp = false,  -- global/local nlsp-settings.nvim (disabled - not needed)
+        },
+        -- send new configuration to lsp clients when changing json settings
+        live_reload = true,
+        -- set the filetype to jsonc for settings files with comments
+        filetype_jsonc = true,
+        plugins = {
+          lspconfig = {
+            enabled = true,
+          },
+          jsonls = {
+            enabled = true,
+            configured_servers_only = true,
+          },
+          lua_ls = {
+            enabled_for_neovim_config = true,
+          },
+        },
+      })
+    end,
+  },
+
+  -- nvim-dap (Debug Adapter Protocol) for debugging support
+  -- MUST be loaded before nvim-jdtls to ensure proper integration
+  {
+    'mfussenegger/nvim-dap',
+    lazy = false, -- Load immediately to ensure availability
+    config = function()
+      -- Basic DAP setup - detailed config is in dap-config.lua
+      local dap = require("dap")
+      vim.notify("🐛 nvim-dap loaded successfully", vim.log.levels.INFO)
+    end,
+  },
+
+  -- nvim-dap-ui for IntelliJ-like debugging UI
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio"
+    },
+    lazy = false,
+    config = function()
+      local dap, dapui = require("dap"), require("dapui")
+      
+      -- Setup dap-ui with IntelliJ-like layout
+      dapui.setup({
+        icons = { expanded = "", collapsed = "", current_frame = "" },
+        mappings = {
+          expand = { "<CR>", "<2-LeftMouse>" },
+          open = "o",
+          remove = "d",
+          edit = "e",
+          repl = "r",
+          toggle = "t",
+        },
+        element_mappings = {},
+        expand_lines = vim.fn.has("nvim-0.7") == 1,
+        layouts = {
+          {
+            elements = {
+              -- Elements can be strings or table with id and size keys.
+              { id = "scopes", size = 0.25 },
+              "breakpoints",
+              "stacks",
+              "watches",
+            },
+            size = 40, -- 40 columns
+            position = "left",
+          },
+          {
+            elements = {
+              "repl",
+              "console",
+            },
+            size = 0.25, -- 25% of total lines
+            position = "bottom",
+          },
+        },
+        controls = {
+          enabled = true,
+          element = "repl",
+          icons = {
+            pause = "",
+            play = "",
+            step_into = "",
+            step_over = "",
+            step_out = "",
+            step_back = "",
+            run_last = "",
+            terminate = "",
+          },
+        },
+        floating = {
+          max_height = nil,
+          max_width = nil,
+          border = "single",
+          mappings = {
+            close = { "q", "<Esc>" },
+          },
+        },
+        windows = { indent = 1 },
+        render = {
+          max_type_length = nil,
+          max_value_lines = 100,
+        }
+      })
+
+      -- Automatically open/close DAP UI
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+        vim.notify("🐛 Debug session started - DAP UI opened", vim.log.levels.INFO)
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+        vim.notify("🏁 Debug session ended - DAP UI closed", vim.log.levels.INFO)
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+        vim.notify("🚪 Debug session exited - DAP UI closed", vim.log.levels.INFO)
+      end
+
+      -- Additional keymaps for DAP UI
+      vim.keymap.set("n", "<Leader>du", function() dapui.toggle() end, { desc = "Toggle DAP UI" })
+      vim.keymap.set("n", "<Leader>dE", function() dapui.eval() end, { desc = "Evaluate expression under cursor" })
+      vim.keymap.set("v", "<Leader>dE", function() dapui.eval() end, { desc = "Evaluate selected expression" })
+      vim.keymap.set("n", "<Leader>df", function() dapui.float_element() end, { desc = "Float DAP element" })
+      
+      vim.notify("🎨 nvim-dap-ui configured for IntelliJ-like debugging experience", vim.log.levels.INFO)
+    end,
+  },
+
+  -- nvim-dap-virtual-text for inline variable values (like IntelliJ)
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-treesitter/nvim-treesitter"
+    },
+    lazy = false,
+    config = function()
+      require("nvim-dap-virtual-text").setup({
+        enabled = true,
+        enabled_commands = true,
+        highlight_changed_variables = true,
+        highlight_new_as_changed = false,
+        show_stop_reason = true,
+        commented = false,
+        only_first_definition = true,
+        all_references = false,
+        clear_on_continue = false,
+        display_callback = function(variable, buf, stackframe, node, options)
+          if options.virt_text_pos == 'inline' then
+            return ' = ' .. variable.value
+          else
+            return variable.name .. ' = ' .. variable.value
+          end
+        end,
+        virt_text_pos = vim.fn.has 'nvim-0.10' == 1 and 'inline' or 'eol',
+        all_frames = false,
+        virt_lines = false,
+        virt_text_win_col = nil
+      })
+      
+      vim.notify("💭 nvim-dap-virtual-text configured for inline variable display", vim.log.levels.INFO)
+    end,
+  },
+
+  -- nvim-jdtls for professional Java development
+  -- Stable, reliable JDTLS integration without Mason API issues
+  {
+    'mfussenegger/nvim-jdtls',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'mfussenegger/nvim-dap',
+    },
+    ft = { "java" },
+    -- Configuration is handled in ftplugin/java.lua for proper per-project setup
+  },
+
   -- Icons support for better UI
   {
     "nvim-tree/nvim-web-devicons",
@@ -32,10 +229,6 @@ local plugins = {
   },
 
   -- override plugin configs
-  {
-    "williamboman/mason.nvim",
-    opts = overrides.mason
-  },
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -187,12 +380,51 @@ local plugins = {
       })
       
       cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
+        mapping = cmp.mapping.preset.cmdline({
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            else
+              fallback()
+            end
+          end, { 'c' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            else
+              fallback()
+            end
+          end, { 'c' }),
+        }),
         sources = cmp.config.sources({
           { name = 'path' }
         }, {
-          { name = 'cmdline' }
-        })
+          { 
+            name = 'cmdline',
+            option = {
+              ignore_cmds = { 'Man', '!' }
+            }
+          }
+        }),
+        completion = {
+          autocomplete = { 
+            require('cmp.types').cmp.TriggerEvent.TextChanged,
+          },
+        },
+        formatting = {
+          format = function(entry, vim_item)
+            -- Enhanced formatting for command line
+            local source_mapping = {
+              cmdline = "[CMD]",
+              path = "[Path]",
+              buffer = "[Buf]",
+            }
+            vim_item.menu = source_mapping[entry.source.name] or "[Other]"
+            return vim_item
+          end,
+        },
       })
     end,
   },
@@ -227,222 +459,6 @@ local plugins = {
     event = { "CmdlineEnter" },
     ft = { "go", "gomod" },
     build = ':lua require("go.install").update_all_sync()',
-  },
-
-  -- Enhanced Java development with nvim-java (IntelliJ-like experience)
-  {
-    "nvim-java/nvim-java",
-    dependencies = {
-      "nvim-java/lua-async-await",
-      "nvim-java/nvim-java-refactor",
-      "nvim-java/nvim-java-core",
-      "nvim-java/nvim-java-test",
-      "nvim-java/nvim-java-dap",
-      "MunifTanjim/nui.nvim",
-      "neovim/nvim-lspconfig",
-      "mfussenegger/nvim-dap",
-      {
-        "JavaHello/spring-boot.nvim",
-        commit = "218c0c26c14d99feca778e4d13f5ec3e8b1b60f0",
-      },
-      {
-        "rcarriga/nvim-dap-ui",
-        dependencies = { "nvim-neotest/nvim-nio" },
-        config = function()
-          require("dapui").setup({
-            -- Enhanced DAP UI for better debugging experience
-            layouts = {
-              {
-                elements = {
-                  { id = "scopes", size = 0.25 },
-                  { id = "breakpoints", size = 0.25 },
-                  { id = "stacks", size = 0.25 },
-                  { id = "watches", size = 0.25 },
-                },
-                position = "left",
-                size = 40
-              },
-              {
-                elements = {
-                  { id = "repl", size = 0.5 },
-                  { id = "console", size = 0.5 },
-                },
-                position = "bottom",
-                size = 10
-              }
-            },
-          })
-          
-          -- Auto-open/close DAP UI
-          local dap, dapui = require("dap"), require("dapui")
-          dap.listeners.after.event_initialized["dapui_config"] = function()
-            dapui.open()
-          end
-          dap.listeners.before.event_terminated["dapui_config"] = function()
-            dapui.close()
-          end
-          dap.listeners.before.event_exited["dapui_config"] = function()
-            dapui.close()
-          end
-        end,
-      },
-      {
-        "williamboman/mason.nvim",
-        -- nvim-java handles registry configuration automatically
-        -- Do not override registries here to avoid conflicts
-      },
-    },
-    ft = { "java" },
-    config = function()
-      -- Setup nvim-java BEFORE lspconfig (critical for proper initialization)
-      require("java").setup({
-        -- Enhanced configuration for better IntelliJ-like experience
-        root_markers = {
-          'settings.gradle',
-          'settings.gradle.kts', 
-          'pom.xml',
-          'build.gradle',
-          'build.gradle.kts',
-          'mvnw',
-          'gradlew',
-          '.git',
-        },
-        
-        -- Use latest stable versions
-        jdtls = {
-          version = 'v1.43.0',
-        },
-        
-        -- Enable all modern Java development features
-        java_test = {
-          enable = true,
-          version = '0.40.1',
-        },
-        
-        java_debug_adapter = {
-          enable = true,
-          version = '0.58.1',
-        },
-        
-        spring_boot_tools = {
-          enable = true,
-          version = '1.55.1',
-        },
-        
-        lombok = {
-          version = 'nightly',
-        },
-        
-        -- Auto-install JDK for convenience
-        jdk = {
-          auto_install = true,
-          version = '17.0.2', -- LTS version, good for most projects
-        },
-        
-        -- Enhanced notifications
-        notifications = {
-          dap = true,
-        },
-        
-        verification = {
-          invalid_order = true,
-          duplicate_setup_calls = true,
-          invalid_mason_registry = false,
-        },
-      })
-      
-      -- Setup lspconfig AFTER nvim-java (critical order)
-      require('lspconfig').jdtls.setup({
-        -- nvim-java handles all the JDTLS configuration automatically
-        -- You can add custom settings here if needed
-        settings = {
-          java = {
-            -- Enhanced Java settings for better IntelliJ-like experience
-            signatureHelp = { enabled = true },
-            maven = { downloadSources = true },
-            referencesCodeLens = { enabled = true },
-            references = { includeDecompiledSources = true },
-            inlayHints = {
-              parameterNames = { enabled = 'all' },
-            },
-            format = { enabled = true }, -- Enable formatting
-            saveActions = {
-              organizeImports = true,
-            },
-          },
-        },
-      })
-      
-      -- Enhanced DAP configuration for Java debugging
-      local dap = require('dap')
-      
-      -- Java-specific DAP keymaps (IntelliJ-style)
-      local keymap = vim.keymap.set
-      
-      -- === BUILD & RUN (like IntelliJ) ===
-      keymap("n", "<leader>jr", "<cmd>JavaRunnerRunMain<CR>", { desc = "Java - Run Main Class" })
-      keymap("n", "<leader>js", "<cmd>JavaRunnerStopMain<CR>", { desc = "Java - Stop Running Application" })
-      keymap("n", "<leader>jl", "<cmd>JavaRunnerToggleLogs<CR>", { desc = "Java - Toggle Logs" })
-      keymap("n", "<leader>jb", "<cmd>JavaBuildBuildWorkspace<CR>", { desc = "Java - Build Workspace" })
-      keymap("n", "<leader>jc", "<cmd>JavaBuildCleanWorkspace<CR>", { desc = "Java - Clean Workspace" })
-      
-      -- === TESTING (like IntelliJ Test Runner) ===
-      keymap("n", "<leader>jtc", "<cmd>JavaTestRunCurrentClass<CR>", { desc = "Java - Run Test Class" })
-      keymap("n", "<leader>jtm", "<cmd>JavaTestRunCurrentMethod<CR>", { desc = "Java - Run Test Method" })
-      keymap("n", "<leader>jtd", "<cmd>JavaTestDebugCurrentClass<CR>", { desc = "Java - Debug Test Class" })
-      keymap("n", "<leader>jtM", "<cmd>JavaTestDebugCurrentMethod<CR>", { desc = "Java - Debug Test Method" })
-      keymap("n", "<leader>jtr", "<cmd>JavaTestViewLastReport<CR>", { desc = "Java - View Test Report" })
-      
-      -- === REFACTORING (like IntelliJ Refactor menu) ===
-      keymap("n", "<leader>jxv", "<cmd>JavaRefactorExtractVariable<CR>", { desc = "Java - Extract Variable" })
-      keymap("v", "<leader>jxv", "<cmd>JavaRefactorExtractVariable<CR>", { desc = "Java - Extract Variable" })
-      keymap("n", "<leader>jxV", "<cmd>JavaRefactorExtractVariableAllOccurrence<CR>", { desc = "Java - Extract Variable (All)" })
-      keymap("v", "<leader>jxV", "<cmd>JavaRefactorExtractVariableAllOccurrence<CR>", { desc = "Java - Extract Variable (All)" })
-      keymap("n", "<leader>jxc", "<cmd>JavaRefactorExtractConstant<CR>", { desc = "Java - Extract Constant" })
-      keymap("v", "<leader>jxc", "<cmd>JavaRefactorExtractConstant<CR>", { desc = "Java - Extract Constant" })
-      keymap("n", "<leader>jxm", "<cmd>JavaRefactorExtractMethod<CR>", { desc = "Java - Extract Method" })
-      keymap("v", "<leader>jxm", "<cmd>JavaRefactorExtractMethod<CR>", { desc = "Java - Extract Method" })
-      keymap("n", "<leader>jxf", "<cmd>JavaRefactorExtractField<CR>", { desc = "Java - Extract Field" })
-      keymap("v", "<leader>jxf", "<cmd>JavaRefactorExtractField<CR>", { desc = "Java - Extract Field" })
-      
-      -- === DEBUGGING (like IntelliJ Debugger) ===
-      keymap("n", "<leader>jd", "<cmd>JavaDapConfig<CR>", { desc = "Java - Configure DAP" })
-      
-      -- Standard DAP controls (like IntelliJ debug toolbar)
-      keymap("n", "<F5>", function() dap.continue() end, { desc = "Debug - Continue" })
-      keymap("n", "<F6>", function() dap.step_over() end, { desc = "Debug - Step Over" })
-      keymap("n", "<F7>", function() dap.step_into() end, { desc = "Debug - Step Into" })
-      keymap("n", "<F8>", function() dap.step_out() end, { desc = "Debug - Step Out" })
-      keymap("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Debug - Toggle Breakpoint" })
-      keymap("n", "<leader>dB", function() 
-        dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) 
-      end, { desc = "Debug - Set Conditional Breakpoint" })
-      keymap("n", "<leader>dr", function() dap.repl.open() end, { desc = "Debug - Open REPL" })
-      keymap("n", "<leader>du", function() require("dapui").toggle() end, { desc = "Debug - Toggle UI" })
-      
-      -- === PROFILES & SETTINGS (like IntelliJ Run Configurations) ===
-      keymap("n", "<leader>jp", "<cmd>JavaProfile<CR>", { desc = "Java - Open Profiles" })
-      keymap("n", "<leader>jk", "<cmd>JavaSettingsChangeRuntime<CR>", { desc = "Java - Change JDK Runtime" })
-      
-      -- === QUICK ACCESS (IntelliJ-style shortcuts) ===
-      keymap("n", "<F9>", "<cmd>JavaTestRunCurrentClass<CR>", { desc = "Java - Run Tests (F9)" })
-      keymap("n", "<F10>", "<cmd>JavaRunnerRunMain<CR>", { desc = "Java - Run Main (F10)" })
-      keymap("n", "<S-F9>", "<cmd>JavaTestDebugCurrentClass<CR>", { desc = "Java - Debug Tests (Shift+F9)" })
-      keymap("n", "<S-F10>", function()
-        -- Debug main class (requires DAP setup)
-        vim.cmd("JavaDapConfig")
-        vim.defer_fn(function()
-          dap.continue()
-        end, 500)
-      end, { desc = "Java - Debug Main (Shift+F10)" })
-      
-      -- Print setup success message
-      vim.defer_fn(function()
-        print("☕ nvim-java: IntelliJ-like Java environment ready!")
-        print("📝 Use <leader>j* for Java commands | F9/F10 for quick run/test")
-        print("🐛 Use F5-F8 for debugging | <leader>db for breakpoints")
-      end, 2000)
-    end,
   },
 
   -- Install a plugin
@@ -537,23 +553,53 @@ local plugins = {
         { "<leader>l", group = "LSP" },
         { "<leader>g", group = "Git/Go" },
         { "<leader>j", group = "Java" },
+        { "<leader>jb", group = "Java Build" },
         { "<leader>jr", group = "Java Run" },
         { "<leader>jt", group = "Java Test" },
         { "<leader>jx", group = "Java Refactor" },
+        { "<leader>jd", group = "Java Debug" },
+        { "<leader>js", group = "Java Settings" },
+        { "<leader>jg", group = "Java Go To" },
+        { "<leader>jc", group = "Java Code" },
         { "<leader>t", group = "Terminal" },
         { "<leader>w", group = "Window" },
         { "<leader>b", group = "Buffer" },
         { "<leader>d", group = "Debug" },
+        { "<leader>db", group = "Debug Breakpoints" },
+        { "<leader>ds", group = "Debug Step" },
+        { "<leader>dr", group = "Debug REPL/Restart" },
+        { "<leader>dv", group = "Debug View/Eval" },
         { "<leader>s", group = "Search" },
         { "<leader>h", group = "Help" },
         { "<leader>a", group = "AugmentCode" },
         { "<leader>v", group = "View/Visual" },
+        { "<leader>x", group = "Diagnostics/Quickfix" },
         { "<leader>vt", desc = "Show directory tree in floating window" },
         { "<leader>tv", desc = "New vertical terminal" },
         { "<leader>tn", desc = "Toggle line number" },
         { "<leader>aw", desc = "Show workspace folders" },
         { "<leader>aW", desc = "Add current directory to workspace" },
         { "<leader>aF", desc = "Add custom folder to workspace" },
+        -- Debug hotkeys documentation
+        { "<F5>", desc = "Start/Continue Debug" },
+        { "<F6>", desc = "Pause Debug" },
+        { "<F9>", desc = "Toggle Breakpoint" },
+        { "<F10>", desc = "Step Over" },
+        { "<F11>", desc = "Step Into" },
+        { "<S-F11>", desc = "Step Out" },
+        { "<S-F5>", desc = "Stop Debug" },
+        { "<C-F5>", desc = "Restart Debug" },
+        { "<leader>db", desc = "Toggle Breakpoint" },
+        { "<leader>dB", desc = "Conditional Breakpoint" },
+        { "<leader>dC", desc = "Clear All Breakpoints" },
+        { "<leader>dc", desc = "Debug Continue" },
+        { "<leader>dt", desc = "Debug Terminate" },
+        { "<leader>dr", desc = "Debug Restart/REPL" },
+        { "<leader>dh", desc = "Debug Help" },
+        { "<leader>ds", desc = "Debug Show Scopes" },
+        { "<leader>df", desc = "Debug Show Frames" },
+        { "<leader>dv", desc = "Debug Hover/Eval" },
+        { "<leader>de", desc = "Debug Evaluate Expression" },
       })
     end,
   },
@@ -855,45 +901,262 @@ local plugins = {
     end,
   },
 
-  -- Enhanced Notifications (replaces basic vim.notify)
+  -- Enhanced Command Line UI with floating input
   {
-    "rcarriga/nvim-notify",
-    event = "VimEnter",
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
     config = function()
-      require("notify").setup({
-        background_colour = "#000000",
-        fps = 30,
-        icons = {
-          DEBUG = "",
-          ERROR = "",
-          INFO = "",
-          TRACE = "✎",
-          WARN = ""
+      require("noice").setup({
+        lsp = {
+          -- Override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
         },
-        level = 2,
-        minimum_width = 50,
-        render = "compact",
-        stages = "fade_in_slide_out",
-        time_formats = {
-          notification = "%T",
-          notification_history = "%FT%T"
+        -- Enhanced command line with floating UI
+        cmdline = {
+          enabled = true,
+          view = "cmdline_popup",
+          opts = {},
+          format = {
+            -- Conceal the long command-line when typing
+            cmdline = { pattern = "^:", icon = "", lang = "vim" },
+            search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
+            search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
+            filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
+            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
+            input = {}, -- Used by input()
+          },
         },
-        timeout = 3000,
-        top_down = true
+        messages = {
+          -- NOTE: If you enable messages, then the cmdline is enabled automatically.
+          enabled = true,
+          view = "notify",
+          view_error = "notify",
+          view_warn = "notify",
+          view_history = "messages",
+          view_search = "virtualtext",
+        },
+        popupmenu = {
+          enabled = true,
+          backend = "nui", -- Use nui for better integration
+          kind_icons = {}, -- Use default icons
+        },
+        -- Enhanced notifications
+        notify = {
+          enabled = true,
+          view = "notify",
+        },
+        routes = {
+          {
+            filter = {
+              event = "msg_show",
+              any = {
+                { find = "%d+L, %d+B" },
+                { find = "; after #%d+" },
+                { find = "; before #%d+" },
+              },
+            },
+            view = "mini",
+          },
+        },
+        views = {
+          cmdline_popup = {
+            position = {
+              row = 25,
+              col = "50%",
+            },
+            size = {
+              width = 60,
+              height = "auto",
+            },
+            border = {
+              style = "rounded",
+              padding = { 0, 1 },
+            },
+            filter_options = {},
+            win_options = {
+              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+            },
+          },
+          popupmenu = {
+            relative = "editor",
+            position = {
+              row = 8,
+              col = "50%",
+            },
+            size = {
+              width = 60,
+              height = 10,
+            },
+            border = {
+              style = "rounded",
+              padding = { 0, 1 },
+            },
+            win_options = {
+              winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+            },
+          },
+        },
+      })
+    end,
+  },
+
+  -- Enhanced search UI
+  {
+    "nvim-pack/nvim-spectre",
+    event = "VeryLazy",
+    config = function()
+      require("spectre").setup({
+        color_devicons = true,
+        highlight = {
+          ui = "String",
+          search = "DiffChange",
+          replace = "DiffDelete"
+        },
+        mapping = {
+          ['toggle_line'] = {
+            map = "dd",
+            cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
+            desc = "toggle current item"
+          },
+          ['enter_file'] = {
+            map = "<cr>",
+            cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
+            desc = "goto current file"
+          },
+          ['send_to_qf'] = {
+            map = "<leader>q",
+            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+            desc = "send all item to quickfix"
+          },
+          ['replace_cmd'] = {
+            map = "<leader>c",
+            cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
+            desc = "input replace vim command"
+          },
+          ['show_option_menu'] = {
+            map = "<leader>o",
+            cmd = "<cmd>lua require('spectre').show_options()<CR>",
+            desc = "show option"
+          },
+          ['run_current_replace'] = {
+            map = "<leader>rc",
+            cmd = "<cmd>lua require('spectre.actions').run_current_replace()<CR>",
+            desc = "replace current line"
+          },
+          ['run_replace'] = {
+            map = "<leader>R",
+            cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+            desc = "replace all"
+          },
+          ['change_view_mode'] = {
+            map = "<leader>v",
+            cmd = "<cmd>lua require('spectre').change_view()<CR>",
+            desc = "change result view mode"
+          },
+          ['change_replace_sed'] = {
+            map = "trs",
+            cmd = "<cmd>lua require('spectre').change_engine_replace('sed')<CR>",
+            desc = "use sed to replace"
+          },
+          ['change_replace_oxi'] = {
+            map = "tro",
+            cmd = "<cmd>lua require('spectre').change_engine_replace('oxi')<CR>",
+            desc = "use oxi to replace"
+          },
+          ['toggle_live_update'] = {
+            map = "tu",
+            cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
+            desc = "update change when vim write file."
+          },
+          ['toggle_ignore_case'] = {
+            map = "ti",
+            cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
+            desc = "toggle ignore case"
+          },
+          ['toggle_ignore_hidden'] = {
+            map = "th",
+            cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
+            desc = "toggle search hidden"
+          },
+          ['resume_last_search'] = {
+            map = "<leader>l",
+            cmd = "<cmd>lua require('spectre').resume_last_search()<CR>",
+            desc = "resume last search before close"
+          },
+        },
+        find_engine = {
+          ['rg'] = {
+            cmd = "rg",
+            args = {
+              '--color=never',
+              '--no-heading',
+              '--with-filename',
+              '--line-number',
+              '--column',
+            },
+            options = {
+              ['ignore-case'] = {
+                value = "--ignore-case",
+                icon = "[I]",
+                desc = "ignore case"
+              },
+              ['hidden'] = {
+                value = "--hidden",
+                desc = "hidden file",
+                icon = "[H]"
+              },
+            }
+          },
+        },
+        replace_engine = {
+          ['sed'] = {
+            cmd = "sed",
+            args = nil,
+            options = {
+              ['ignore-case'] = {
+                value = "--ignore-case",
+                icon = "[I]",
+                desc = "ignore case"
+              },
+            }
+          },
+        },
+        default = {
+          find = {
+            cmd = "rg",
+            options = {"ignore-case"}
+          },
+          replace = {
+            cmd = "sed"
+          }
+        },
+        replace_vim_cmd = "cdo",
+        is_open = false,
+        is_insert_mode = false,
       })
       
-      -- Set nvim-notify as default notification handler
-      vim.notify = require("notify")
-      
-      -- Key mapping to view notification history
-      vim.keymap.set("n", "<leader>nh", function()
-        require("notify").history()
-      end, { desc = "Show notification history" })
-      
-      -- Key mapping to dismiss all notifications
-      vim.keymap.set("n", "<leader>nd", function()
-        require("notify").dismiss({ silent = true, pending = true })
-      end, { desc = "Dismiss all notifications" })
+      -- Key mappings for spectre
+      vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
+        desc = "Toggle Spectre"
+      })
+      vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+        desc = "Search current word"
+      })
+      vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+        desc = "Search current word"
+      })
+      vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+        desc = "Search on current file"
+      })
     end,
   },
 
@@ -963,6 +1226,310 @@ local plugins = {
       vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end, { desc = "Quickfix" })
       vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end, { desc = "Location List" })
       vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end, { desc = "LSP References" })
+    end,
+  },
+
+  -- Enhanced status line with more information
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VimEnter",
+    config = function()
+      require("lualine").setup({
+        options = {
+          theme = "auto",
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
+          disabled_filetypes = {
+            statusline = {},
+            winbar = {},
+          },
+          ignore_focus = {},
+          always_divide_middle = true,
+          globalstatus = true,
+          refresh = {
+            statusline = 1000,
+            tabline = 1000,
+            winbar = 1000,
+          }
+        },
+        sections = {
+          lualine_a = {'mode'},
+          lualine_b = {
+            'branch',
+            'diff',
+            {
+              'diagnostics',
+              sources = { 'nvim_diagnostic', 'nvim_lsp' },
+              sections = { 'error', 'warn', 'info', 'hint' },
+              diagnostics_color = {
+                error = 'DiagnosticError',
+                warn  = 'DiagnosticWarn',
+                info  = 'DiagnosticInfo',
+                hint  = 'DiagnosticHint',
+              },
+              symbols = {error = ' ', warn = ' ', info = ' ', hint = ' '},
+              colored = true,
+              update_in_insert = false,
+              always_visible = false,
+            }
+          },
+          lualine_c = {
+            {
+              'filename',
+              file_status = true,
+              newfile_status = false,
+              path = 1, -- Relative path
+              shorting_target = 40,
+              symbols = {
+                modified = '[+]',
+                readonly = '[RO]',
+                unnamed = '[No Name]',
+                newfile = '[New]',
+              }
+            }
+          },
+          lualine_x = {
+            'encoding',
+            'fileformat',
+            'filetype',
+            {
+              -- Show LSP status
+              function()
+                local clients = vim.lsp.get_active_clients()
+                if next(clients) == nil then
+                  return ""
+                end
+                
+                local client_names = {}
+                for _, client in pairs(clients) do
+                  table.insert(client_names, client.name)
+                end
+                return " " .. table.concat(client_names, ", ")
+              end,
+              color = { fg = '#7dc4e4' },
+            }
+          },
+          lualine_y = {'progress'},
+          lualine_z = {'location'}
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {'filename'},
+          lualine_x = {'location'},
+          lualine_y = {},
+          lualine_z = {}
+        },
+        tabline = {},
+        winbar = {},
+        inactive_winbar = {},
+        extensions = {'nvim-tree', 'trouble', 'quickfix'}
+      })
+    end,
+  },
+
+  -- Enhanced buffer line with tabs and close buttons
+  {
+    "akinsho/bufferline.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
+    config = function()
+      require("bufferline").setup({
+        options = {
+          mode = "buffers",
+          style_preset = require("bufferline").style_preset.default,
+          themable = true,
+          numbers = "none",
+          close_command = "bdelete! %d",
+          right_mouse_command = "bdelete! %d",
+          left_mouse_command = "buffer %d",
+          middle_mouse_command = nil,
+          indicator = {
+            icon = '▎',
+            style = 'icon',
+          },
+          buffer_close_icon = '',
+          modified_icon = '●',
+          close_icon = '',
+          left_trunc_marker = '',
+          right_trunc_marker = '',
+          max_name_length = 30,
+          max_prefix_length = 30,
+          truncate_names = true,
+          tab_size = 21,
+          diagnostics = "nvim_lsp",
+          diagnostics_update_in_insert = false,
+          diagnostics_indicator = function(count, level, diagnostics_dict, context)
+            local icon = level:match("error") and " " or " "
+            return " " .. icon .. count
+          end,
+          color_icons = true,
+          show_buffer_icons = true,
+          show_buffer_close_icons = true,
+          show_close_icon = true,
+          show_tab_indicators = true,
+          show_duplicate_prefix = true,
+          persist_buffer_sort = true,
+          separator_style = "slant",
+          enforce_regular_tabs = false,
+          always_show_bufferline = true,
+          hover = {
+            enabled = true,
+            delay = 200,
+            reveal = {'close'}
+          },
+          sort_by = 'insert_after_current',
+          offsets = {
+            {
+              filetype = "NvimTree",
+              text = "File Explorer",
+              text_align = "left",
+              separator = true
+            }
+          },
+        },
+        highlights = {
+          buffer_selected = {
+            bold = true,
+            italic = true,
+          },
+        },
+      })
+    end,
+  },
+
+
+  -- Enhanced terminal integration
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    event = "VeryLazy",
+    config = function()
+      require("toggleterm").setup({
+        size = 20,
+        open_mapping = [[<c-\>]],
+        hide_numbers = true,
+        shade_filetypes = {},
+        shade_terminals = true,
+        shading_factor = 2,
+        start_in_insert = true,
+        insert_mappings = true,
+        terminal_mappings = true,
+        persist_size = true,
+        persist_mode = true,
+        direction = 'float',
+        close_on_exit = true,
+        shell = vim.o.shell,
+        auto_scroll = true,
+        float_opts = {
+          border = 'curved',
+          width = function()
+            return math.floor(vim.o.columns * 0.8)
+          end,
+          height = function()
+            return math.floor(vim.o.lines * 0.8)
+          end,
+          winblend = 0,
+          zindex = 1000,
+          title_pos = 'center',
+        },
+        winbar = {
+          enabled = false,
+          name_formatter = function(term)
+            return term.name
+          end
+        },
+      })
+      
+      -- Enhanced terminal key mappings
+      local Terminal = require('toggleterm.terminal').Terminal
+      
+      -- Horizontal terminal
+      local horizontal_term = Terminal:new({
+        direction = "horizontal",
+        size = 15,
+      })
+      
+      -- Vertical terminal
+      local vertical_term = Terminal:new({
+        direction = "vertical",
+        size = vim.o.columns * 0.4,
+      })
+      
+      -- Lazygit terminal
+      local lazygit = Terminal:new({
+        cmd = "lazygit",
+        dir = "git_dir",
+        direction = "float",
+        float_opts = {
+          border = "double",
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+        end,
+        on_close = function(term)
+          vim.cmd("startinsert!")
+        end,
+      })
+      
+      -- Key mappings
+      vim.keymap.set("n", "<leader>tv", function() vertical_term:toggle() end, { desc = "New vertical terminal" })
+      vim.keymap.set("n", "<leader>th", function() horizontal_term:toggle() end, { desc = "New horizontal terminal" })
+      vim.keymap.set("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "New floating terminal" })
+      vim.keymap.set("n", "<leader>gg", function() lazygit:toggle() end, { desc = "Open Lazygit" })
+      
+      -- Terminal mode mappings
+      function _G.set_terminal_keymaps()
+        local opts = {buffer = 0}
+        vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+        vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+        vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+        vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+        vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+        vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+        vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
+      end
+      
+      vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+    end,
+  },
+
+  -- Enhanced indentation guides
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("ibl").setup({
+        indent = {
+          char = "│",
+          tab_char = "│",
+        },
+        scope = {
+          enabled = true,
+          show_start = true,
+          show_end = false,
+          injected_languages = false,
+          highlight = { "Function", "Label" },
+          priority = 500,
+        },
+        exclude = {
+          filetypes = {
+            "help",
+            "alpha",
+            "dashboard",
+            "Trouble",
+            "trouble",
+            "lazy",
+            "mason",
+            "notify",
+            "toggleterm",
+            "lazyterm",
+          },
+        },
+      })
     end,
   },
 

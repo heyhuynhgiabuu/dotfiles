@@ -133,6 +133,42 @@ return {
                     { name = "path" },
                 })
             })
+            
+            -- Setup command line completion using autocommand to ensure it runs after everything is loaded
+            vim.api.nvim_create_autocmd("CmdlineEnter", {
+                callback = function()
+                    local cmp = require('cmp')
+                    
+                    -- Setup search completion
+                    cmp.setup.cmdline('/', {
+                        completion = { autocomplete = false },
+                        mapping = cmp.mapping.preset.cmdline(),
+                        sources = {
+                            { name = 'buffer', opts = { keyword_pattern = [=[[^[:blank:]].*]=] } }
+                        }
+                    })
+                    
+                    cmp.setup.cmdline('?', {
+                        completion = { autocomplete = false },
+                        mapping = cmp.mapping.preset.cmdline(),
+                        sources = {
+                            { name = 'buffer', opts = { keyword_pattern = [=[[^[:blank:]].*]=] } }
+                        }
+                    })
+                    
+                    -- Setup command completion
+                    cmp.setup.cmdline(':', {
+                        completion = { autocomplete = false },
+                        mapping = cmp.mapping.preset.cmdline(),
+                        sources = cmp.config.sources({
+                            { name = 'path' }
+                        }, {
+                            { name = 'cmdline' }
+                        })
+                    })
+                end,
+                once = true, -- Only run once
+            })
         end,
     },
 }

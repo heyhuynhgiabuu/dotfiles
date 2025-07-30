@@ -14,7 +14,7 @@ end, { noremap = true, silent = true })
 -- go to errors in a file :/
 vim.keymap.set("n", "<leader>ne", vim.diagnostic.goto_next) -- next err
 vim.keymap.set("n", "<leader>pe", vim.diagnostic.goto_prev) -- previous err
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+vim.keymap.set("n", "<leader>ed", vim.diagnostic.open_float) -- show error diagnostics
 -- copy current file path (absolute) into clipboard
 vim.keymap.set("n", "<leader>cp", function()
 	local filepath = vim.fn.expand("%:p")
@@ -114,4 +114,5 @@ vim.api.nvim_create_user_command("ShowTree", function()
 	print("Job ID: " .. job_id)
 end, {})
 
-vim.keymap.set("n", "<leader>vt", ":ShowTree<CR>", { desc = "Show directory tree in floating window" })
+-- Simple tree command using Unix tree (kept for reference, but NvimTree is preferred)
+vim.keymap.set("n", "<leader>vt", ":ShowTree<CR>", { desc = "Show Unix tree in floating window (alternative)" })

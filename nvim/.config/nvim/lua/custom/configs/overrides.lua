@@ -50,38 +50,42 @@ M.treesitter = {
 }
 
 M.mason = {
+  -- nvim-java registry configuration moved to dependency setup
   ensure_installed = {
-    -- lua stuff
-    "lua-language-server",
-    "stylua",
+    -- LSP servers
+    "lua-language-server",    -- Lua LSP
+    "stylua",                 -- Lua formatter
+    "html-lsp",               -- HTML LSP
+    "css-lsp",                -- CSS LSP
+    "prettier",               -- Multi-format formatter
+    "eslint_d",               -- JS/TS linter
+    "emmet-ls",               -- Emmet LSP
 
-    -- web dev stuff
-    "css-lsp",
-    "html-lsp",
-    "ts_ls",              -- Updated from typescript-language-server
-    "deno",
-    "prettier",
+    -- JavaScript/TypeScript
+    "typescript-language-server", -- TS LSP
+    "js-debug-adapter",       -- JS/TS debugger
 
-    -- c/cpp stuff
-    "clangd",
-    "clang-format",
+    -- Shell scripting
+    "bash-language-server",   -- Bash LSP
+    "shellcheck",             -- Shell script linter
+    "shfmt",                  -- Shell formatter
 
-    -- Go development - enhanced toolchain
-    "gopls",              -- Go language server
-    "goimports",          -- Go imports formatter
-    "gofumpt",            -- Go formatter (stricter than gofmt)
-    "golangci-lint",      -- Go linter
-    "gotests",            -- Go test generator
-    "impl",               -- Go interface implementation generator
-    "gomodifytags",       -- Go struct tag modifier
-    "dlv",                -- Go debugger (Delve)
+    -- Go development
+    "gopls",                  -- Go language server
+    "goimports",              -- Go imports formatter
+    "gofumpt",                -- Go formatter (stricter than gofmt)
+    "golangci-lint",          -- Go linter
+    "gotests",                -- Go test generator
+    "impl",                   -- Go interface implementation generator
+    "gomodifytags",           -- Go struct tag modifier
+    "delve",                  -- Go debugger (Delve)
 
-    -- Java development - enhanced toolchain
-    "jdtls",              -- Java language server
-    "google-java-format", -- Java formatter
-    "checkstyle",         -- Java style checker
-    "java-debug-adapter", -- Java debug adapter
-    "java-test",          -- Java test runner
+    -- Java development - let nvim-java handle Java-specific tools
+    "jdtls",                  -- Java Language Server
+    "java-debug-adapter",     -- Java debugger
+    "java-test",              -- Java test runner
+    "google-java-format",     -- Java formatter
+    "checkstyle",             -- Java style checker
   },
 }
 
@@ -98,6 +102,12 @@ M.nvimtree = {
         git = true,
       },
     },
+  },
+
+  -- Position NvimTree on the right side
+  view = {
+    side = "right",
+    width = 30,
   },
 }
 
