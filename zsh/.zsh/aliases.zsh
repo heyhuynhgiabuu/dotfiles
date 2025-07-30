@@ -84,8 +84,9 @@ alias copq='gh copilot suggest'
 alias cope='gh copilot explain'
 alias copf='gh copilot fix'
 
-# Tmux
+# Tmux Layouts
 alias tjava='~/dotfiles/scripts/tmux-java-layout.sh'
+alias tgo='~/dotfiles/scripts/tmux-go-layout.sh'
 
 # Go-specific aliases
 alias gor='go run .'
@@ -111,12 +112,11 @@ alias ochelp='opencode --help'                # Show help
 alias ocver='opencode --version'              # Show version
 
 # OpenCode shortcuts with modes
-alias ocplan='opencode --mode plan'           # Planning mode (read-only)
-alias ocreview='opencode --mode review'       # Review mode (read-only)
-alias ocdebug='opencode --mode debug'         # Debug mode
-alias ocdocs='opencode --mode docs'           # Documentation mode
-alias ocenhanced='opencode --mode enhanced'   # Enhanced mode (Claude Sonnet 4)
-alias ocbuild='opencode --mode build'         # Build mode (Gemini 2.5 Pro)
+alias ocdaily='opencode --mode daily'         # Interactive development (Free GPT-4.1)
+alias ocbeast='opencode --mode beast'         # Autonomous complex tasks (Free GPT-4.1)
+alias ocplan='opencode --mode plan'           # Read-only planning mode (Free GPT-4.1)
+alias ocbuild='opencode --mode build'         # Build mode for large codebases (Gemini 2.5 Pro)
+alias ocenhanced='opencode --mode enhanced'   # Enhanced reasoning mode (Claude Sonnet 4)
 
 # OpenCode quick commands
 alias ocq='opencode run'                      # Quick run alias

@@ -69,7 +69,7 @@ Consistent keyboard shortcuts across all projects:
 
 ### `workspace_folders.conf`
 Default workspace directories automatically included:
-- Common development folders (`~/projects`, `~/code`, `~/dev`)
+- Common development folders (`~/projects`, `~/Developer/`)
 - Language-specific directories (`~/go/src`, `~/python`)
 - Configuration directories (`~/dotfiles`, `~/.config`)
 
