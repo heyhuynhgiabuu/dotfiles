@@ -84,6 +84,8 @@ alias gclone='gh repo clone'
 alias copq='gh copilot suggest'
 alias cope='gh copilot explain'
 alias copf='gh copilot fix'
+alias glog="git log --oneline --graph --decorate"
+alias gclean='git_clean_merged'
 
 # Tmux Layouts
 alias tjava='~/dotfiles/scripts/tmux-java-layout.sh'

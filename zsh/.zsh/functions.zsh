@@ -78,3 +78,8 @@ logocode() {
   fi
 }
 
+# Clean up merged git branches
+git_clean_merged() {
+  git branch --merged | egrep -v "(^\*|main|master)" | xargs git branch -d
+}
+
