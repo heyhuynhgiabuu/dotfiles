@@ -21,4 +21,3 @@ export GOPATH=$HOME/go
 # Use Homebrew Go (no need to set GOROOT manually)
 export PATH="$PATH:$GOPATH/bin"
 unset GOROOT
-

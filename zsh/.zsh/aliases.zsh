@@ -102,7 +102,7 @@ alias gol='golangci-lint run'
 # --- OpenCode & Serena Integration ---
 
 # Layer 1: Session Management & Basic Commands
-alias oc='opencode'                           # Start OpenCode TUI in current directory
+alias oc='opencode' # Ensure log directory exists
 alias occ='opencode run --continue'           # Continue the last session (USE WITH CAUTION: only if model is the same)
 alias ocs='opencode run --share'              # Run and share a session
 alias ocup='opencode upgrade'                 # Upgrade to the latest version
@@ -122,7 +122,8 @@ alias oc-plan='opencode --mode plan'          # Start NEW session in plan mode (
 alias oc-build='opencode --mode build'        # Start NEW session in build mode (Gemini 2.5 Pro)
 alias oc-enhanced='opencode --mode enhanced'  # Start NEW session in enhanced mode (Claude Sonnet 4)
 
-# Layer 3: Cost-Effective Quick-Fire Commands
+
+
 # Runs a specific tool in a NEW, non-interactive session using a FREE model.
 # Example: ocs-find "my_function"
 ocs-find() { opencode run --model 'github-copilot/gpt-4.1' "@serena find_symbol \"$1\""; }

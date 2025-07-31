@@ -58,3 +58,23 @@ qss() {
   fi       
 }
 bindkey -v
+
+# View the latest opencode log file and follow it
+logocode() {
+  local log_dir="$HOME/.local/share/opencode/log"
+  if [[ -d "$log_dir" ]]; then
+    # zsh glob to get the latest modified file
+    local -a files
+    files=("$log_dir"/*(N.om[1]))
+    if (( ${#files[@]} > 0 )); then
+      # Use tail -f to follow the file. +F in less is also an option,
+      # but tail is more direct for this use case.
+      tail -f "$files[1]"
+    else
+      echo "No log files found in $log_dir"
+    fi
+  else
+    echo "Log directory not found: $log_dir"
+  fi
+}
+
