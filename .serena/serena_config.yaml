@@ -1,5 +1,5 @@
 # Serena Configuration
-read_only: true
+read_only: false
 dashboard:
   enabled: true
   port: 24282

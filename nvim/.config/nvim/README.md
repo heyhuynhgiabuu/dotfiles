@@ -1,63 +1,47 @@
-# NvChad dotfiles với Enhanced Development
+# Neovim Configuration for an Enhanced Development Experience
 
-## Cài đặt nhanh
+This directory contains a Neovim setup based on NvChad, heavily customized to provide a streamlined, powerful, and IDE-like development workflow, especially for Java and Go.
 
-```bash
-git clone https://github.com/heyhuynhgiabuu/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-bash scripts/install.sh
-```
+## Core Philosophy: KISS (Keep It Simple, Stupid)
 
-## Phím tắt F-key cho Development
+This configuration prioritizes simplicity and powerful, essential features over excessive complexity. Key decisions include:
+-   Using **NvimTree** for its simplicity and speed over more complex file explorers.
+-   A strong focus on a clean, intuitive **debugging experience** that mirrors modern IDEs.
+-   Ensuring all configurations are **cross-platform** (macOS & Linux).
 
-### Phím tắt chính (F3-F12)
-- **F3**: Toggle NvimTree (file explorer)
-- **F4**: Toggle Debug UI (giao diện debug như IntelliJ)
-- **F5**: Start/Continue Debug (bắt đầu/tiếp tục debug)
-- **F6**: Pause Debug (tạm dừng debug)
-- **F7**: Run Test Class (chạy test toàn bộ class)
-- **F8**: Run Test Method (chạy test method hiện tại)
-- **F9**: Toggle Breakpoint (đặt/bỏ breakpoint)
-- **F10**: Step Over (debug: bước qua)
-- **F11**: Step Into (debug: bước vào)
-- **F12**: Debug Java/Spring Boot (debug ứng dụng Java)
+## Key Features
 
-### Debug nâng cao
-- `<leader>dv`: Xem giá trị biến
-- `<leader>di`: Kiểm tra biến chi tiết
-- `<leader>dE`: Đánh giá biểu thức
-- `<leader>e`: Mở NvimTree (thay thế cho Neo-tree)
-- `<leader>ed`: Hiển thị diagnostics
+### 1. IDE-like Debugging (DAP UI)
+The central feature is a sophisticated debugging interface powered by `nvim-dap-ui`. It provides a multi-panel layout that separates concerns logically:
+-   **Scopes & Variables:** Inspect the state of your application.
+-   **Call Stack:** Trace the execution flow.
+-   **Breakpoints & Watchers:** Manage breakpoints and watch expressions.
+-   **REPL & Console:** A dedicated area for logs and interactive commands.
 
-## Plugin nổi bật
+### 2. Standardized F-Key Hotkeys
+A full set of F-keys (F3-F12) provides a familiar, muscle-memory-friendly workflow for common actions:
+-   **F3:** Toggle File Explorer (`NvimTree`)
+-   **F4:** Toggle the entire Debug UI
+-   **F5:** Start / Continue Debugging
+-   **F9:** Toggle Breakpoint
+-   **F10:** Step Over
+-   **F11:** Step Into
+-   **F12:** Quick Debug for Java/Go
 
-### UI & Navigation
-- **NvimTree**: File explorer đơn giản (KISS principle)
-- **DAP UI**: Giao diện debug như IntelliJ
-- **lualine**: Status line
-- **bufferline**: Tab management
-- **which-key**: Hướng dẫn phím tắt
+### 3. Powerful Java & Spring Boot Support
+Leverages `jdtls` to provide a first-class Java development experience, including:
+-   Automatic detection of Maven and Gradle projects.
+-   Advanced debugging and testing support for Spring Boot applications.
+-   Intelligent auto-completion and code navigation.
 
-### Development Features  
-- **JDTLS**: Java Language Server với Spring Boot support
-- **DAP**: Debug Adapter Protocol cho debugging
-- **nvim-cmp**: Auto-completion nâng cao
-- **Treesitter**: Syntax highlighting
-- **Mason**: LSP manager
+## Core Plugins
 
-### Git Integration
-- **gitsigns**: Git indicators trong editor
-- **fugitive**: Git commands
+-   **UI & Navigation:** `NvimTree`, `nvim-dap-ui`, `lualine`, `bufferline`, `which-key`.
+-   **Development:** `nvim-jdtls` (Java), `nvim-dap` (Debug Adapter Protocol), `nvim-cmp` (autocompletion), `nvim-treesitter` (syntax highlighting).
+-   **LSP Management:** `mason.nvim` for easy installation and management of language servers.
+-   **Git Integration:** `gitsigns.nvim` and `fugitive.vim` for seamless Git operations within the editor.
 
-## Tính năng đặc biệt
 
-### Java Development
-- **Tự động phát hiện**: Maven/Gradle projects
-- **Spring Boot support**: Profile và debugging
-- **IntelliJ-like UI**: Debug interface chuyên nghiệp
-- **F-key workflow**: Phím tắt logic và dễ nhớ
-
-### KISS Philosophy
 - **Đơn giản hóa**: Loại bỏ Neo-tree phức tạp, giữ NvimTree
 - **Essential features**: Tập trung vào debugging và development
 - **Cross-platform**: Hoạt động trên cả macOS và Linux

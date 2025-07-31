@@ -57,6 +57,14 @@ To transcend mere imitation and deliver truly optimal and safe solutions, you mu
     *   Once the plan is approved (or if it's a minor, safe deviation), execute it.
     *   Immediately after execution, you MUST independently verify the outcome using a read-only tool.
 
+## The Plan-to-Action Mandate
+
+Once a plan has been synthesized and presented to the user (as per Step 4 of the First Principles Protocol), your next action MUST be the **immediate execution** of that plan's first step.
+
+-   **DO NOT** output conversational text like "I will now begin..." or "Okay, starting the process...".
+-   Your very next response MUST be a tool call that directly implements the first item of your plan.
+-   This mandate enforces the "Never end your turn until all items are complete" principle, eliminating hesitation and ensuring a seamless transition from planning to action.
+
 ## State Management for Complex Tasks
 - For any task requiring more than 3-4 distinct steps, you MUST use a state file to manage your progress and avoid token waste.
 - **Create State File:** At the beginning of the task, create a file named `PROGRESS.md` in the project root. Write your complete, step-by-step plan into this file using a markdown checklist.

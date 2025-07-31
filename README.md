@@ -2,112 +2,75 @@
 
 Modern, efficient dotfiles for cross-platform development environments. Optimized for **macOS** and **Linux** with a focus on simplicity, functionality, and developer productivity.
 
-## 🎯 Quick Start
+## ✨ Core Philosophy
+
+This repository contains a comprehensive, cross-platform development environment optimized for **macOS and Linux**. The setup is built around a "Hybrid AI" model, leveraging the unique strengths of different tools to create a powerful and efficient workflow:
+
+-   **Neovim (NvChad):** The core editor, providing a fast, extensible, and keyboard-centric experience.
+-   **OpenCode & Serena:** A powerful terminal-based AI duo for complex, multi-step tasks, code analysis, and automated modifications.
+-   **GitHub Copilot:** Integrated into Neovim for real-time, inline code completions.
+-   **AugmentCode:** Provides deep workspace-aware chat and context for in-editor assistance.
+-   **WezTerm & Tmux:** A modern terminal emulator combined with a robust session manager for organized, persistent workspaces.
+-   **Zsh:** An enhanced shell with advanced completions, aliases, and functions to streamline command-line operations.
+
+## 🚀 Getting Started
+
+Setting up the environment is designed to be simple and idempotent.
 
 ```bash
-# Clone repository
+# 1. Clone the repository
 git clone https://github.com/heyhuynhgiabuu/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
-# Run setup (idempotent)
+# 2. Run the installation script
+# This will set up symlinks and install necessary dependencies.
 ./scripts/install.sh
 ```
 
-## 🛠️ Features
+## 🛠️ Key Features
 
-### 🎨 Enhanced Debug Environment
-- **IntelliJ-like debugging experience** for Java and Go
-- **5-panel sidebar layout** with organized debug information
-- **Full-width console** for maximum output visibility
-- **F-key hotkeys** matching IDE standards
+-   **Unified Development Environment:** Consistent tools, shortcuts, and configurations across macOS and Linux.
+-   **Advanced Debugging:** An IntelliJ-like debugging experience for Java and Go, featuring a 5-panel UI, standard F-key hotkeys, and a clear separation between the debug console and application logs.
+-   **AI-Powered Workflow:** A multi-layered AI setup that combines the strengths of OpenCode, Serena, GitHub Copilot, and AugmentCode.
+-   **Optimized Shell:** A rich set of Zsh aliases and functions to accelerate common tasks for Git, Docker, Kubernetes, and more.
+-   **Pre-configured Sessions:** Tmux layouts for specific languages (Java, Go) that can be launched with a single command.
 
-#### Enhanced Debug Layout:
+## 📁 Repository Structure
+
+The repository is organized by tool, making it easy to navigate and manage configurations.
+
 ```
-[Variables/Scopes  ] [                    ] [NvimTree]
-[Call Stack       ] [    Code Editor     ] [        ]
-[Breakpoints      ] [                    ] [        ]
-[Watches          ] [                    ] [        ]
-[Console+Controls ] [                    ] [        ]
-[-------- REPL (Logs & Output) ----------] [        ]
-```
-
-#### Console vs REPL:
-- **🎮 Console (Sidebar)**: Debug controls (play/pause/step buttons) + interface
-- **📋 REPL (Bottom)**: Full-width logs, output, and interactive debugging
-
-#### Debug Hotkeys:
-- **F9**: Toggle Breakpoint
-- **F5**: Start/Continue Debug
-- **F10**: Step Over
-- **F11**: Step Into
-- **F4**: Toggle Debug UI
-- **F12**: Quick Debug (Java/Go)
-
-### 🔧 Tools & Technologies
-- **Editor**: Neovim/NvChad with LSP integration
-- **Terminal**: WezTerm + Tmux sessions
-- **Shell**: Zsh with advanced completions
-- **Languages**: Go, Java, JavaScript/TypeScript
-- **Debug**: DAP with enhanced UI layout
-- **Window Manager**: AeroSpace (macOS)
-
-### 📁 Structure
-```
+.
 ├── nvim/          # Neovim configuration (Lua)
 ├── tmux/          # Tmux configuration and layouts
-├── zsh/           # Zsh configuration and aliases
-├── wezterm/       # Terminal configuration
-├── scripts/       # Installation and utility scripts
-├── opencode/      # OpenCode AI configuration
+├── zsh/           # Zsh configuration, aliases, and functions
+├── wezterm/       # WezTerm terminal emulator settings
+├── aerospace/     # AeroSpace window manager configuration (macOS)
+├── opencode/      # OpenCode AI agent configuration and prompts
+├── augment/       # AugmentCode AI tool configuration
+├── scripts/       # Installation, setup, and utility scripts
 └── docs/          # Documentation and guides
 ```
 
-## 🐛 Enhanced Debugging
-
-### Quick Test
-```bash
-# Test the FINAL CORRECT layout
-./scripts/verify-final-correct-layout.sh
-
-# Open test file
-nvim /tmp/debug-final-test/test.go
-```
-
-### Debug Features
-- **5-Panel Sidebar**: Variables, Stack, Breakpoints, Watches, Console+Controls
-- **Console vs REPL**: Console (controls) in sidebar, REPL (logs) at bottom
-- **Control Integration**: Debug controls perfectly placed in sidebar Console
-- **Auto-Open/Close**: UI management tied to debug sessions
-- **Enhanced Help**: `<Leader>d?` for full guide, `<Leader>dL` for layout info
-
-### Key Improvements
-1. **Console in sidebar** - Debug controls (play/pause/step) perfectly integrated
-2. **REPL at bottom** - Full-width logs and output for maximum visibility
-3. **Controls integration** - Sidebar Console works perfectly with debug buttons
-4. **Logical organization** - Controls where you interact, logs where you read
-5. **Maximum efficiency** - Best use of screen real estate for debugging
-
-## 🚀 Development Workflows
+## 💻 Development Workflows
 
 ### Java Development
 ```bash
-# Start Java layout
+# Start a pre-configured Tmux session for Java development
 ./scripts/tmux-java-layout.sh
 
-# Debug with F12 or <Leader>dj
-# Set breakpoints with F9
+# Use F9 to toggle breakpoints and F12 to start debugging.
 ```
 
-### Go Development  
+### Go Development
 ```bash
-# Start Go layout
+# Start a pre--configured Tmux session for Go development
 ./scripts/tmux-go-layout.sh
 
-# Debug with F12 or <Leader>dg
-# Set breakpoints with F9
+# Use F9 to toggle breakpoints and F12 to start debugging.
 ```
 
-## 🤝 Contributing
+
 
 ### Development Guidelines
 1. **Test thoroughly** - Verify changes on both macOS and Linux
