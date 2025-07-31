@@ -105,14 +105,14 @@
     "dev": {
       "description": "Primary development mode with GPT-4.1 (Free)",
       "model": "github-copilot/gpt-4.1",
-      "temperature": 0.3,
-      "prompt": "{file:prompts/gpt-4.1-optimized.md}"
+      "temperature": 0.2,
+      "prompt": "{file:prompts/dev-prompt.md}"
     },
     "build": {
       "description": "Large codebase mode with 2M context",
       "model": "github-copilot/gemini-2.5-pro",
-      "temperature": 0.3,
-      "prompt": "{file:prompts/global-assistant.md}",
+      "temperature": 0.2,
+      "prompt": "{file:prompts/build-prompt.md}",
       "tools": {
         "todowrite": false,
         "todoread": false
@@ -121,8 +121,8 @@
     "enhanced": {
       "description": "Critical reasoning with Claude Sonnet 4",
       "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.3,
-      "prompt": "{file:prompts/enhanced-development-assistant.md}",
+      "temperature": 0.2,
+      "prompt": "{file:prompts/enhanced-prompt.md}",
       "tools": {
         "todowrite": false,
         "todoread": false
@@ -132,7 +132,7 @@
       "description": "Read-only analysis and planning",
       "model": "github-copilot/gpt-4.1",
       "temperature": 0.2,
-      "prompt": "{file:prompts/global-assistant.md}",
+      "prompt": "{file:prompts/plan-prompt.md}",
       "tools": {
         "write": false,
         "edit": false,
