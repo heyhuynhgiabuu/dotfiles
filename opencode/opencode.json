@@ -102,14 +102,8 @@
     }
   },
   "mode": {
-    "daily": {
-      "description": "Interactive development with GPT-4.1 (Free)",
-      "model": "github-copilot/gpt-4.1",
-      "temperature": 0.3,
-      "prompt": "{file:prompts/global-assistant.md}"
-    },
-    "beast": {
-      "description": "Autonomous GPT-4.1 with Beast Mode v3 (Free)",
+    "dev": {
+      "description": "Primary development mode with GPT-4.1 (Free)",
       "model": "github-copilot/gpt-4.1",
       "temperature": 0.3,
       "prompt": "{file:prompts/gpt-4.1-optimized.md}"

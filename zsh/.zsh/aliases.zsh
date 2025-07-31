@@ -112,8 +112,7 @@ alias ochelp='opencode --help'                # Show help
 alias ocver='opencode --version'              # Show version
 
 # OpenCode shortcuts with modes
-alias ocdaily='opencode --mode daily'         # Interactive development (Free GPT-4.1)
-alias ocbeast='opencode --mode beast'         # Autonomous complex tasks (Free GPT-4.1)
+alias ocdev='opencode --mode dev'             # Primary development mode (Free GPT-4.1)
 alias ocplan='opencode --mode plan'           # Read-only planning mode (Free GPT-4.1)
 alias ocbuild='opencode --mode build'         # Build mode for large codebases (Gemini 2.5 Pro)
 alias ocenhanced='opencode --mode enhanced'   # Enhanced reasoning mode (Claude Sonnet 4)
