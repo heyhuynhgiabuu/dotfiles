@@ -1,0 +1,1 @@
+Dự án này chứa các tệp cấu hình (dotfiles) cho môi trường phát triển trên nhiều nền tảng, được tối ưu hóa cho macOS và Linux. Mục tiêu là sự đơn giản, chức năng và năng suất của nhà phát triển.

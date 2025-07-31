@@ -254,3 +254,5 @@ fi
 
 # opencode
 export PATH=/Users/killerkidbo/.opencode/bin:$PATH
+
+. "$HOME/.local/bin/env"

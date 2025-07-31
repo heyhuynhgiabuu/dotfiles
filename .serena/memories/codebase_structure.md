@@ -1,0 +1,7 @@
+- `nvim/`: Cấu hình Neovim (Lua)
+- `tmux/`: Cấu hình và layout Tmux
+- `zsh/`: Cấu hình và alias Zsh
+- `wezterm/`: Cấu hình Terminal
+- `scripts/`: Các kịch bản cài đặt và tiện ích
+- `opencode/`: Cấu hình OpenCode AI
+- `docs/`: Tài liệu và hướng dẫn

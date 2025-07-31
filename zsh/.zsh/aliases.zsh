@@ -44,9 +44,10 @@ alias pip='pip3'
 alias dc='docker compose'
 alias dcu='docker compose up -d'
 alias dcd='docker compose down'
-alias dps='docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}''
+alias dps='docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}''
 alias dlogs='docker logs -f'
 alias dclogs='docker compose logs -f'
+alias dprune='docker system prune -af' # Prune all unused docker objects
 
 # Kubernetes
 alias k='kubectl'
@@ -98,27 +99,45 @@ alias goi='go install'
 alias gof='gofumpt -w .'
 alias gol='golangci-lint run'
 
-# OpenCode AI aliases
-alias oc='opencode'                           # Start OpenCode in current directory
-alias ocr='opencode run'                      # Run OpenCode with direct prompt
-alias occ='opencode run --continue'           # Continue last session
-alias ocs='opencode run --share'              # Run and share session
-alias ocauth='opencode auth'                  # Manage authentication
-alias oclogin='opencode auth login'           # Login to providers
-alias oclist='opencode auth list'             # List authenticated providers
-alias oclogout='opencode auth logout'         # Logout from provider
-alias ocup='opencode upgrade'                 # Upgrade to latest version
+# --- OpenCode & Serena Integration ---
+
+# Layer 1: Session Management & Basic Commands
+alias oc='opencode'                           # Start OpenCode TUI in current directory
+alias occ='opencode run --continue'           # Continue the last session (USE WITH CAUTION: only if model is the same)
+alias ocs='opencode run --share'              # Run and share a session
+alias ocup='opencode upgrade'                 # Upgrade to the latest version
 alias ochelp='opencode --help'                # Show help
 alias ocver='opencode --version'              # Show version
 
-# OpenCode shortcuts with modes
-alias ocdev='opencode --mode dev'             # Primary development mode (Free GPT-4.1)
-alias ocplan='opencode --mode plan'           # Read-only planning mode (Free GPT-4.1)
-alias ocbuild='opencode --mode build'         # Build mode for large codebases (Gemini 2.5 Pro)
-alias ocenhanced='opencode --mode enhanced'   # Enhanced reasoning mode (Claude Sonnet 4)
+# Layer 1.1: Authentication
+alias ocauth='opencode auth'                  # Manage authentication
+alias oclogin='opencode auth login'           # Login to providers
+alias oclist='opencode auth list'             # List authenticated providers
+alias oclogout='opencode auth logout'         # Logout from a provider
 
-# OpenCode quick commands
-alias ocq='opencode run'                      # Quick run alias
-alias ocexplain='opencode run "Explain"'      # Quick explain
-alias ocfix='opencode run "Fix this code"'    # Quick fix
-alias octest='opencode run "Write tests for"' # Quick test generation
+# Layer 2: Safe Mode-based Session Starters
+# These aliases ALWAYS start a NEW session with the specified powerful model.
+alias oc-dev='opencode --mode dev'            # Start NEW session in dev mode (GPT-4.1)
+alias oc-plan='opencode --mode plan'          # Start NEW session in plan mode (GPT-4.1)
+alias oc-build='opencode --mode build'        # Start NEW session in build mode (Gemini 2.5 Pro)
+alias oc-enhanced='opencode --mode enhanced'  # Start NEW session in enhanced mode (Claude Sonnet 4)
+
+# Layer 3: Cost-Effective Quick-Fire Commands
+# Runs a specific tool in a NEW, non-interactive session using a FREE model.
+# Example: ocs-find "my_function"
+ocs-find() { opencode run --model 'github-copilot/gpt-4.1' "@serena find_symbol \"$1\""; }
+ocs-refs() { opencode run --model 'github-copilot/gpt-4.1' "@serena find_referencing_symbols \"$1\" relative_path:\"$2\""; }
+ocs-grep() { opencode run --model 'github-copilot/gpt-4.1' "@serena search_for_pattern \"$1\""; }
+ocs-list() { opencode run --model 'github-copilot/gpt-4.1' "@serena list_dir \"$1\""; }
+ocs-read() { opencode run --model 'github-copilot/gpt-4.1' "@read \"$1\""; }
+
+# Layer 3.1: Serena Memory Management (using FREE model)
+ocs-memw() { opencode run --model 'github-copilot/gpt-4.1' "@serena write_memory '$1' content:'$2'"; }
+ocs-memr() { opencode run --model 'github-copilot/gpt-4.1' "@serena read_memory '$1'"; }
+ocs-memlist() { opencode run --model 'github-copilot/gpt-4.1' "@serena list_memories"; }
+
+# Layer 3.2: General Purpose Quick Commands (using FREE model)
+oc-explain() { opencode run --model 'github-copilot/gpt-4.1' "Explain this: $1"; }
+oc-fix() { opencode run --model 'github-copilot/gpt-4.1' "Fix this code: $1"; }
+oc-test() { opencode run "Write tests for this: $1"; }
+
