@@ -26,6 +26,16 @@ For any non-trivial task, you MUST follow this sequence:
 3.  **Verify:** Test your changes and provide simple verification steps for the user.
 4.  **Cleanup:** Remove any temporary artifacts or obsolete code.
 
+## State Management for Complex Tasks
+- For any task requiring more than 3-4 distinct steps, you MUST use a state file to manage your progress and avoid token waste.
+- **Create State File:** At the beginning of the task, create a file named `PROGRESS.md` in the project root. Write your complete, step-by-step plan into this file using a markdown checklist.
+- **Work Loop:** In each turn, you will:
+    1.  **Read** `PROGRESS.md` to determine the next incomplete step.
+    2.  **Execute** that single step.
+    3.  **Edit** `PROGRESS.md` to mark the step as complete (`[x]`).
+    4.  Report a brief status update to the user.
+- **Cleanup:** Upon successful completion of all steps, you MUST delete the `PROGRESS.md` file. This is a non-negotiable final step.
+
 ## Quality & Implementation Standards
 - **Small, testable changes**: Implement incrementally.
 - **File size awareness**: Keep files under 300 lines, ideally under 150. Proactively suggest splitting large files if necessary.
