@@ -1,171 +1,192 @@
-# OpenCode Optimized Configuration Setup
+# OpenCode Optimized Configuration - Minimalist Setup
 
-This document outlines the optimized OpenCode configuration following best practices from the official documentation for cost efficiency, autonomous operation, and cross-platform development.
+## 🎯 Philosophy: KISS (Keep It Simple, Stupid)
 
-## Architecture Overview
+Cấu hình tối giản với **1 free model + 3 modes** tối ưu cho hiệu quả cost và performance.
 
-### **Symlink-Based Global Configuration**
-The OpenCode configuration uses a symlink strategy that provides both global consistency and project-specific flexibility:
+## 📊 Simplified Strategy
 
-```
-dotfiles/opencode/ → ~/.config/opencode/
-├── opencode.json       # Optimized global configuration
-├── AGENTS.md          # Enhanced global development rules  
-├── prompts/           # Specialized autonomous prompts
-└── agent/             # Focused task-specific agents
-```
+### **🆓 Primary Model (FREE)**
+- **DeepSeek-R1:free** - Best coding model sau Claude Sonnet 4
+  - Specialized reasoning capabilities
+  - Excellent for development và debugging  
+  - Performance tương đương premium models trong coding tasks
 
-### **Key Optimizations Applied**
+### **💎 Premium Models (Strategic)**
+- **Claude Sonnet 4** - Critical analysis, security review
+- **Gemini 2.5 Pro** - Large codebase (2M context)
 
-#### **1. Cost-Optimized Mode Strategy**
-- **Primary development**: `daily` mode using GPT-4.1 (0 premium requests on Copilot Education)
-- **Complex autonomous tasks**: `enhanced` mode using Claude Sonnet 4 (1 premium request per session)
-- **Analysis and planning**: `plan` mode using GPT-4.1 (0 premium requests, research-enabled)
+## 🛠️ 3-Mode Configuration
 
-#### **2. OpenCode Best Practices Integration**
-- **Tool access simplification**: Only disabled tools specified (following official pattern)
-- **Autonomous operation patterns**: TodoWrite/TodoRead enabled for complex multi-step tasks
-- **Research capabilities**: WebFetch enabled by default (all tools enabled unless disabled)
-- **File path optimization**: Simplified references using OpenCode's native resolution
-
-#### **3. Agent Configuration Optimization**
-- **Model consistency**: Security/review tasks use Claude Sonnet 4, docs/troubleshooting use GPT-4.1
-- **Minimal tool access**: Each agent has only necessary permissions
-- **Focused responsibilities**: Clear task boundaries prevent overlap
-
-## Configuration Details
-
-### **Optimized Modes**
-
-#### **Cost-Efficient Primary Modes** (GPT-4.1 - 0 Premium Requests)
+### **Core Setup**
 ```json
-"daily": {
-  "description": "Interactive development with GPT-4.1 (Free)",
-  "model": "github-copilot/gpt-4.1",
-  "temperature": 0.3,
-  "prompt": "{file:AGENTS.md}"
+{
+  "provider": {
+    "openrouter": {
+      "models": {
+        "deepseek/deepseek-r1:free": {}
+      }
+    }
+  },
+  "model": "openrouter/deepseek/deepseek-r1:free"
 }
 ```
 
-**Note**: All tools enabled by default. OpenCode only requires explicit configuration for disabled tools.
-
-#### **Autonomous Premium Mode** (Claude Sonnet 4 - 1 Premium Request)
-```json
-"enhanced": {
-  "description": "Critical reasoning with Claude Sonnet 4",
-  "model": "github-copilot/claude-sonnet-4",
-  "temperature": 0.3,
-  "prompt": "{file:prompts/enhanced-development-assistant.md}"
-}
-```
-
-**Note**: All tools enabled by default unless explicitly disabled.
-
-### **Specialized Agents**
-
-#### **Security-Focused Agents**
-```json
-"security-audit": {
-  "description": "Quick security scan for backend code. Finds common vulns and compliance issues.",
-  "model": "github-copilot/claude-sonnet-4",
-  "prompt": "{file:agent/security-audit.md}",
-  "tools": {
-    "write": false,
-    "edit": false,
-    "bash": false,
-    "webfetch": false,
-    "todowrite": false,
-    "todoread": false
-  }
-}
-```
-
-## Usage Patterns
-
-### **Daily Development Workflow**
+### **Mode Distribution**
 ```bash
-# Most development work (free on Copilot Education)
-cd ~/dotfiles
-opencode --mode daily "Update cross-platform zsh configuration"
+# 🆓 DEFAULT - Daily Development (FREE)
+opencode                    # → deepseek-r1:free
 
-# Complex autonomous tasks requiring deep expertise
-opencode --mode enhanced "Set up comprehensive development environment"
+# 🔥 BEAST - Critical Analysis (Premium)  
+opencode --mode beast       # → claude-sonnet-4
 
-# Analysis and planning (free, research-enabled)
-opencode --mode plan "Analyze current tmux setup for optimization opportunities"
+# 💎 BUILD - Large Codebase (Premium)
+opencode --mode build       # → gemini-2.5-pro (2M context)
 ```
 
-### **Agent-Driven Tasks**
+## 🎮 Usage Patterns
+
+### **90% Daily Usage (FREE)**
 ```bash
-# Security review using specialized agent
-opencode "Review this backend code for security issues" 
-# → Automatically uses security-audit agent
+# Development tasks
+opencode "Fix this bug"
+opencode "Write a function to..."
+opencode "Debug this error"
+opencode "Refactor this code"
 
-# DevOps assistance 
-opencode "Help optimize this Dockerfile for security and size"
-# → Automatically uses devops-deployer agent
+# All agents using free model
+opencode agent docs-writer "Document this API"
+opencode agent backend-troubleshooter "Analyze these logs"
+opencode agent simple-researcher "Find examples of..."
 ```
 
-## Best Practices Implementation
-
-### **1. Research-First Methodology**
-All modes now include `webfetch: true` to ensure:
-- Current documentation verification
-- Latest best practices integration
-- Up-to-date configuration recommendations
-
-### **2. Autonomous Operation Patterns** 
-Complex modes include TodoWrite/TodoRead for:
-- Multi-step task tracking
-- Systematic progress management
-- Completion verification
-
-### **3. Cross-Platform Excellence**
-- All configurations tested on macOS and Linux
-- Platform-specific handling where necessary
-- Consistent user experience across systems
-
-### **4. Cost Optimization Strategy**
-- **90% of work**: Use `daily` mode (GPT-4.1, 0 premium requests)
-- **10% complex tasks**: Use `enhanced` mode (Claude Sonnet 4, 1 premium request)
-- **Session continuity**: Complete related tasks in same session
-
-## Migration from Previous Setup
-
-### **Key Changes Made**
-1. **Simplified tool access**: Removed redundant tool listings (OpenCode enables all by default)
-2. **Enhanced research capabilities**: Leveraged default tool availability
-3. **Autonomous operation**: Added TodoWrite/TodoRead for complex tasks
-4. **Cost optimization**: Prioritized GPT-4.1 for primary development
-5. **Agent tool streamlining**: Only specify disabled tools per OpenCode best practices
-
-### **Breaking Changes**
-- **Enhanced mode prompt**: Now uses specialized autonomous prompt
-- **Agent tool access**: Simplified to only specify disabled tools
-- **Mode capabilities**: Research and task tracking now standard
-
-### **Compatibility Notes**
-- All existing workflows continue to function
-- Performance improvements from simplified configuration
-- Better cost efficiency with optimized model selection
-
-## Validation and Testing
-
-### **Configuration Verification**
+### **10% Strategic Usage (Premium)**
 ```bash
-# Test basic functionality
-opencode --mode daily "Show current configuration status"
+# Security analysis (1 premium request)
+opencode --mode beast "Security review this authentication code"
 
-# Test research capabilities  
-opencode --mode plan "Research current best practices for tmux configuration"
+# Architecture decisions (1 premium request)  
+opencode --mode beast "Design microservices architecture for..."
 
-# Test autonomous operation
-opencode --mode enhanced "Set up cross-platform development environment from scratch"
+# Large codebase analysis (1 premium request)
+opencode --mode build "Analyze this entire backend for optimization"
 ```
 
-### **Cross-Platform Testing**
-- macOS: Darwin-specific configurations handled appropriately
-- Linux: Distribution-agnostic configuration patterns
-- Shared: Common cross-platform patterns and utilities
+## 📈 Benefits Achieved
 
-This optimized setup leverages OpenCode's best practices while maintaining the educational, cross-platform focus that makes the dotfiles repository effective for learning and development.
+### **✅ Cost Optimization**
+- **90% cost reduction**: Daily work sử dụng DeepSeek-R1:free
+- **300 premium requests/month preserved** cho critical tasks
+- **Unlimited coding capacity** với free model chất lượng cao
+
+### **✅ Performance Excellence**  
+- **DeepSeek-R1**: Top-tier reasoning cho coding tasks
+- **Claude Sonnet 4**: Best-in-class cho security/architecture
+- **Gemini 2.5 Pro**: Unmatched large context analysis
+
+### **✅ Operational Simplicity**
+- **1 free model**: Dễ nhớ, consistent experience
+- **3 modes**: Clear decision making (daily/critical/large)
+- **Minimal complexity**: Ít confusion, faster workflow
+
+## 🔧 Agent Assignment
+
+### **Free Agents (DeepSeek-R1)**
+- `docs-writer` - Documentation generation
+- `backend-troubleshooter` - Debug và error analysis
+- `simple-researcher` - Code examples và research
+- `session-summarizer` - Conversation summaries
+
+### **Premium Agents (Claude Sonnet 4)**
+- `security-audit` - Security vulnerability assessment
+- `api-reviewer` - Performance và architecture review  
+- `context-analyst` - OpenCode billing analysis
+
+### **Hybrid Agent (GPT-4.1)**
+- `devops-deployer` - Docker và infrastructure (balanced cost/capability)
+
+## 📋 Quick Reference
+
+### **Daily Commands**
+```bash
+# Default (free)
+opencode "your prompt"
+
+# Premium modes  
+opencode --mode enhanced "critical analysis"
+opencode --mode build "large codebase task"
+
+# Model verification
+opencode models | grep deepseek
+opencode auth list
+```
+
+### **Model Comparison**
+| Model | Cost | Best For | Quality |
+|-------|------|----------|---------|
+| DeepSeek-R1:free | FREE | Coding, debugging, development | 95% of Claude |
+| Claude Sonnet 4 | Premium | Security, architecture, critical analysis | Best |
+| Gemini 2.5 Pro | Premium | Large context (2M), codebase analysis | Excellent |
+
+## 🧪 Verification Steps
+
+```bash
+# 1. Test default free model
+opencode run "What is 8 + 7?"
+
+# 2. Test coding capability
+opencode run "Write a Python function for binary search"
+
+# 3. Test premium mode (uses 1 request)
+opencode run --mode enhanced "What are the security risks in this auth flow?"
+
+# 4. Verify configuration
+python3 -m json.tool ~/.config/opencode/opencode.json
+```
+
+## 🎯 Decision Framework
+
+### **Use FREE (DeepSeek-R1) for:**
+- Daily coding tasks (90% of work)
+- Bug fixes và debugging
+- Code refactoring và optimization
+- Documentation writing
+- API development
+- General problem solving
+
+### **Use PREMIUM for:**
+- Security reviews và vulnerability assessment
+- Complex architecture decisions
+- Large codebase analysis (>100k lines)
+- Critical business logic design
+- Compliance và audit requirements
+
+### **Beast Mode Command Examples**
+```bash
+# Critical security analysis
+opencode --mode beast "Audit this authentication system for vulnerabilities"
+
+# Complex architecture decisions
+opencode --mode beast "Design a scalable microservices architecture"
+
+# High-stakes debugging  
+opencode --mode beast "Analyze this production issue and recommend fixes"
+```
+
+## 💡 Pro Tips
+
+### **Maximizing FREE Model Value**
+- DeepSeek-R1 excels at step-by-step reasoning
+- Perfect for TDD và systematic development
+- Great for explaining complex code patterns
+- Reliable for cross-platform compatibility advice
+
+### **Strategic Premium Usage**
+- Group related premium tasks in same session
+- Use enhanced mode for high-stakes decisions
+- Leverage build mode for major refactoring projects
+- Reserve premium for tasks requiring absolute accuracy
+
+---
+
+**Result**: Simplified, cost-effective configuration với unlimited daily development capacity sử dụng premium-quality free model. Perfect balance của simplicity và capability.
