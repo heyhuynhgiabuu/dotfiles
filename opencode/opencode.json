@@ -3,12 +3,19 @@
   "provider": {
     "openrouter": {
       "models": {
-        "deepseek/deepseek-r1:free": {}
+        "qwen/qwen3-coder:free": {}
+      }
+    },
+    "github-copilot": {
+      "models": {
+        "claude-sonnet-4": {},
+        "gpt-4.1": {},
+        "gemini-2.5-pro": {}
       }
     }
   },
   "theme": "opencode",
-  "model": "openrouter/deepseek/deepseek-r1:free",
+  "model": "openrouter/qwen/qwen3-coder: free",
   "share": "disabled",
   "autoshare": false,
   "autoupdate": true,
@@ -28,7 +35,7 @@
     },
     "devops-deployer": {
       "description": "Docker and infrastructure optimization",
-      "model": "github-copilot/gpt-4.1",
+      "model": "openrouter/qwen/qwen3-coder:free",
       "prompt": "{file:agent/devops-deployer.md}",
       "tools": {
         "write": false,
@@ -51,7 +58,7 @@
     },
     "docs-writer": {
       "description": "Essential developer documentation",
-      "model": "openrouter/deepseek/deepseek-r1:free",
+      "model": "openrouter/qwen/qwen3-coder:free",
       "prompt": "{file:agent/docs-writer.md}",
       "tools": {
         "bash": false,
@@ -61,7 +68,7 @@
     },
     "backend-troubleshooter": {
       "description": "Debug backend issues and analyze logs",
-      "model": "openrouter/deepseek/deepseek-r1:free",
+      "model": "openrouter/qwen/qwen3-coder:free",
       "prompt": "{file:agent/backend-troubleshooter.md}",
       "tools": {
         "write": false,
@@ -73,7 +80,7 @@
     },
     "simple-researcher": {
       "description": "Find code examples when searches fail",
-      "model": "openrouter/deepseek/deepseek-r1:free",
+      "model": "openrouter/qwen/qwen3-coder:free",
       "prompt": "{file:agent/simple-researcher.md}",
       "tools": {
         "write": false,
@@ -96,7 +103,7 @@
     },
     "session-summarizer": {
       "description": "Create conversation summaries",
-      "model": "openrouter/deepseek/deepseek-r1:free",
+      "model": "openrouter/qwen/qwen3-coder:free",
       "temperature": 0.2,
       "prompt": "{file:agent/session-summarizer.md}",
       "tools": {
@@ -110,8 +117,8 @@
   },
   "mode": {
     "dev": {
-      "description": "Daily development with DeepSeek-R1 (Free)",
-      "model": "openrouter/deepseek/deepseek-r1:free",
+      "description": "Daily development with Qwen3 Coder (Free)",
+      "model": "openrouter/qwen/qwen3-coder:free",
       "temperature": 0.1,
       "prompt": "{file:prompts/dev-prompt.md}"
     },
@@ -119,7 +126,7 @@
       "description": "Beast mode - Unleash Claude Sonnet 4 power",
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.2,
-      "prompt": "{file:AGENTS.md}",
+      "prompt": "{file:prompts/beast-prompt.md}",
       "tools": {
         "todowrite": false,
         "todoread": false
@@ -133,6 +140,17 @@
       "tools": {
         "todowrite": false,
         "todoread": false
+      }
+    },
+    "plan": {
+      "description": "Read-only analysis and planning",
+      "model": "openrouter/qwen/qwen3-coder:free",
+      "temperature": 0.1,
+      "prompt": "{file:prompts/plan-prompt.md}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
       }
     }
   },
