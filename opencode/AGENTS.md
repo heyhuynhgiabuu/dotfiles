@@ -154,7 +154,7 @@ Final Outcome:
 ## ⚡ Autonomous Execution Rules
 
 ### **State Management for Complex Tasks**
-- For tasks requiring 4+ steps, the checklist and progress MUST be managed directly in the conversation (chat), not in a PROGRESS.md file.
+- For tasks requiring 4+ steps, the checklist and progress MUST be managed directly in the conversation (chat).
 - **Workflow**: Post a markdown checklist in the chat → Execute each step → Mark each step as complete in the chat → Repeat until all steps are done
 - **Autonomous Execution**: Once the checklist is posted and approved in the chat, the agent must autonomously execute the entire plan without stopping for further approval after each step.
 
@@ -245,7 +245,7 @@ This protocol ensures every task is handled with deep contextual awareness, curr
 ### **For Large/Complex Tasks**
 1. **Deep Understanding**: Break down problem using research and codebase investigation  
 2. **Comprehensive Planning**: Create detailed 13-step plan (##1-13) with clear phases
-3. **PROGRESS.md State**: Use living document to track progress through complex workflows
+3. **Chat-based Tracking**: Manage checklist and progress directly in the conversation (chat)
 4. **Autonomous Execution**: Complete entire plan without interruption once approved
 5. **Formal Verification**: Conduct PASS/FAIL audit against all maxims and requirements
 6. **Complete Cleanup**: Remove temporary files using `PurityAndCleanliness` and ensure clean final state
