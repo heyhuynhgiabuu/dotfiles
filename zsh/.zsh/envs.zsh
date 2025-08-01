@@ -18,6 +18,7 @@ export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 
 # Go development environment
 export GOPATH=$HOME/go
+export GOBIN="$HOME/go/bin"
 # Use Homebrew Go (no need to set GOROOT manually)
-export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:$GOBIN"
 unset GOROOT

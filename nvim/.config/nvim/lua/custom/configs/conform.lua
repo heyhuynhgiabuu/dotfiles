@@ -29,13 +29,11 @@ local options = {
   -- adding same formatter for multiple filetypes can look too much work for some
   -- instead of the above code you could just use a loop! the config is just a table after all!
 
-  -- Disabled format_on_save to avoid errors with incomplete code
-  -- Use <space>fm to format manually when needed
-  -- format_on_save = {
-  --   -- These options will be passed to conform.format()
-  --   timeout_ms = 500,
-  --   lsp_fallback = true,
-  -- },
+  format_on_save = {
+    -- These options will be passed to conform.format()
+    timeout_ms = 500,
+    lsp_fallback = true,
+  },
 }
 
 require("conform").setup(options)

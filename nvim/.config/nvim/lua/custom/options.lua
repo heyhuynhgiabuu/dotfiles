@@ -6,57 +6,56 @@ local o = vim.o
 local g = vim.g
 
 -- Leader keys (ensure they're set early)
-g.mapleader = ' '
-g.maplocalleader = ' '
+g.mapleader = " "
+g.maplocalleader = " "
 
 -------------------------------------- options ------------------------------------------
 -- UI enhancements (extends core options)
-o.laststatus = 3          -- Global statusline (confirm core setting)
-o.showmode = false        -- Don't show mode in command line (confirm core setting)
-o.splitkeep = "screen"    -- Keep screen stable when splitting
+o.laststatus = 3 -- Global statusline (confirm core setting)
+o.showmode = false -- Don't show mode in command line (confirm core setting)
+o.splitkeep = "screen" -- Keep screen stable when splitting
 
 -- Clipboard and cursor
 o.clipboard = "unnamedplus" -- Confirm core setting
-o.cursorline = true       -- Highlight current line
+o.cursorline = true -- Highlight current line
 o.cursorlineopt = "number" -- Only highlight line number
 
--- Indenting (keep your preference of 4 spaces)
+-- Indenting (switched to 2 spaces as requested)
 o.expandtab = true
-o.shiftwidth = 4          -- Your preference
+o.shiftwidth = 2 -- Set to 2 spaces indent
 o.smartindent = true
-o.tabstop = 4             -- Your preference  
-o.softtabstop = 4         -- Your preference
-
+o.tabstop = 2 -- Tab key inserts 2 spaces
+o.softtabstop = 2 -- Backspace treats 2 spaces as a unit
 -- UI enhancements
 opt.fillchars = { eob = " " } -- Remove ~ from empty lines
 o.ignorecase = true
 o.smartcase = true
 o.mouse = "a"
-opt.colorcolumn = "80"    -- Keep your column guide
+opt.colorcolumn = "80" -- Keep your column guide
 
 -- Numbers
 o.number = true
-o.relativenumber = true   -- Keep your relative numbers
+o.relativenumber = true -- Keep your relative numbers
 o.numberwidth = 2
 o.ruler = false
 
 -- Disable nvim intro
-opt.shortmess:append "sI"
+opt.shortmess:append("sI")
 
 -- Window behavior
-o.signcolumn = "yes"      -- Always show sign column
-o.splitbelow = true       -- Horizontal splits go below
-o.splitright = true       -- Vertical splits go right
-o.timeoutlen = 1000       -- Timeout for which-key (increased from 400)
-o.undofile = true         -- Persistent undo
+o.signcolumn = "yes" -- Always show sign column
+o.splitbelow = true -- Horizontal splits go below
+o.splitright = true -- Vertical splits go right
+o.timeoutlen = 1000 -- Timeout for which-key (increased from 400)
+o.undofile = true -- Persistent undo
 
 -- Performance
-o.updatetime = 250        -- Faster completion and gitsigns
+o.updatetime = 250 -- Faster completion and gitsigns
 
 -- Navigation
 -- Go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
-opt.whichwrap:append "<>[]hl"
+opt.whichwrap:append("<>[]hl")
 
 -- Disable default providers for better performance
 g.loaded_node_provider = 0
@@ -65,10 +64,10 @@ g.loaded_perl_provider = 0
 g.loaded_ruby_provider = 0
 
 -- Add mason binaries to PATH
-local is_windows = vim.fn.has "win32" ~= 0
+local is_windows = vim.fn.has("win32") ~= 0
 local sep = is_windows and "\\" or "/"
 local delim = is_windows and ";" or ":"
-vim.env.PATH = table.concat({ vim.fn.stdpath "data", "mason", "bin" }, sep) .. delim .. vim.env.PATH
+vim.env.PATH = table.concat({ vim.fn.stdpath("data"), "mason", "bin" }, sep) .. delim .. vim.env.PATH
 
 -- Enable fallback syntax highlighting for languages without treesitter
 vim.cmd([[

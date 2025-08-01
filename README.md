@@ -86,6 +86,10 @@ The repository is organized by tool, making it easy to navigate and manage confi
 - **Match conventions** - Use Lua for Neovim, shell for scripts
 - **Self-contained configs** - New configurations shouldn't require external dependencies
 
+### AI Agent Documentation
+- [Serena MCP Best Practices](docs/serena-mcp-best-practices.md) - Guidelines for leveraging Serena MCP with OpenCode agents
+- [Serena MCP Example Workflows](docs/serena-mcp-example-workflows.md) - Practical examples of Serena-enhanced agent operations
+
 ## 📄 License
 
 Personal dotfiles collection - use at your own discretion.

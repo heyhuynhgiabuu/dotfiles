@@ -1,4 +1,8 @@
 return {
+  rocks = {
+    enabled = false,
+    hererocks = false,
+  },
   defaults = { lazy = true },
   install = { colorscheme = { "nvchad" } },
 

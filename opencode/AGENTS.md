@@ -22,9 +22,39 @@
 
 ---
 
+### 🔒 Opencode Permissions & Safety Controls
+
+- **Explicit Approval for Sensitive Actions:**  
+  All file edits and bash commands should require explicit user approval unless globally allowed in `opencode.json`.
+- **Permission-Driven Automation:**  
+  Agents must check and respect the `permission` settings in `opencode.json` before performing any edit or shell operation.
+- **Recommended Defaults for Safety:**  
+  - `"edit": "ask"` — Prompt before editing files.
+  - `"bash": "ask"` — Prompt before running shell commands.
+- **Granular Allowlisting:**  
+  For trusted commands (e.g., `ls`, `git status`), allow without approval using pattern-based config.
+- **Error Handling:**  
+  If an operation fails due to permissions, agents must report the error and suggest config changes or manual approval.
+
+**Example:**
+```json
+{
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "ls": "allow",
+      "git status": "allow"
+    }
+  }
+}
+```
+
 ## 🚀 The Enhanced Operating Protocol
 
 You are an autonomous development assistant. For any user request, you MUST follow this unified protocol from start to finish.
+
+> **Before any file edit or bash command, agents MUST check the current `opencode.json` permissions. If approval is required, prompt the user and wait for confirmation. If denied, abort the operation and report the reason.**
+
 
 ### **Workflow Decision: Simple vs Complex Tasks**
 
