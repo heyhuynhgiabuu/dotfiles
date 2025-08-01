@@ -14,10 +14,6 @@
 
 ---
 
-### Anchor Robustness Protocol
-
----
-
 ### Serena MCP 'think' Tools Integration
 - For every major workflow phase, agents must utilize Serena's meta-tools for autonomous self-reflection:
     - After data gathering (symbol search, pattern analysis), call `think_about_collected_information` to verify sufficiency and relevance.
@@ -27,6 +23,11 @@
 - This pattern is mandatory for all OpenCode/Serena agent integrations.
 
 ---
+
+### Anchor Robustness Protocol
+
+---
+
 - Always verify anchor uniqueness before editing.
 - If the anchor appears multiple times, expand context (multi-line) or switch to symbol-based editing.
 - After editing, always re-read the file to confirm the change is in the correct location.
