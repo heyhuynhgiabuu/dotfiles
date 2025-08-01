@@ -7,21 +7,21 @@
 ## Final Configuration
 
 ### **1 Free Model Strategy**
-- **Primary**: `openrouter/deepseek/deepseek-r1:free`
-- **Rationale**: Best coding model after Claude Sonnet 4, excellent reasoning capabilities
-- **Performance**: 95% quality of premium models for development tasks
+- **Primary**: `openrouter/qwen/qwen3-coder:free`
+- **Rationale**: Best coding model miễn phí với context 262K, excellent reasoning capabilities
+- **Performance**: Tốt cho development tasks hàng ngày
 
 ### **3 Mode Setup**
 ```json
 {
-  "dev": "openrouter/deepseek/deepseek-r1:free",      // Daily development (default)
-  "enhanced": "github-copilot/claude-sonnet-4",        // Critical analysis  
-  "build": "github-copilot/gemini-2.5-pro"            // Large codebase (2M context)
+  "dev": "openrouter/qwen/qwen3-coder:free",      // Daily development (default)
+  "beast": "github-copilot/claude-sonnet-4",        // Critical analysis  
+  "build": "openrouter/qwen/qwen3-coder"            // Large codebase (262K context)
 }
 ```
 
 ### **Agent Distribution**
-- **Free Agents**: docs-writer, backend-troubleshooter, simple-researcher, session-summarizer (all use DeepSeek-R1:free)
+- **Free Agents**: docs-writer, backend-troubleshooter, simple-researcher, session-summarizer (all use Qwen3-Coder:free)
 - **Premium Agents**: security-audit, api-reviewer, context-analyst (use Claude Sonnet 4)
 - **Hybrid**: devops-deployer (uses GPT-4.1 for cost balance)
 
@@ -39,17 +39,17 @@
 - Consistent development experience
 
 ### **Performance Excellence**
-- DeepSeek-R1: Excellent for systematic coding and debugging
+- Qwen3-Coder:free: Excellent for systematic coding and debugging
 - Claude Sonnet 4: Best for security and architecture analysis
-- Gemini 2.5 Pro: Unmatched large context capabilities
+- Qwen3-Coder (Trả phí): Best for large codebase analysis
 
 ## Usage Pattern
-- **90% free usage**: `opencode "prompt"` → DeepSeek-R1:free
-- **10% premium usage**: `opencode --mode enhanced/build` → Premium models
+- **90% free usage**: `opencode "prompt"` → Qwen3-Coder:free
+- **10% premium usage**: `opencode --mode beast/build` → Premium models
 
 ## Verification Status
 - ✅ JSON configuration valid
-- ✅ DeepSeek-R1:free working perfectly for coding
+- ✅ Qwen3-Coder:free working perfectly for coding
 - ✅ Simple 3-mode structure implemented
 - ✅ Agent assignments optimized
 - ✅ Documentation updated

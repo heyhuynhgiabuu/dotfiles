@@ -7,14 +7,14 @@ Cấu hình tối giản với **1 free model + 3 modes** tối ưu cho hiệu q
 ## 📊 Simplified Strategy
 
 ### **🆓 Primary Model (FREE)**
-- **DeepSeek-R1:free** - Best coding model sau Claude Sonnet 4
+- **Qwen3-Coder:free** - Best coding model miễn phí với context 262K
   - Specialized reasoning capabilities
   - Excellent for development và debugging  
-  - Performance tương đương premium models trong coding tasks
+  - Performance tốt cho coding tasks hàng ngày
 
 ### **💎 Premium Models (Strategic)**
 - **Claude Sonnet 4** - Critical analysis, security review
-- **Gemini 2.5 Pro** - Large codebase (2M context)
+- **Qwen3-Coder (Trả phí)** - Large codebase (262K context, mạnh hơn free)
 
 ## 🛠️ 3-Mode Configuration
 
@@ -24,24 +24,25 @@ Cấu hình tối giản với **1 free model + 3 modes** tối ưu cho hiệu q
   "provider": {
     "openrouter": {
       "models": {
-        "deepseek/deepseek-r1:free": {}
+        "qwen/qwen3-coder:free": {},
+        "qwen/qwen3-coder": {}
       }
     }
   },
-  "model": "openrouter/deepseek/deepseek-r1:free"
+  "model": "openrouter/qwen/qwen3-coder:free"
 }
 ```
 
 ### **Mode Distribution**
 ```bash
 # 🆓 DEFAULT - Daily Development (FREE)
-opencode                    # → deepseek-r1:free
+opencode                    # → qwen3-coder:free
 
 # 🔥 BEAST - Critical Analysis (Premium)  
 opencode --mode beast       # → claude-sonnet-4
 
 # 💎 BUILD - Large Codebase (Premium)
-opencode --mode build       # → gemini-2.5-pro (2M context)
+opencode --mode build       # → qwen/qwen3-coder (trả phí)
 ```
 
 ## 🎮 Usage Patterns
@@ -113,40 +114,40 @@ opencode --mode build "Analyze this entire backend for optimization"
 opencode "your prompt"
 
 # Premium modes  
-opencode --mode enhanced "critical analysis"
+opencode --mode beast "critical analysis"
 opencode --mode build "large codebase task"
 
 # Model verification
-opencode models | grep deepseek
+opencode models | grep qwen
 opencode auth list
 ```
 
 ### **Model Comparison**
 | Model | Cost | Best For | Quality |
 |-------|------|----------|---------|
-| DeepSeek-R1:free | FREE | Coding, debugging, development | 95% of Claude |
+| Qwen3-Coder:free | FREE | Coding, debugging, development | Excellent |
 | Claude Sonnet 4 | Premium | Security, architecture, critical analysis | Best |
-| Gemini 2.5 Pro | Premium | Large context (2M), codebase analysis | Excellent |
+| Qwen3-Coder (Trả phí) | Premium | Large context (262K), codebase analysis | Best for code |
 
 ## 🧪 Verification Steps
 
 ```bash
 # 1. Test default free model
-opencode run "What is 8 + 7?"
+opencode "What is 8 + 7?"
 
 # 2. Test coding capability
-opencode run "Write a Python function for binary search"
+opencode "Write a Python function for binary search"
 
 # 3. Test premium mode (uses 1 request)
-opencode run --mode enhanced "What are the security risks in this auth flow?"
+opencode --mode beast "What are the security risks in this auth flow?"
 
 # 4. Verify configuration
-python3 -m json.tool ~/.config/opencode/opencode.json
+cat ~/.config/opencode/opencode.json
 ```
 
 ## 🎯 Decision Framework
 
-### **Use FREE (DeepSeek-R1) for:**
+### **Use FREE (Qwen3-Coder:free) for:**
 - Daily coding tasks (90% of work)
 - Bug fixes và debugging
 - Code refactoring và optimization
@@ -176,14 +177,14 @@ opencode --mode beast "Analyze this production issue and recommend fixes"
 ## 💡 Pro Tips
 
 ### **Maximizing FREE Model Value**
-- DeepSeek-R1 excels at step-by-step reasoning
+- Qwen3-Coder:free excels at step-by-step reasoning
 - Perfect for TDD và systematic development
 - Great for explaining complex code patterns
 - Reliable for cross-platform compatibility advice
 
 ### **Strategic Premium Usage**
 - Group related premium tasks in same session
-- Use enhanced mode for high-stakes decisions
+- Use beast mode for high-stakes decisions
 - Leverage build mode for major refactoring projects
 - Reserve premium for tasks requiring absolute accuracy
 

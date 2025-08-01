@@ -3,19 +3,19 @@
   "provider": {
     "openrouter": {
       "models": {
-        "qwen/qwen3-coder:free": {}
+        "qwen/qwen3-coder:free": {},
+        "qwen/qwen3-coder": {}
       }
     },
     "github-copilot": {
       "models": {
         "claude-sonnet-4": {},
-        "gpt-4.1": {},
-        "gemini-2.5-pro": {}
+        "gpt-4.1": {}
       }
     }
   },
   "theme": "opencode",
-  "model": "openrouter/qwen/qwen3-coder: free",
+  "model": "openrouter/qwen/qwen3-coder:free",
   "share": "disabled",
   "autoshare": false,
   "autoupdate": true,
@@ -133,8 +133,8 @@
       }
     },
     "build": {
-      "description": "Large codebase mode with 2M context",
-      "model": "github-copilot/gemini-2.5-pro",
+      "description": "Large codebase mode with 262K context",
+      "model": "openrouter/qwen/qwen3-coder",
       "temperature": 0.1,
       "prompt": "{file:prompts/build-prompt.md}",
       "tools": {
