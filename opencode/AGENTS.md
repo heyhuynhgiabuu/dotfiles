@@ -15,6 +15,18 @@
 ---
 
 ### Anchor Robustness Protocol
+
+---
+
+### Serena MCP 'think' Tools Integration
+- For every major workflow phase, agents must utilize Serena's meta-tools for autonomous self-reflection:
+    - After data gathering (symbol search, pattern analysis), call `think_about_collected_information` to verify sufficiency and relevance.
+    - Before code modification or verification, call `think_about_task_adherence` to ensure all actions align with the original mission.
+    - At the end of the workflow, call `think_about_whether_you_are_done` to confirm all tasks are complete and nothing is missed.
+- Log or report the results of these tools as part of the verification checklist and final report.
+- This pattern is mandatory for all OpenCode/Serena agent integrations.
+
+---
 - Always verify anchor uniqueness before editing.
 - If the anchor appears multiple times, expand context (multi-line) or switch to symbol-based editing.
 - After editing, always re-read the file to confirm the change is in the correct location.
@@ -158,6 +170,7 @@ You are an autonomous development assistant. For any user request, you MUST foll
 ```markdown
 ---
 **VERIFICATION CHECKLIST**
+* Self-reflection: Results from Serena 'think' tools (collected_information, task_adherence, whether_you_are_done) are logged and reviewed.
 * Anchor verified: All edits made at correct, intended locations?
 * Workload complete: {ENTIRE workload from ##2 and ##8 fully implemented?}
 * Impact handled: {All impacts from ##7 properly mitigated?}
