@@ -1,68 +1,223 @@
-#!/usr/bin/env bash
-#
-# Find or create a note in my notes directory and open it in Neovim.
-#
-# This script is inspired by a similar one from @gothenburg.
-#
-# It fuzzy finds in the notes directory, which is a git repo. It will only
-# search for files tracked by git, so to create a new file, you have to type
-# the name of the file and press enter.
-#
-# To use this, you need to have fzf installed.
-#
-# It also includes the logic to either attach to an existing tmux session or
-# create a new one, optionally attaching to an existing nvim instance if one is
-# running in that session.
+#!/bin/bash
 
-NOTES_DIR="$HOME/dotfiles/notes"
-EDITOR="nvim"
+# Note management script with tmux integration
+# Find or create notes and open them in Neovim with tmux session management
+# Usage: bash scripts/note.sh
 
-# Ensure the notes directory exists
-mkdir -p "$NOTES_DIR"
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Check if fzf is installed
-if ! command -v fzf &> /dev/null; then
-    echo "fzf could not be found, please install it."
-    exit 1
-fi
+# Configuration
+readonly NOTES_DIR="${DOTFILES_DIR}/notes"
+readonly EDITOR="nvim"
+readonly NOTES_SESSION="notes"
 
-# Use fzf to select a note. The fzf command will search for files under git
-# control. If you type a filename that doesn't exist and press enter, fzf
-# will output that filename.
-#
-# --select-1: Automatically select the only match
-# --exit-0: Exit immediately if there's no match
-# --print-query: Print the query if there are no results
-# --search-path: The directory to search in
-cd "$NOTES_DIR"
-# file=$(git ls-files | fzf --select-1 --exit-0)
-file=$(find . -type f | fzf --select-1 --exit-0)
-
-# If fzf was cancelled (ESC), then exit
-if [ -z "$file" ]; then
-    echo "No note selected."
-    exit 0
-fi
-
-# If the selected file doesn't exist, create it
-if [ ! -f "$file" ]; then
-    # file name may include slash, so we need to make sure the directory exists
-    mkdir -p "$(dirname "$file")"
-    touch "$file"
-fi
-
-# This part is for tmux integration.
-# If we are inside tmux, we want to open the file in the current session.
-# If we are not in tmux, we want to create a new session.
-if [ -n "$TMUX" ]; then
-    # If nvim is running in the current session, open the file in it.
-    if tmux list-panes -F '#{pane_current_command}' | grep -q "nvim"; then
-        tmux send-keys ":e $NOTES_DIR/$file" C-m
-    else
-        tmux new-window "$EDITOR $NOTES_DIR/$file"
+main() {
+    # Ensure notes directory exists
+    mkdir -p "$NOTES_DIR"
+    
+    # Check for fzf
+    if ! cmd_exists fzf; then
+        log_error "fzf is required but not installed"
+        log_info "Install with: brew install fzf (macOS) or package manager (Linux)"
+        exit 1
     fi
-else
-    # If not in tmux, create a new session named "notes"
-    tmux new-session -s "notes" "$EDITOR $NOTES_DIR/$file"
-fi
+    
+    # Select or create note
+    local selected_file
+    selected_file=$(select_note)
+    
+    if [[ -z "$selected_file" ]]; then
+        log_info "No note selected"
+        exit 0
+    fi
+    
+    # Open note with appropriate method
+    open_note "$selected_file"
+}
 
+select_note() {
+    log_info "Searching for notes in $NOTES_DIR..."
+    
+    cd "$NOTES_DIR"
+    
+    # Use find instead of git ls-files for broader compatibility
+    local selected_file
+    selected_file=$(find . -type f -name "*.md" -o -name "*.txt" -o -name "*.org" 2>/dev/null | fzf --select-1 --exit-0 --prompt="Select note: ")
+    
+    if [[ -n "$selected_file" && ! -f "$selected_file" ]]; then
+        create_note_file "$selected_file"
+    fi
+    
+    echo "$selected_file"
+}
+
+create_note_file() {
+    local file_path="$1"
+    
+    log_info "Creating new note: $file_path"
+    
+    # Create directory structure if needed
+    mkdir -p "$(dirname "$file_path")"
+    touch "$file_path"
+    
+    # Add basic markdown header if it's a markdown file
+    if [[ "$file_path" == *.md ]]; then
+        local note_title
+        note_title=$(basename "$file_path" .md | tr '_-' ' ')
+        echo "# $note_title" > "$file_path"
+        echo "" >> "$file_path"
+        echo "Created: $(date '+%Y-%m-%d %H:%M:%S')" >> "$file_path"
+        echo "" >> "$file_path"
+    fi
+}
+
+open_note() {
+    local file="$1"
+    local full_path="${NOTES_DIR}/${file}"
+    
+    if [[ -n "$TMUX" ]]; then
+        open_in_tmux "$full_path"
+    else
+        open_new_tmux_session "$full_path"
+    fi
+}
+
+open_in_tmux() {
+    local file_path="$1"
+    
+    log_info "Opening note in current tmux session"
+    
+    # Check if nvim is already running in current session
+    if tmux list-panes -F '#{pane_current_command}' | grep -q "nvim"; then
+        tmux send-keys ":e $file_path" C-m
+    else
+        tmux new-window "$EDITOR $file_path"
+    fi
+}
+
+open_new_tmux_session() {
+    local file_path="$1"
+    
+    log_info "Creating new tmux session: $NOTES_SESSION"
+    
+    if tmux_session_exists "$NOTES_SESSION"; then
+        tmux attach-session -t "$NOTES_SESSION"
+    else
+        tmux new-session -s "$NOTES_SESSION" "$EDITOR $file_path"
+    fi
+}
+
+# Execute main function
+main "$@"#!/bin/bash
+
+# Note management script with tmux integration
+# Find or create notes and open them in Neovim with tmux session management
+# Usage: bash scripts/note.sh
+
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+
+# Configuration
+readonly NOTES_DIR="${DOTFILES_DIR}/notes"
+readonly EDITOR="nvim"
+readonly NOTES_SESSION="notes"
+
+main() {
+    # Ensure notes directory exists
+    mkdir -p "$NOTES_DIR"
+    
+    # Check for fzf
+    if ! cmd_exists fzf; then
+        log_error "fzf is required but not installed"
+        log_info "Install with: brew install fzf (macOS) or package manager (Linux)"
+        exit 1
+    fi
+    
+    # Select or create note
+    local selected_file
+    selected_file=$(select_note)
+    
+    if [[ -z "$selected_file" ]]; then
+        log_info "No note selected"
+        exit 0
+    fi
+    
+    # Open note with appropriate method
+    open_note "$selected_file"
+}
+
+select_note() {
+    log_info "Searching for notes in $NOTES_DIR..."
+    
+    cd "$NOTES_DIR"
+    
+    # Use find instead of git ls-files for broader compatibility
+    local selected_file
+    selected_file=$(find . -type f -name "*.md" -o -name "*.txt" -o -name "*.org" 2>/dev/null | fzf --select-1 --exit-0 --prompt="Select note: ")
+    
+    if [[ -n "$selected_file" && ! -f "$selected_file" ]]; then
+        create_note_file "$selected_file"
+    fi
+    
+    echo "$selected_file"
+}
+
+create_note_file() {
+    local file_path="$1"
+    
+    log_info "Creating new note: $file_path"
+    
+    # Create directory structure if needed
+    mkdir -p "$(dirname "$file_path")"
+    touch "$file_path"
+    
+    # Add basic markdown header if it's a markdown file
+    if [[ "$file_path" == *.md ]]; then
+        local note_title
+        note_title=$(basename "$file_path" .md | tr '_-' ' ')
+        echo "# $note_title" > "$file_path"
+        echo "" >> "$file_path"
+        echo "Created: $(date '+%Y-%m-%d %H:%M:%S')" >> "$file_path"
+        echo "" >> "$file_path"
+    fi
+}
+
+open_note() {
+    local file="$1"
+    local full_path="${NOTES_DIR}/${file}"
+    
+    if [[ -n "$TMUX" ]]; then
+        open_in_tmux "$full_path"
+    else
+        open_new_tmux_session "$full_path"
+    fi
+}
+
+open_in_tmux() {
+    local file_path="$1"
+    
+    log_info "Opening note in current tmux session"
+    
+    # Check if nvim is already running in current session
+    if tmux list-panes -F '#{pane_current_command}' | grep -q "nvim"; then
+        tmux send-keys ":e $file_path" C-m
+    else
+        tmux new-window "$EDITOR $file_path"
+    fi
+}
+
+open_new_tmux_session() {
+    local file_path="$1"
+    
+    log_info "Creating new tmux session: $NOTES_SESSION"
+    
+    if tmux_session_exists "$NOTES_SESSION"; then
+        tmux attach-session -t "$NOTES_SESSION"
+    else
+        tmux new-session -s "$NOTES_SESSION" "$EDITOR $file_path"
+    fi
+}
+
+# Execute main function
+main "$@"

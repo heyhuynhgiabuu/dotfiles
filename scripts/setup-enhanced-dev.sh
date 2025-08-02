@@ -1,198 +1,206 @@
 #!/bin/bash
 
-# Enhanced Development Environment Setup
-# This script sets up Go and Java development with enhanced autocompletion
+# Enhanced Development Environment Setup - cross-platform (macOS & Linux)
+# Sets up Go and Java development with enhanced autocompletion
+# Usage: bash scripts/setup-enhanced-dev.sh
 
-set -e
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-echo "🚀 Setting up enhanced Go and Java development environment"
-echo "========================================================"
+# Configuration
+readonly WORKSPACE_BASE="${HOME}/Development"
+readonly WORKSPACE_DIRS=(
+    "go"
+    "java"
+    "projects"
+    "go/bin"
+    "go/src"
+    "go/pkg"
+    "java/projects"
+    "java/libraries"
+)
 
-# Colors
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-print_step() {
-    echo -e "${BLUE}📋 $1${NC}"
+main() {
+    log_header "Setting up enhanced Go and Java development environment"
+    
+    # Check and install prerequisites
+    check_prerequisites
+    
+    # Install development tools
+    install_go_tools_enhanced
+    setup_java_environment_enhanced
+    
+    # Create workspace directories
+    create_development_workspaces
+    
+    # Sync Neovim plugins
+    sync_neovim_plugins
+    
+    # Test the setup
+    test_enhanced_setup
+    
+    show_enhanced_completion_info
 }
 
-print_success() {
-    echo -e "${GREEN}✅ $1${NC}"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
-}
-
-print_error() {
-    echo -e "${RED}❌ $1${NC}"
-}
-
-# Check if required tools are installed
 check_prerequisites() {
-    print_step "Checking prerequisites..."
+    log_info "Checking prerequisites..."
     
     # Check Go
-    if ! command -v go &> /dev/null; then
-        print_error "Go is not installed. Please install Go first."
-        echo "Visit: https://golang.org/dl/"
+    if ! cmd_exists go; then
+        log_error "Go is not installed. Please install Go first."
+        log_info "Visit: https://golang.org/dl/"
         exit 1
     else
-        print_success "Go $(go version | cut -d' ' -f3) found"
+        log_success "Go $(go version | cut -d' ' -f3) found"
     fi
     
-    # Check Java
-    if ! command -v java &> /dev/null; then
-        print_warning "Java not found. Installing with Homebrew..."
-        if command -v brew &> /dev/null; then
-            brew install openjdk@17
-            print_success "Java installed"
-        else
-            print_error "Java not found and Homebrew not available. Please install Java manually."
-            exit 1
-        fi
+    # Check and install Java
+    if ! cmd_exists java; then
+        log_warning "Java not found. Installing..."
+        setup_java_environment "17"
     else
-        print_success "Java $(java -version 2>&1 | head -n 1) found"
+        log_success "Java $(java -version 2>&1 | head -n 1) found"
     fi
     
-    # Check Node.js (for some language servers)
-    if ! command -v node &> /dev/null; then
-        print_warning "Node.js not found. Installing with Homebrew..."
-        if command -v brew &> /dev/null; then
-            brew install node
-            print_success "Node.js installed"
-        fi
+    # Check and install Node.js
+    if ! cmd_exists node; then
+        log_warning "Node.js not found. Installing..."
+        install_package "node"
     else
-        print_success "Node.js $(node -v) found"
+        log_success "Node.js $(node -v) found"
     fi
 }
 
-# Install Go tools
-install_go_tools() {
-    print_step "Installing enhanced Go development tools..."
+install_go_tools_enhanced() {
+    log_info "Installing enhanced Go development tools..."
     
-    # Essential Go tools
-    go install golang.org/x/tools/gopls@latest
-    go install golang.org/x/tools/cmd/goimports@latest
-    go install mvdan.cc/gofumpt@latest
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-    go install github.com/go-delve/delve/cmd/dlv@latest
-    go install github.com/cweill/gotests/gotests@latest
-    go install github.com/josharian/impl@latest
-    go install github.com/fatih/gomodifytags@latest
-    
-    print_success "Go tools installed successfully"
+    if cmd_exists go; then
+        # Install standard Go tools plus additional ones
+        local enhanced_tools=(
+            "golang.org/x/tools/gopls@latest"
+            "golang.org/x/tools/cmd/goimports@latest"
+            "mvdan.cc/gofumpt@latest"
+            "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
+            "github.com/go-delve/delve/cmd/dlv@latest"
+            "github.com/cweill/gotests/gotests@latest"
+            "github.com/josharian/impl@latest"
+            "github.com/fatih/gomodifytags@latest"
+        )
+        
+        for tool in "${enhanced_tools[@]}"; do
+            log_step "Installing $(basename "$tool" | cut -d'@' -f1)..."
+            go install "$tool"
+        done
+        
+        log_success "Enhanced Go tools installed successfully"
+    else
+        log_error "Go installation failed, skipping tools installation"
+        return 1
+    fi
 }
 
-# Setup Java environment
-setup_java_environment() {
-    print_step "Setting up Java development environment..."
+setup_java_environment_enhanced() {
+    log_info "Setting up enhanced Java development environment..."
     
-    # Ensure JAVA_HOME is set
-    if [[ -z "$JAVA_HOME" ]]; then
-        if [[ -d "/opt/homebrew/opt/openjdk@17" ]]; then
-            export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
-            echo 'export JAVA_HOME="/opt/homebrew/opt/openjdk@17"' >> ~/.zshrc
-        elif [[ -d "/usr/local/opt/openjdk@17" ]]; then
-            export JAVA_HOME="/usr/local/opt/openjdk@17"
-            echo 'export JAVA_HOME="/usr/local/opt/openjdk@17"' >> ~/.zshrc
-        fi
-        print_success "JAVA_HOME configured"
-    fi
+    # Setup Java environment with version detection
+    setup_java_environment "17"
     
     # Install Maven if not present
-    if ! command -v mvn &> /dev/null; then
-        print_warning "Maven not found. Installing with Homebrew..."
-        if command -v brew &> /dev/null; then
-            brew install maven
-            print_success "Maven installed"
-        fi
+    if ! cmd_exists mvn; then
+        log_warning "Maven not found. Installing..."
+        install_package "maven"
     else
-        print_success "Maven $(mvn -version | head -n 1) found"
+        log_success "Maven $(mvn -version | head -n 1 | cut -d' ' -f3) found"
     fi
     
     # Install Gradle if not present
-    if ! command -v gradle &> /dev/null; then
-        print_warning "Gradle not found. Installing with Homebrew..."
-        if command -v brew &> /dev/null; then
-            brew install gradle
-            print_success "Gradle installed"
-        fi
+    if ! cmd_exists gradle; then
+        log_warning "Gradle not found. Installing..."
+        install_package "gradle"
     else
-        print_success "Gradle $(gradle -version | grep Gradle | cut -d' ' -f2) found"
+        local gradle_version
+        gradle_version=$(gradle -version 2>/dev/null | grep "Gradle" | cut -d' ' -f2 || echo "unknown")
+        log_success "Gradle $gradle_version found"
     fi
 }
 
-# Sync Neovim plugins
+create_development_workspaces() {
+    log_info "Creating development workspaces..."
+    
+    for dir in "${WORKSPACE_DIRS[@]}"; do
+        mkdir -p "${WORKSPACE_BASE}/$dir"
+    done
+    
+    log_success "Development directories created in $WORKSPACE_BASE"
+}
+
 sync_neovim_plugins() {
-    print_step "Syncing Neovim plugins..."
+    log_info "Syncing Neovim plugins..."
     
-    # Start Neovim with plugin sync commands
-    nvim --headless "+Lazy! sync" "+qa"
-    
-    # Install/update Mason packages
-    nvim --headless "+MasonInstallAll" "+qa"
-    
-    print_success "Neovim plugins synced successfully"
+    if cmd_exists nvim; then
+        # Start Neovim with plugin sync commands
+        log_step "Running Lazy sync..."
+        nvim --headless "+Lazy! sync" "+qa" 2>/dev/null || log_warning "Lazy sync may have issues"
+        
+        # Install/update Mason packages
+        log_step "Running MasonInstallAll..."
+        nvim --headless "+MasonInstallAll" "+qa" 2>/dev/null || log_warning "MasonInstallAll may need manual run"
+        
+        log_success "Neovim plugins sync attempted"
+    else
+        log_error "Neovim not found - skipping plugin sync"
+    fi
 }
 
-# Create workspace directories
-create_workspaces() {
-    print_step "Creating development workspaces..."
-    
-    mkdir -p ~/Development/{go,java,projects}
-    mkdir -p ~/Development/go/{bin,src,pkg}
-    mkdir -p ~/Development/java/{projects,libraries}
-    
-    print_success "Development directories created"
-}
-
-# Test the setup
-test_setup() {
-    print_step "Testing the enhanced development setup..."
+test_enhanced_setup() {
+    log_info "Testing the enhanced development setup..."
     
     # Test Go tools
-    print_step "Testing Go tools..."
-    if command -v gopls &> /dev/null; then
-        print_success "gopls (Go LSP) is working"
-    else
-        print_error "gopls not found"
-    fi
-    
-    if command -v gofumpt &> /dev/null; then
-        print_success "gofumpt (Go formatter) is working"
-    else
-        print_error "gofumpt not found"
-    fi
+    test_go_tools_enhanced
     
     # Test Java tools
-    print_step "Testing Java tools..."
-    if [[ -n "$JAVA_HOME" ]]; then
-        print_success "JAVA_HOME is set to: $JAVA_HOME"
-    else
-        print_warning "JAVA_HOME is not set"
-    fi
+    test_java_tools_enhanced
 }
 
-# Main setup process
-main() {
-    echo "Starting enhanced development environment setup..."
+test_go_tools_enhanced() {
+    log_info "Testing Go tools..."
     
-    check_prerequisites
-    install_go_tools
-    setup_java_environment
-    create_workspaces
-    sync_neovim_plugins
-    test_setup
+    local go_tools=("gopls" "gofumpt" "dlv" "golangci-lint")
     
-    echo ""
-    print_success "Enhanced development environment setup completed!"
-    echo ""
-    echo "🎉 Next Steps:"
-    echo "=============="
+    for tool in "${go_tools[@]}"; do
+        if cmd_exists "$tool"; then
+            log_success "$tool is working"
+        else
+            log_warning "$tool not found in PATH"
+        fi
+    done
+}
+
+test_java_tools_enhanced() {
+    log_info "Testing Java tools..."
+    
+    if [[ -n "$JAVA_HOME" ]]; then
+        log_success "JAVA_HOME is set to: $JAVA_HOME"
+    else
+        log_warning "JAVA_HOME is not set"
+    fi
+    
+    local java_tools=("mvn" "gradle")
+    
+    for tool in "${java_tools[@]}"; do
+        if cmd_exists "$tool"; then
+            log_success "$tool is available"
+        else
+            log_warning "$tool not found"
+        fi
+    done
+}
+
+show_enhanced_completion_info() {
+    echo
+    log_success "Enhanced development environment setup completed!"
+    echo
+    log_info "Next Steps:"
     echo "1. Restart your terminal or source ~/.zshrc"
     echo "2. Open Neovim and test autocompletion:"
     echo "   - Create a Go file and type 'fmt.' - you should see suggestions"
@@ -204,8 +212,232 @@ main() {
     echo "4. Test Java tools with:"
     echo "   - <leader>jo (Java organize imports)"
     echo "   - <leader>jf (Java quick fix)"
-    echo ""
-    print_warning "Note: Some features may require restarting Neovim"
+    echo
+    log_warning "Note: Some features may require restarting Neovim"
+    echo
+    log_info "Development workspaces created in: $WORKSPACE_BASE"
 }
 
+# Execute main function
+main "$@"#!/bin/bash
+
+# Enhanced Development Environment Setup - cross-platform (macOS & Linux)
+# Sets up Go and Java development with enhanced autocompletion
+# Usage: bash scripts/setup-enhanced-dev.sh
+
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+
+# Configuration
+readonly WORKSPACE_BASE="${HOME}/Development"
+readonly WORKSPACE_DIRS=(
+    "go"
+    "java"
+    "projects"
+    "go/bin"
+    "go/src"
+    "go/pkg"
+    "java/projects"
+    "java/libraries"
+)
+
+main() {
+    log_header "Setting up enhanced Go and Java development environment"
+    
+    # Check and install prerequisites
+    check_prerequisites
+    
+    # Install development tools
+    install_go_tools_enhanced
+    setup_java_environment_enhanced
+    
+    # Create workspace directories
+    create_development_workspaces
+    
+    # Sync Neovim plugins
+    sync_neovim_plugins
+    
+    # Test the setup
+    test_enhanced_setup
+    
+    show_enhanced_completion_info
+}
+
+check_prerequisites() {
+    log_info "Checking prerequisites..."
+    
+    # Check Go
+    if ! cmd_exists go; then
+        log_error "Go is not installed. Please install Go first."
+        log_info "Visit: https://golang.org/dl/"
+        exit 1
+    else
+        log_success "Go $(go version | cut -d' ' -f3) found"
+    fi
+    
+    # Check and install Java
+    if ! cmd_exists java; then
+        log_warning "Java not found. Installing..."
+        setup_java_environment "17"
+    else
+        log_success "Java $(java -version 2>&1 | head -n 1) found"
+    fi
+    
+    # Check and install Node.js
+    if ! cmd_exists node; then
+        log_warning "Node.js not found. Installing..."
+        install_package "node"
+    else
+        log_success "Node.js $(node -v) found"
+    fi
+}
+
+install_go_tools_enhanced() {
+    log_info "Installing enhanced Go development tools..."
+    
+    if cmd_exists go; then
+        # Install standard Go tools plus additional ones
+        local enhanced_tools=(
+            "golang.org/x/tools/gopls@latest"
+            "golang.org/x/tools/cmd/goimports@latest"
+            "mvdan.cc/gofumpt@latest"
+            "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
+            "github.com/go-delve/delve/cmd/dlv@latest"
+            "github.com/cweill/gotests/gotests@latest"
+            "github.com/josharian/impl@latest"
+            "github.com/fatih/gomodifytags@latest"
+        )
+        
+        for tool in "${enhanced_tools[@]}"; do
+            log_step "Installing $(basename "$tool" | cut -d'@' -f1)..."
+            go install "$tool"
+        done
+        
+        log_success "Enhanced Go tools installed successfully"
+    else
+        log_error "Go installation failed, skipping tools installation"
+        return 1
+    fi
+}
+
+setup_java_environment_enhanced() {
+    log_info "Setting up enhanced Java development environment..."
+    
+    # Setup Java environment with version detection
+    setup_java_environment "17"
+    
+    # Install Maven if not present
+    if ! cmd_exists mvn; then
+        log_warning "Maven not found. Installing..."
+        install_package "maven"
+    else
+        log_success "Maven $(mvn -version | head -n 1 | cut -d' ' -f3) found"
+    fi
+    
+    # Install Gradle if not present
+    if ! cmd_exists gradle; then
+        log_warning "Gradle not found. Installing..."
+        install_package "gradle"
+    else
+        local gradle_version
+        gradle_version=$(gradle -version 2>/dev/null | grep "Gradle" | cut -d' ' -f2 || echo "unknown")
+        log_success "Gradle $gradle_version found"
+    fi
+}
+
+create_development_workspaces() {
+    log_info "Creating development workspaces..."
+    
+    for dir in "${WORKSPACE_DIRS[@]}"; do
+        mkdir -p "${WORKSPACE_BASE}/$dir"
+    done
+    
+    log_success "Development directories created in $WORKSPACE_BASE"
+}
+
+sync_neovim_plugins() {
+    log_info "Syncing Neovim plugins..."
+    
+    if cmd_exists nvim; then
+        # Start Neovim with plugin sync commands
+        log_step "Running Lazy sync..."
+        nvim --headless "+Lazy! sync" "+qa" 2>/dev/null || log_warning "Lazy sync may have issues"
+        
+        # Install/update Mason packages
+        log_step "Running MasonInstallAll..."
+        nvim --headless "+MasonInstallAll" "+qa" 2>/dev/null || log_warning "MasonInstallAll may need manual run"
+        
+        log_success "Neovim plugins sync attempted"
+    else
+        log_error "Neovim not found - skipping plugin sync"
+    fi
+}
+
+test_enhanced_setup() {
+    log_info "Testing the enhanced development setup..."
+    
+    # Test Go tools
+    test_go_tools_enhanced
+    
+    # Test Java tools
+    test_java_tools_enhanced
+}
+
+test_go_tools_enhanced() {
+    log_info "Testing Go tools..."
+    
+    local go_tools=("gopls" "gofumpt" "dlv" "golangci-lint")
+    
+    for tool in "${go_tools[@]}"; do
+        if cmd_exists "$tool"; then
+            log_success "$tool is working"
+        else
+            log_warning "$tool not found in PATH"
+        fi
+    done
+}
+
+test_java_tools_enhanced() {
+    log_info "Testing Java tools..."
+    
+    if [[ -n "$JAVA_HOME" ]]; then
+        log_success "JAVA_HOME is set to: $JAVA_HOME"
+    else
+        log_warning "JAVA_HOME is not set"
+    fi
+    
+    local java_tools=("mvn" "gradle")
+    
+    for tool in "${java_tools[@]}"; do
+        if cmd_exists "$tool"; then
+            log_success "$tool is available"
+        else
+            log_warning "$tool not found"
+        fi
+    done
+}
+
+show_enhanced_completion_info() {
+    echo
+    log_success "Enhanced development environment setup completed!"
+    echo
+    log_info "Next Steps:"
+    echo "1. Restart your terminal or source ~/.zshrc"
+    echo "2. Open Neovim and test autocompletion:"
+    echo "   - Create a Go file and type 'fmt.' - you should see suggestions"
+    echo "   - Create a Java file and type 'System.' - you should see suggestions"
+    echo "3. Test Go tools with:"
+    echo "   - <leader>gr (Go run)"
+    echo "   - <leader>gt (Go test)"
+    echo "   - <leader>gf (Go format)"
+    echo "4. Test Java tools with:"
+    echo "   - <leader>jo (Java organize imports)"
+    echo "   - <leader>jf (Java quick fix)"
+    echo
+    log_warning "Note: Some features may require restarting Neovim"
+    echo
+    log_info "Development workspaces created in: $WORKSPACE_BASE"
+}
+
+# Execute main function
 main "$@"

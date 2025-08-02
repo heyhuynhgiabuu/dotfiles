@@ -1,123 +1,435 @@
 #!/bin/bash
 
-# AugmentCode Setup Script for Cross-Platform Dotfiles
+# AugmentCode Configuration Setup Script - cross-platform (macOS & Linux)
 # Manages AugmentCode configuration with stow integration
+# Usage: bash scripts/setup-augment-config.sh
 
-echo "=== AugmentCode Configuration Setup ==="
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Check prerequisites
-echo "Checking prerequisites..."
+# Configuration
+readonly AUGMENT_CONFIGS=(
+    ".local/share/vim-augment"
+    ".config/augment"
+)
 
-# Check if stow is available
-if ! command -v stow >/dev/null 2>&1; then
-    echo "❌ GNU Stow is required but not installed"
-    echo "Install with:"
-    echo "  macOS: brew install stow"
-    echo "  Linux: sudo apt install stow (Debian/Ubuntu) or sudo yum install stow (RHEL/CentOS)"
-    exit 1
-fi
+main() {
+    log_header "AugmentCode Configuration Setup"
+    
+    # Check prerequisites
+    check_prerequisites
+    
+    # Validate environment
+    validate_environment
+    
+    # Check plugin installation
+    check_plugin_installation
+    
+    # Backup existing configuration
+    backup_existing_configs
+    
+    # Setup stow configuration
+    setup_stow_configuration
+    
+    # Verify installation
+    verify_installation
+    
+    show_completion_info
+}
 
-echo "✅ GNU Stow found: $(stow --version | head -1)"
+check_prerequisites() {
+    log_info "Checking prerequisites..."
+    
+    # Check if stow is available
+    if ! cmd_exists stow; then
+        log_error "GNU Stow is required but not installed"
+        log_info "Install with:"
+        if [[ "$PLATFORM" == "macos" ]]; then
+            echo "  macOS: brew install stow"
+        elif [[ "$PLATFORM" == "linux" ]]; then
+            echo "  Ubuntu/Debian: sudo apt install stow"
+            echo "  CentOS/RHEL: sudo yum install stow"
+            echo "  Arch: sudo pacman -S stow"
+        fi
+        exit 1
+    fi
+    
+    local stow_version
+    stow_version=$(stow --version | head -1)
+    log_success "GNU Stow found: $stow_version"
+}
 
-# Check if we're in the dotfiles directory
-if [[ ! -f "README.md" ]] || [[ ! -d "augment" ]]; then
-    echo "❌ Please run this script from the dotfiles repository root"
-    echo "Expected: cd ~/dotfiles && ./scripts/setup-augment-config.sh"
-    exit 1
-fi
+validate_environment() {
+    log_info "Validating environment..."
+    
+    # Check if we're in the dotfiles directory
+    if [[ ! -f "README.md" ]] || [[ ! -d "augment" ]]; then
+        log_error "Please run this script from the dotfiles repository root"
+        log_info "Expected: cd ~/dotfiles && bash scripts/setup-augment-config.sh"
+        exit 1
+    fi
+    
+    log_success "Running from dotfiles directory"
+}
 
-echo "✅ Running from dotfiles directory"
+check_plugin_installation() {
+    log_info "Checking AugmentCode plugin installation..."
+    
+    # Test if AugmentCode command is available
+    if nvim --headless +"lua if pcall(function() vim.cmd('Augment status') end) then print('✅ AugmentCode plugin found') else print('❌ AugmentCode plugin not found') end" +qall 2>/dev/null | grep -q "✅"; then
+        log_success "AugmentCode plugin is installed"
+    else
+        log_warning "AugmentCode plugin not found or not working"
+        log_info "Run: nvim +':Lazy sync' +qall to install/update plugins"
+    fi
+}
 
-# Check if AugmentCode plugin is installed in Neovim
-echo "Checking AugmentCode plugin installation..."
-if nvim --headless +"lua if pcall(function() vim.cmd('Augment status') end) then print('✅ AugmentCode plugin found') else print('❌ AugmentCode plugin not found') end" +qall 2>/dev/null | grep -q "✅"; then
-    echo "✅ AugmentCode plugin is installed"
-else
-    echo "⚠️  AugmentCode plugin not found or not working"
-    echo "Run: nvim +':Lazy sync' +qall to install/update plugins"
-fi
+backup_existing_configs() {
+    log_info "Backing up existing configuration..."
+    
+    local backup_timestamp
+    backup_timestamp=$(date +%Y%m%d_%H%M%S)
+    
+    # Backup vim-augment directory
+    local vim_augment_dir="${HOME}/.local/share/vim-augment"
+    if [[ -d "$vim_augment_dir" ]]; then
+        local backup_dir="${vim_augment_dir}.backup.${backup_timestamp}"
+        mv "$vim_augment_dir" "$backup_dir"
+        log_success "Backed up vim-augment config to: $backup_dir"
+    fi
+    
+    # Backup augment config directory
+    local augment_config_dir="${HOME}/.config/augment"
+    if [[ -d "$augment_config_dir" ]]; then
+        local backup_dir="${augment_config_dir}.backup.${backup_timestamp}"
+        mv "$augment_config_dir" "$backup_dir"
+        log_success "Backed up augment config to: $backup_dir"
+    fi
+    
+    # Backup augmentignore file
+    local augmentignore_file="${HOME}/.augmentignore"
+    if [[ -f "$augmentignore_file" ]]; then
+        backup_file "$augmentignore_file" ".backup.${backup_timestamp}"
+        log_success "Backed up .augmentignore"
+    fi
+}
 
-# Backup existing AugmentCode configuration
-echo "Backing up existing configuration..."
-if [[ -d ~/.local/share/vim-augment ]]; then
-    backup_dir=~/.local/share/vim-augment.backup.$(date +%Y%m%d_%H%M%S)
-    mv ~/.local/share/vim-augment "$backup_dir"
-    echo "✅ Backed up existing config to: $backup_dir"
-fi
+setup_stow_configuration() {
+    log_info "Setting up AugmentCode configuration with stow..."
+    
+    cd "$DOTFILES_DIR"
+    
+    # Check if augment directory exists
+    if [[ ! -d "augment" ]]; then
+        log_error "AugmentCode configuration directory 'augment' not found"
+        log_info "Please ensure the augment directory exists in your dotfiles"
+        exit 1
+    fi
+    
+    # Use stow to symlink configuration
+    if stow -v augment; then
+        log_success "AugmentCode configuration symlinked successfully"
+    else
+        log_error "Failed to stow AugmentCode configuration"
+        exit 1
+    fi
+}
 
-if [[ -d ~/.config/augment ]]; then
-    backup_dir=~/.config/augment.backup.$(date +%Y%m%d_%H%M%S)
-    mv ~/.config/augment "$backup_dir"
-    echo "✅ Backed up existing config to: $backup_dir"
-fi
+verify_installation() {
+    log_info "Verifying installation..."
+    
+    # Check symlinked files
+    local config_files=(
+        "${HOME}/.config/augment/keymaps.conf"
+        "${HOME}/.config/augment/settings.conf"
+        "${HOME}/.config/augment/workspace_folders.conf"
+        "${HOME}/.augmentignore"
+    )
+    
+    local all_files_exist=true
+    for file in "${config_files[@]}"; do
+        if [[ -L "$file" ]]; then
+            log_success "Symlink exists: $(basename "$file")"
+        elif [[ -f "$file" ]]; then
+            log_warning "File exists (not symlink): $(basename "$file")"
+        else
+            log_error "Missing: $(basename "$file")"
+            all_files_exist=false
+        fi
+    done
+    
+    if [[ "$all_files_exist" == "true" ]]; then
+        log_success "All configuration files are in place"
+    else
+        log_warning "Some configuration files are missing"
+    fi
+    
+    # Test AugmentCode functionality
+    test_augmentcode_functionality
+}
 
-# Remove existing symlinks if they exist
-echo "Cleaning up existing symlinks..."
-[[ -L ~/.local/share/vim-augment ]] && rm ~/.local/share/vim-augment
-[[ -L ~/.config/augment ]] && rm ~/.config/augment
+test_augmentcode_functionality() {
+    log_info "Testing AugmentCode functionality..."
+    
+    # Test basic command availability
+    if nvim --headless +"Augment status" +qall 2>/dev/null; then
+        log_success "AugmentCode commands are working"
+    else
+        log_warning "AugmentCode commands not responding"
+    fi
+    
+    # Check workspace configuration
+    local workspace_config="${HOME}/.config/augment/workspace_folders.conf"
+    if [[ -f "$workspace_config" ]]; then
+        log_success "Workspace configuration loaded"
+        log_info "Workspace folders: $(cat "$workspace_config" | head -3 | tr '
+' ', ' | sed 's/,$//')"
+    else
+        log_warning "Workspace configuration not found"
+    fi
+}
 
-# Use stow to create symlinks
-echo "Creating symlinks with stow..."
-cd "$(dirname "$0")/.." || exit 1
+show_completion_info() {
+    echo
+    log_success "AugmentCode configuration setup completed!"
+    echo
+    log_info "Configuration files installed:"
+    echo "  • ~/.config/augment/keymaps.conf - Custom keybindings"
+    echo "  • ~/.config/augment/settings.conf - AugmentCode settings"
+    echo "  • ~/.config/augment/workspace_folders.conf - Workspace configuration"
+    echo "  • ~/.augmentignore - Files to exclude from indexing"
+    echo
+    log_info "Next steps:"
+    echo "1. Restart Neovim to load new configuration"
+    echo "2. Run: :Augment signin to authenticate"
+    echo "3. Test with: :Augment status"
+    echo "4. Check workspace indexing progress"
+    echo
+    log_info "Configuration management:"
+    echo "  • Edit files in ~/dotfiles/augment/.config/augment/"
+    echo "  • Changes are automatically symlinked"
+    echo "  • Use 'stow -D augment' to remove symlinks"
+    echo "  • Use 'stow augment' to re-create symlinks"
+    echo
+    log_warning "Remember: Sign in to AugmentCode to complete setup"
+}
 
-if stow -v augment 2>&1; then
-    echo "✅ Successfully created AugmentCode configuration symlinks"
-else
-    echo "❌ Failed to create symlinks with stow"
-    exit 1
-fi
+# Execute main function
+main "$@"#!/bin/bash
 
-# Verify symlinks were created correctly
-echo "Verifying configuration..."
+# AugmentCode Configuration Setup Script - cross-platform (macOS & Linux)
+# Manages AugmentCode configuration with stow integration
+# Usage: bash scripts/setup-augment-config.sh
 
-if [[ -L ~/.config/augment && -d ~/.config/augment ]]; then
-    echo "✅ Global AugmentCode config symlinked: ~/.config/augment"
-else
-    echo "❌ Global config symlink failed"
-fi
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-if [[ -L ~/.local/share/vim-augment && -d ~/.local/share/vim-augment ]]; then
-    echo "✅ AugmentCode data directory symlinked: ~/.local/share/vim-augment"
-else
-    echo "❌ Data directory symlink failed"
-fi
+# Configuration
+readonly AUGMENT_CONFIGS=(
+    ".local/share/vim-augment"
+    ".config/augment"
+)
 
-if [[ -f ~/.augmentignore ]]; then
-    echo "✅ Global .augmentignore symlinked"
-else
-    echo "❌ .augmentignore symlink failed"
-fi
+main() {
+    log_header "AugmentCode Configuration Setup"
+    
+    # Check prerequisites
+    check_prerequisites
+    
+    # Validate environment
+    validate_environment
+    
+    # Check plugin installation
+    check_plugin_installation
+    
+    # Backup existing configuration
+    backup_existing_configs
+    
+    # Setup stow configuration
+    setup_stow_configuration
+    
+    # Verify installation
+    verify_installation
+    
+    show_completion_info
+}
 
-# Test AugmentCode functionality
-echo "Testing AugmentCode functionality..."
-if command -v nvim >/dev/null; then
-    echo "Run this to test AugmentCode:"
-    echo "  nvim test.go"
-    echo "  :Augment status"
-    echo ""
-    echo "Expected keymaps:"
-    echo "  <leader>ai - Sign in"
-    echo "  <leader>as - Show status"
-    echo "  <leader>ac - Chat with AugmentCode"
-    echo "  <Tab> or <C-l> - Accept completions"
-else
-    echo "⚠️  Neovim not found in PATH"
-fi
+check_prerequisites() {
+    log_info "Checking prerequisites..."
+    
+    # Check if stow is available
+    if ! cmd_exists stow; then
+        log_error "GNU Stow is required but not installed"
+        log_info "Install with:"
+        if [[ "$PLATFORM" == "macos" ]]; then
+            echo "  macOS: brew install stow"
+        elif [[ "$PLATFORM" == "linux" ]]; then
+            echo "  Ubuntu/Debian: sudo apt install stow"
+            echo "  CentOS/RHEL: sudo yum install stow"
+            echo "  Arch: sudo pacman -S stow"
+        fi
+        exit 1
+    fi
+    
+    local stow_version
+    stow_version=$(stow --version | head -1)
+    log_success "GNU Stow found: $stow_version"
+}
 
-echo ""
-echo "🎉 AugmentCode configuration setup complete!"
-echo ""
-echo "📁 Configuration files:"
-echo "  ~/.config/augment/          - Global settings and keymaps"
-echo "  ~/.local/share/vim-augment/ - Data and cache"
-echo "  ~/.augmentignore            - Global ignore patterns"
-echo ""
-echo "🔄 To update configuration:"
-echo "  1. Edit files in ~/dotfiles/augment/"
-echo "  2. Changes are immediately reflected (symlinked)"
-echo ""
-echo "🗑️  To remove:"
-echo "  cd ~/dotfiles && stow -D augment"
-echo ""
-echo "📚 Documentation:"
-echo "  https://docs.augmentcode.com/vim/"
+validate_environment() {
+    log_info "Validating environment..."
+    
+    # Check if we're in the dotfiles directory
+    if [[ ! -f "README.md" ]] || [[ ! -d "augment" ]]; then
+        log_error "Please run this script from the dotfiles repository root"
+        log_info "Expected: cd ~/dotfiles && bash scripts/setup-augment-config.sh"
+        exit 1
+    fi
+    
+    log_success "Running from dotfiles directory"
+}
+
+check_plugin_installation() {
+    log_info "Checking AugmentCode plugin installation..."
+    
+    # Test if AugmentCode command is available
+    if nvim --headless +"lua if pcall(function() vim.cmd('Augment status') end) then print('✅ AugmentCode plugin found') else print('❌ AugmentCode plugin not found') end" +qall 2>/dev/null | grep -q "✅"; then
+        log_success "AugmentCode plugin is installed"
+    else
+        log_warning "AugmentCode plugin not found or not working"
+        log_info "Run: nvim +':Lazy sync' +qall to install/update plugins"
+    fi
+}
+
+backup_existing_configs() {
+    log_info "Backing up existing configuration..."
+    
+    local backup_timestamp
+    backup_timestamp=$(date +%Y%m%d_%H%M%S)
+    
+    # Backup vim-augment directory
+    local vim_augment_dir="${HOME}/.local/share/vim-augment"
+    if [[ -d "$vim_augment_dir" ]]; then
+        local backup_dir="${vim_augment_dir}.backup.${backup_timestamp}"
+        mv "$vim_augment_dir" "$backup_dir"
+        log_success "Backed up vim-augment config to: $backup_dir"
+    fi
+    
+    # Backup augment config directory
+    local augment_config_dir="${HOME}/.config/augment"
+    if [[ -d "$augment_config_dir" ]]; then
+        local backup_dir="${augment_config_dir}.backup.${backup_timestamp}"
+        mv "$augment_config_dir" "$backup_dir"
+        log_success "Backed up augment config to: $backup_dir"
+    fi
+    
+    # Backup augmentignore file
+    local augmentignore_file="${HOME}/.augmentignore"
+    if [[ -f "$augmentignore_file" ]]; then
+        backup_file "$augmentignore_file" ".backup.${backup_timestamp}"
+        log_success "Backed up .augmentignore"
+    fi
+}
+
+setup_stow_configuration() {
+    log_info "Setting up AugmentCode configuration with stow..."
+    
+    cd "$DOTFILES_DIR"
+    
+    # Check if augment directory exists
+    if [[ ! -d "augment" ]]; then
+        log_error "AugmentCode configuration directory 'augment' not found"
+        log_info "Please ensure the augment directory exists in your dotfiles"
+        exit 1
+    fi
+    
+    # Use stow to symlink configuration
+    if stow -v augment; then
+        log_success "AugmentCode configuration symlinked successfully"
+    else
+        log_error "Failed to stow AugmentCode configuration"
+        exit 1
+    fi
+}
+
+verify_installation() {
+    log_info "Verifying installation..."
+    
+    # Check symlinked files
+    local config_files=(
+        "${HOME}/.config/augment/keymaps.conf"
+        "${HOME}/.config/augment/settings.conf"
+        "${HOME}/.config/augment/workspace_folders.conf"
+        "${HOME}/.augmentignore"
+    )
+    
+    local all_files_exist=true
+    for file in "${config_files[@]}"; do
+        if [[ -L "$file" ]]; then
+            log_success "Symlink exists: $(basename "$file")"
+        elif [[ -f "$file" ]]; then
+            log_warning "File exists (not symlink): $(basename "$file")"
+        else
+            log_error "Missing: $(basename "$file")"
+            all_files_exist=false
+        fi
+    done
+    
+    if [[ "$all_files_exist" == "true" ]]; then
+        log_success "All configuration files are in place"
+    else
+        log_warning "Some configuration files are missing"
+    fi
+    
+    # Test AugmentCode functionality
+    test_augmentcode_functionality
+}
+
+test_augmentcode_functionality() {
+    log_info "Testing AugmentCode functionality..."
+    
+    # Test basic command availability
+    if nvim --headless +"Augment status" +qall 2>/dev/null; then
+        log_success "AugmentCode commands are working"
+    else
+        log_warning "AugmentCode commands not responding"
+    fi
+    
+    # Check workspace configuration
+    local workspace_config="${HOME}/.config/augment/workspace_folders.conf"
+    if [[ -f "$workspace_config" ]]; then
+        log_success "Workspace configuration loaded"
+        log_info "Workspace folders: $(cat "$workspace_config" | head -3 | tr '
+' ', ' | sed 's/,$//')"
+    else
+        log_warning "Workspace configuration not found"
+    fi
+}
+
+show_completion_info() {
+    echo
+    log_success "AugmentCode configuration setup completed!"
+    echo
+    log_info "Configuration files installed:"
+    echo "  • ~/.config/augment/keymaps.conf - Custom keybindings"
+    echo "  • ~/.config/augment/settings.conf - AugmentCode settings"
+    echo "  • ~/.config/augment/workspace_folders.conf - Workspace configuration"
+    echo "  • ~/.augmentignore - Files to exclude from indexing"
+    echo
+    log_info "Next steps:"
+    echo "1. Restart Neovim to load new configuration"
+    echo "2. Run: :Augment signin to authenticate"
+    echo "3. Test with: :Augment status"
+    echo "4. Check workspace indexing progress"
+    echo
+    log_info "Configuration management:"
+    echo "  • Edit files in ~/dotfiles/augment/.config/augment/"
+    echo "  • Changes are automatically symlinked"
+    echo "  • Use 'stow -D augment' to remove symlinks"
+    echo "  • Use 'stow augment' to re-create symlinks"
+    echo
+    log_warning "Remember: Sign in to AugmentCode to complete setup"
+}
+
+# Execute main function
+main "$@"

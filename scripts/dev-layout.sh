@@ -1,28 +1,107 @@
 #!/bin/bash
 
-SESSION="devlayout"
+# General development tmux layout
+# Usage: dev-layout.sh [session-name]
 
-# Start a new tmux session, detached
-tmux new-session -d -s $SESSION
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Left pane: nvim
-tmux send-keys -t $SESSION 'nvim' C-m
+# Configuration
+readonly DEFAULT_SESSION="devlayout"
 
-# Split right vertically (creates right pane)
-tmux split-window -h -t $SESSION
+main() {
+    local session_name="${1:-$DEFAULT_SESSION}"
+    
+    log_info "Creating development tmux layout: $session_name"
+    
+    # Create or attach to session
+    if tmux_session_exists "$session_name"; then
+        log_info "Session '$session_name' already exists. Attaching..."
+        tmux attach-session -t "$session_name"
+        exit 0
+    fi
+    
+    # Create new session
+    create_tmux_session "$session_name"
+    
+    # Setup layout
+    setup_development_layout "$session_name"
+    
+    # Attach to session
+    tmux attach-session -t "$session_name"
+}
 
-# Top right: opencode (replace 'opencode' with your actual command)
-tmux send-keys -t $SESSION:0.1 'opencode' C-m
+setup_development_layout() {
+    local session="$1"
+    
+    # Start with nvim in left pane
+    tmux send-keys -t "$session" 'nvim' C-m
+    
+    # Split right vertically for opencode
+    tmux split-window -h -t "$session"
+    tmux send-keys -t "$session:0.1" 'opencode' C-m
+    
+    # Split bottom right horizontally for terminal
+    tmux split-window -v -t "$session:0.1"
+    
+    # Select left pane (nvim) to start
+    tmux select-pane -t "$session:0.0"
+    
+    log_success "Development layout created successfully"
+}
 
-# Split bottom right horizontally (creates bottom right pane)
-tmux split-window -v -t $SESSION:0.1
+# Execute main function
+main "$@"#!/bin/bash
 
-# Bottom right: terminal (default shell, so no command needed)
+# General development tmux layout
+# Usage: dev-layout.sh [session-name]
 
-# Select left pane to start
-tmux select-pane -t $SESSION:0.0
+# Source common utilities
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Attach to the session
-tmux attach-session -t $SESSION
+# Configuration
+readonly DEFAULT_SESSION="devlayout"
 
+main() {
+    local session_name="${1:-$DEFAULT_SESSION}"
+    
+    log_info "Creating development tmux layout: $session_name"
+    
+    # Create or attach to session
+    if tmux_session_exists "$session_name"; then
+        log_info "Session '$session_name' already exists. Attaching..."
+        tmux attach-session -t "$session_name"
+        exit 0
+    fi
+    
+    # Create new session
+    create_tmux_session "$session_name"
+    
+    # Setup layout
+    setup_development_layout "$session_name"
+    
+    # Attach to session
+    tmux attach-session -t "$session_name"
+}
 
+setup_development_layout() {
+    local session="$1"
+    
+    # Start with nvim in left pane
+    tmux send-keys -t "$session" 'nvim' C-m
+    
+    # Split right vertically for opencode
+    tmux split-window -h -t "$session"
+    tmux send-keys -t "$session:0.1" 'opencode' C-m
+    
+    # Split bottom right horizontally for terminal
+    tmux split-window -v -t "$session:0.1"
+    
+    # Select left pane (nvim) to start
+    tmux select-pane -t "$session:0.0"
+    
+    log_success "Development layout created successfully"
+}
+
+# Execute main function
+main "$@"
