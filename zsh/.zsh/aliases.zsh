@@ -86,6 +86,7 @@ alias cope='gh copilot explain'
 alias copf='gh copilot fix'
 alias glog="git log --oneline --graph --decorate"
 alias gclean='git_clean_merged'
+alias gsecrets='gh api repos/$(git config --get remote.origin.url | sed -E "s#.*github.com[:/](.*)\.git#\1#")/actions/secrets'
 
 # Tmux Layouts
 alias tjava='~/dotfiles/scripts/tmux-java-layout.sh'

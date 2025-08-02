@@ -20,6 +20,6 @@ jobs:
       - name: Run opencode
         uses: sst/opencode/github@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           model: github-models/openai/gpt-4.1

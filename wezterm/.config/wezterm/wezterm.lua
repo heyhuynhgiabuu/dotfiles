@@ -7,7 +7,15 @@ if wezterm.config_builder then
 end
 
 -- === THEME & APPEARANCE ===
-config.color_scheme = 'Tokyo Night'
+function scheme_for_appearance(appearance)
+  if appearance:find "Dark" then
+    return "Tokyo Night Storm"
+  else
+    return "Tokyo Night Day"
+  end
+end
+config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
+
 config.font = wezterm.font('JetBrains Mono', { weight = 'Medium' })
 config.font_size = 15.0
 config.window_background_opacity = 0.85
@@ -21,7 +29,7 @@ config.quit_when_all_windows_are_closed = true
 
 -- === PERFORMANCE ===
 config.max_fps = 120
-config.scrollback_lines = 5000  -- Lower for memory usage
+config.scrollback_lines = 10000  -- Increased for better CLI history
 
 -- === KEYBINDINGS ESSENTIALS ===
 config.keys = {
@@ -71,6 +79,11 @@ config.keys = {
   { key = 'RightArrow', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Right' },
   { key = 'UpArrow', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Up' },
   { key = 'DownArrow', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Down' },
+  -- Vim-style pane navigation
+  { key = 'h', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Left' },
+  { key = 'l', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Right' },
+  { key = 'k', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Up' },
+  { key = 'j', mods = 'CMD', action = wezterm.action.ActivatePaneDirection 'Down' },
 
   -- Close pane
   { key = 'w', mods = 'CMD', action = wezterm.action.CloseCurrentPane { confirm = false } },
@@ -111,6 +124,15 @@ config.keys = {
 }
 
 -- === PERFORMANCE TWEAKS ===
+
+-- === MODERN PRODUCTIVITY ===
+-- Enable session restore (restores tabs/panes on restart)
+config.enable_tab_bar = true
+config.enable_wayland = false  -- macOS không cần
+config.automatically_reload_config = true
+-- Auto-launch tmux on new window (optional, uncomment to enable)
+-- config.default_prog = { '/usr/bin/env', 'tmux' }
+
 config.enable_wayland = false  -- macOS không cần
 config.front_end = "OpenGL"    -- Tốt cho macOS
 config.webgpu_power_preference = "HighPerformance"
