@@ -710,8 +710,8 @@ if dap_ok then
     -- Create a new buffer for help
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(help_text, '\n'))
-    vim.api.nvim_buf_set_option(buf, 'filetype', 'help')
-    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+    vim.api.nvim_set_option_value('filetype', 'help', { buf = buf })
+    vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
     
     -- Open in a centered floating window
     local width = 90
@@ -768,8 +768,8 @@ Toggle with F4 or <Leader>du
     -- Create a new buffer for layout info
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(layout_info, '\n'))
-    vim.api.nvim_buf_set_option(buf, 'filetype', 'help')
-    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+    vim.api.nvim_set_option_value('filetype', 'help', { buf = buf })
+    vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
     
     -- Open in a floating window
     local width = 70

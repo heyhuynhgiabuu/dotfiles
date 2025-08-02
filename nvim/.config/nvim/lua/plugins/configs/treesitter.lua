@@ -53,4 +53,15 @@ local options = {
   parser_install_dir = vim.fn.stdpath("data") .. "/treesitter",
 }
 
+-- Add gotmpl parser config for Go templates
+local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+parser_config.gotmpl = {
+  install_info = {
+    url = "https://github.com/ngalaiko/tree-sitter-go-template",
+    files = { "src/parser.c" },
+    branch = "master",
+  },
+  filetype = "gotmpl",
+}
+
 return options

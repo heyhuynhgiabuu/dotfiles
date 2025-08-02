@@ -41,7 +41,7 @@ uvx --from git+https://github.com/oraios/serena serena start-mcp-server --transp
 
 **Integration Command:**
 ```bash
-claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project $(pwd)
+claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project \"$(pwd)\"
 ```
 
 ### 3. ✅ Security Command Testing (devops-deployer)
@@ -177,7 +177,7 @@ uvx --from git+https://github.com/oraios/serena serena start-mcp-server --transp
 open http://localhost:24282
 
 # 3. Test integration with Claude/OpenCode
-claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project $(pwd)
+claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project \"$(pwd)\"
 ```
 
 ### Verification Commands:

@@ -24,7 +24,7 @@ uvx --from git+https://github.com/oraios/serena serena start-mcp-server --transp
 ```bash
 cd /Users/killerkidbo/dotfiles
 # Update existing Serena integration
-claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project $(pwd)
+claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project \"$(pwd)\"
 ```
 **Expected Results:**
 - Serena should load without errors

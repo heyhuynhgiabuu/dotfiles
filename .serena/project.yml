@@ -1,13 +1,7 @@
 # Serena Project Configuration for Dotfiles
-# Auto-updated: 2025-08-02
+# Auto-updated: Sun Aug  3 01:31:13 +07 2025
 project_name: dotfiles
-language: mixed
-languages:
-  - shell
-  - lua
-  - markdown
-  - yaml
-  - json
+language: python
 
 # Project Description
 description: |
