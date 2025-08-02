@@ -154,7 +154,7 @@
     },
     "plan": {
       "description": "Read-only analysis and planning",
-      "model": "openrouter/qwen/qwen3-coder:free",
+      "model": "github-copilot/gpt-4.1",
       "temperature": 0.1,
       "prompt": "{file:prompts/plan-prompt.md}",
       "tools": {

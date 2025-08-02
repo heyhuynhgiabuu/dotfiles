@@ -1,0 +1,14 @@
+[Unit]
+Description=Serena Auto-Update Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+WorkingDirectory=%h/dotfiles
+ExecStart=%h/dotfiles/scripts/serena-auto-update.sh
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=default.target

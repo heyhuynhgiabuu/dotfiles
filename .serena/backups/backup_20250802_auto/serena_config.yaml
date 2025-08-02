@@ -1,0 +1,28 @@
+# Serena Configuration
+read_only: false
+dashboard:
+  enabled: true
+  port: 24282
+logging:
+  level: info
+  file: serena.log
+security:
+  allowed_file_extensions: [".sh", ".lua", ".md", ".yml", ".json"]
+  forbidden_paths: ["/etc", "/var", "~/.ssh"]
+  max_file_size: "5MB"
+  audit_logging: true
+tools:
+  execute_shell_command:
+    enabled: true
+    restricted_commands: ["rm -rf", "dd", "shutdown", "reboot"]
+  find_symbol:
+    enabled: true
+  replace_lines:
+    enabled: true
+  read_file:
+    enabled: true
+  insert_at_line:
+    enabled: true
+project:
+  auto_index: true
+  memory_dir: .serena/memories

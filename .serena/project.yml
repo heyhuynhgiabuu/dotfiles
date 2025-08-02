@@ -1,2 +1,61 @@
+# Serena Project Configuration for Dotfiles
+# Auto-updated: 2025-08-02
 project_name: dotfiles
-language: python
+language: mixed
+languages:
+  - shell
+  - lua
+  - markdown
+  - yaml
+  - json
+
+# Project Description
+description: |
+  Personal dotfiles repository containing cross-platform configurations
+  for development tools, shell environments, and productivity applications.
+  Supports macOS and Linux environments.
+
+# Project Type
+project_type: configuration
+category: dotfiles
+
+# Multi-platform Support
+platforms:
+  - macos
+  - linux
+
+# Main Components
+components:
+  - nvim (Neovim configuration)
+  - tmux (Terminal multiplexer)
+  - zsh (Shell configuration)
+  - wezterm (Terminal emulator)
+  - aerospace (Window manager)
+  - augment (AI assistant)
+  - opencode (Agent framework)
+  - scripts (Automation tools)
+
+# Documentation
+documentation:
+  readme: README.md
+  main_docs: docs/
+  guides:
+    - docs/serena-integration-guide.md
+    - docs/serena-mcp-best-practices.md
+
+# Testing & Verification
+verification:
+  manual_testing: true
+  cross_platform_testing: required
+
+# Automation
+automation:
+  auto_update: true
+  backup_before_changes: true
+  
+# Development Patterns
+patterns:
+  - cross_platform_compatibility
+  - modular_configuration
+  - automated_setup
+  - version_controlled_dotfiles

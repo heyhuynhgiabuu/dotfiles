@@ -1,0 +1,11 @@
+[Unit]
+Description=Serena Auto-Update Timer
+Requires=serena-update.service
+
+[Timer]
+OnCalendar=weekly
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
