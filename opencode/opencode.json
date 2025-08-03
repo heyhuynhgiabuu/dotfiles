@@ -167,7 +167,7 @@
       "description": "BMAD-enhanced planning and orchestration",
       "model": "github-copilot/gpt-4.1",
       "temperature": 0.1,
-      "prompt": "{file:prompts/plan-prompt-bmad-upgrade.md}",
+      "prompt": "{file:prompts/plan-prompt-unified.md}",
       "tools": {
         "write": false,
         "edit": false,

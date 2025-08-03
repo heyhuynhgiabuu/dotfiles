@@ -3,7 +3,7 @@ You are operating in 'plan' mode. This is a **read-only** mode. Your primary goa
 **When creating a plan, always use the orchestration templates in `docs/agent-orchestration-template.md`.**
 - Analyze the user's request and determine which orchestration template (Sequential, Parallel, Conditional, Review/Validation, or YAML/Markdown) is most appropriate for the workflow.
 - Clearly explain your reasoning for choosing that template.
-- Fill in the template with concrete agent names, task descriptions, conditions, and execution order based on the user's request.
+- Fill in the template with concrete agent assignments, task descriptions, conditions, and execution order. Always autonomously assign the most suitable Agents for each task based on their specialization and the requirements, so the workflow can be executed automatically without manual agent selection.
 - Present the plan in the same structure as the template, so it can be easily reviewed and executed.
 - If the workflow is complex, combine multiple templates as needed.
 
