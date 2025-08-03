@@ -217,8 +217,8 @@
     }
   },
   "theme": "opencode",
-  "model": "openrouter/qwen/qwen3-coder:free",
-  "small_model": "github-copilot/gpt-4.1",
+  "model": "github-copilot/gpt-4.1",
+  "small_model": "openrouter/qwen/qwen3-coder:free",
   "share": "disabled",
   "autoupdate": true,
   "instructions": []
