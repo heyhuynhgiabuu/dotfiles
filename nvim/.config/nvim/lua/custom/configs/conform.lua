@@ -11,10 +11,13 @@ local options = {
     -- Java
     java = { "google-java-format" },
 
-    javascript = { "deno_fmt" }, -- Using deno_fmt for faster JS/TS formatting
-    typescript = { "deno_fmt" },
-    javascriptreact = { "prettier" },
-    typescriptreact = { "prettier" },
+    -- JavaScript/TypeScript with enhanced formatting
+     javascript = { "prettier", "eslint_d" },
+     typescript = { "prettier", "eslint_d" },
+     javascriptreact = { "prettier", "eslint_d" },
+     typescriptreact = { "prettier", "eslint_d" },
+     tsx = { "prettier", "eslint_d" },    json = { "prettier" },
+    jsonc = { "prettier" },
 
     css = { "prettier" },
     html = { "prettier" },

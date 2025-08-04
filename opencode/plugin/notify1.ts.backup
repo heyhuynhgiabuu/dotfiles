@@ -1,0 +1,30 @@
+// import type { Plugin } from "@opencode-ai/plugin"
+//
+//
+// const SOUND_PATH = "/Users/killerkidbo/dotfiles/nvim/.config/nvim/break.mp3"
+// const MESSAGE = "Đã hoàn thành task!"
+//
+// const playSoundAndNotify = async ($: any) => {
+//   if (process.platform === "darwin") {
+//     await $`afplay ${SOUND_PATH}`
+//     await $`osascript -e 'display notification "${MESSAGE}" with title "OpenCode"'`
+//     await $`say "${MESSAGE}" || true`
+//   } else {
+//     await $`(command -v mpg123 && mpg123 ${SOUND_PATH}) || (command -v mpv && mpv --no-video --really-quiet ${SOUND_PATH}) || (command -v aplay && aplay ${SOUND_PATH}) || true`
+//     await $`notify-send "OpenCode" "${MESSAGE}" || true`
+//     await $`(command -v spd-say && spd-say "${MESSAGE}") || (command -v espeak && espeak "${MESSAGE}") || true`
+//   }
+// }
+//
+// export const Notify: Plugin = async ({ $ }) => {
+//   return {
+//     async event(input) => {
+//       if (input.event.type ===: "session.idle") {
+//         await playSoundAndNotify($)
+//       }
+//     },
+//     async "permission.ask" (input, output) {
+//       output.status = "deny"
+//     }
+//   }
+// }

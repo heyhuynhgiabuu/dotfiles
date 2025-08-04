@@ -190,18 +190,11 @@
         "git+https://github.com/oraios/serena",
         "serena-mcp-server",
         "--context",
-        "ide-assistant",
+        "ide-assistant"
       ],
       "enabled": true,
       "environment": { "SERENA_READ_ONLY": "false" }
     }
-  },
-  "lsp": {
-    "ruby-lsp": { "disabled": true },
-    "pyright": { "disabled": true },
-    "elixir-ls": { "disabled": true },
-    "zls": { "disabled": true },
-    "csharp": { "disabled": true }
   },
   "theme": "opencode",
   "model": "github-copilot/gpt-4.1",

@@ -75,6 +75,7 @@ return {
 			{ "<leader>f", group = "File" },
 			{ "<leader>l", group = "LSP" },
 			{ "<leader>g", group = "Git/Go" },
+			{ "<leader>ts", group = "TypeScript" },
 			{ "<leader>j", group = "Java" },
 			{ "<leader>jb", group = "Java Build" },
 			{ "<leader>jr", group = "Java Run" },
@@ -123,6 +124,18 @@ return {
 			{ "<leader>df", desc = "Debug Show Frames" },
 			{ "<leader>dv", desc = "Debug Hover/Eval" },
 			{ "<leader>de", desc = "Debug Evaluate Expression" },
+			-- TypeScript specific mappings
+			{ "<leader>tso", desc = "Organize Imports" },
+			{ "<leader>tss", desc = "Sort Imports" },
+			{ "<leader>tsr", desc = "Remove Unused Imports" },
+			{ "<leader>tsu", desc = "Remove All Unused" },
+			{ "<leader>tsa", desc = "Add Missing Imports" },
+			{ "<leader>tsf", desc = "Fix All Errors" },
+			{ "<leader>tsg", desc = "Go to Source Definition" },
+			{ "<leader>tsR", desc = "Rename File" },
+			{ "<leader>tsF", desc = "File References" },
+			{ "<leader>tf", desc = "Fix All & Save" },
+			{ "<leader>to", desc = "Organize & Format" },
 		})
 	end,
 }

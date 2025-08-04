@@ -45,7 +45,7 @@ capabilities.textDocument.completion.completionItem = {
 }
 
 -- if you just want default config for the servers then put them in a table
-local servers = { "html", "cssls", "ts_ls", "clangd" }
+local servers = { "html", "cssls", "clangd" }
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -53,6 +53,7 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+-- Đã loại bỏ ts_ls để tránh xung đột với typescript-tools.nvim
 
 -- Enhanced Go language server configuration
 lspconfig.gopls.setup {

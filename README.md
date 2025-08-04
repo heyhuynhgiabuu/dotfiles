@@ -86,9 +86,44 @@ The repository is organized by tool, making it easy to navigate and manage confi
 - **Match conventions** - Use Lua for Neovim, shell for scripts
 - **Self-contained configs** - New configurations shouldn't require external dependencies
 
+### Neovim Treesitter Migration
+- [Treesitter Modernization Guide](docs/treesitter-modernization-guide.md) - Complete guide for migrating to main branch and fixing common issues
+
 ### AI Agent Documentation
 - [Serena MCP Best Practices](docs/serena-mcp-best-practices.md) - Guidelines for leveraging Serena MCP with OpenCode agents
 - [Serena MCP Example Workflows](docs/serena-mcp-example-workflows.md) - Practical examples of Serena-enhanced agent operations
+
+## 🐛 Troubleshooting
+
+### Neovim Treesitter Issues
+
+If you encounter Treesitter errors like "Impossible pattern: '~' @conceal" or parser download failures:
+
+**Quick Fix:**
+```bash
+# Run the automated fix script
+./scripts/fix-treesitter.sh
+```
+
+**Manual Steps:**
+1. Close all Neovim instances
+2. Clear parser cache: `rm -rf ~/.local/share/nvim/treesitter`
+3. Remove problematic queries: `rm -f ~/.local/share/nvim/lazy/nvim-treesitter/queries/vimdoc/highlights.scm`
+4. Restart Neovim and run `:TSUpdate`
+
+The configuration now uses the `main` branch with improved error handling and automatic parser management.
+
+### Environment Variables
+
+Ensure these are properly set:
+- `$VIMRUNTIME` - Usually set automatically by Neovim
+- Check with `:echo $VIMRUNTIME` in Neovim
+
+### Network Issues
+
+For parser download failures:
+- Check internet connection
+- Clear cache and retry: `rm -rf ~/.local/share/nvim/treesitter && nvim -c 'TSUpdate' -c 'quit'`
 
 ## 📄 License
 
