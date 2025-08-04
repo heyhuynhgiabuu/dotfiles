@@ -207,19 +207,11 @@
         "serena-mcp-server",
         "--context",
         "ide-assistant",
-        "--project",
-        "$(pwd)"
       ],
       "enabled": true,
       "environment": {
         "SERENA_READ_ONLY": "false"
       }
-    },
-    "playwright": {
-      "type": "local",
-      "command": ["npx", "playwright-mcp-server"],
-      "enabled": true,
-      "environment": {}
     }
   },
   "lsp": {

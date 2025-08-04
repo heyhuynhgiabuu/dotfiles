@@ -183,4 +183,67 @@ Integration: Works with existing serena-auto-update.sh system
 
 ---
 
+## [Serena Project Language Configuration Update]
+
+**Description:**
+Updated Serena project.yml configuration to emphasize shell and lua as primary languages for dotfiles repository, while maintaining existing functionality and cross-platform compatibility.
+
+**Solution Pattern:**
+- Read and analyze current .serena/project.yml and .serena/serena_config.yaml
+- Update language field from "shell, python" to "shell, lua"
+- Update initial_prompt to emphasize shell and Lua instead of Python
+- Maintain serena_config.yaml unchanged per requirements
+- Verify changes with anchor validation and git diff
+- Document pattern for future dotfiles language updates
+
+**Checklist:**
+- [x] Read current configuration files (.serena/project.yml, .serena/serena_config.yaml)
+- [x] Update language field: "shell, python" → "shell, lua"
+- [x] Update initial_prompt to mention shell and Lua
+- [x] Keep .serena/serena_config.yaml unchanged
+- [x] Verify anchor uniqueness and correct placement
+- [x] Confirm changes with git diff
+- [x] Document pattern in learned_patterns.md
+
+**Sample Code:**
+```yaml
+# Key fields to update in .serena/project.yml
+language: shell, lua
+
+initial_prompt: |
+  You are working on a personal dotfiles project, primarily configuring shell and Lua for a cross-platform development environment (macOS & Linux).
+  Prioritize simplicity, safety, recoverability, and automation.
+  There is no complex backend code or frontend framework, only focus on optimizing the personal development environment.
+  Always carefully check shell and Lua files for syntax errors and keep everything cross-platform.
+```
+
+**Verification Commands:**
+```bash
+# Check what files were modified
+git status --porcelain .serena/
+
+# View specific changes made
+git diff .serena/project.yml
+
+# Verify file syntax
+python3 -c "import yaml; yaml.safe_load(open('.serena/project.yml'))"
+
+# Ensure serena_config.yaml unchanged
+git status --porcelain .serena/serena_config.yaml
+```
+
+**Notes:**
+- Always use unique anchors when editing to avoid wrong placement
+- Re-read files after editing to verify correct modifications
+- Keep serena_config.yaml security settings intact unless explicitly requested
+- Focus on shell and lua reflects dotfiles primary purpose (shell configs, neovim lua configs)
+- Cross-platform compatibility remains priority
+
+**Related:**
+Task: Language configuration update for dotfiles project
+Files: .serena/project.yml (modified), .serena/serena_config.yaml (unchanged)
+Pattern: DX optimization for dotfiles repository setup
+
+---
+
 Add new entries below following the same format.

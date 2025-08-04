@@ -1,0 +1,25 @@
+# LSP Server Configuration for Serena
+# Auto-generated: Mon Aug 04 2025
+
+lua:
+  command: lua-language-server
+  args: []
+  languages:
+    - lua
+  root_patterns:
+    - ".git"
+    - ".serena"
+    - "init.lua"
+    - ".luarc.json"
+
+bash:
+  command: bash-language-server
+  args: ["start"]
+  languages:
+    - shell
+    - bash
+    - sh
+  root_patterns:
+    - ".git"
+    - ".serena"
+    - "package.json"

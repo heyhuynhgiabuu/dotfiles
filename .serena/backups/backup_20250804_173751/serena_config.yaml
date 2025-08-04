@@ -1,5 +1,5 @@
 # Serena Configuration
-# Auto-updated: Sun Aug  3 01:29:52 +07 2025
+# Auto-updated: Sun Aug  3 01:31:13 +07 2025
 read_only: false
 
 # Dashboard Configuration
@@ -19,20 +19,10 @@ token_count_estimator: enabled
 
 # Security Configuration
 security:
-  allowed_file_extensions: 
-    - ".sh"
-    - ".lua" 
-    - ".md"
-    - ".yml"
-    - ".yaml"
-    - ".json"
-    - ".py"
-    - ".js"
-    - ".ts"
-    - ".go"
-    - ".toml"
-    - ".conf"
-  forbidden_paths: 
+  allowed_file_extensions:
+  - ".sh"
+  - ".lua"
+$3 
     - "/etc"
     - "/var"
     - "~/.ssh"

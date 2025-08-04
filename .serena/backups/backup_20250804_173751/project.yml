@@ -1,24 +1,19 @@
 # Serena Project Configuration for Dotfiles
-# Auto-updated: Sun Aug  3 01:29:52 +07 2025
+# Auto-updated: Mon Aug 04 2025
 project_name: dotfiles
-language: python
 
-# Project Description
 description: |
   Personal dotfiles repository containing cross-platform configurations
   for development tools, shell environments, and productivity applications.
   Supports macOS and Linux environments.
 
-# Project Type
 project_type: configuration
 category: dotfiles
 
-# Multi-platform Support
 platforms:
   - macos
   - linux
 
-# Main Components
 components:
   - nvim (Neovim configuration)
   - tmux (Terminal multiplexer)
@@ -29,7 +24,6 @@ components:
   - opencode (Agent framework)
   - scripts (Automation tools)
 
-# Documentation
 documentation:
   readme: README.md
   main_docs: docs/
@@ -37,19 +31,40 @@ documentation:
     - docs/serena-integration-guide.md
     - docs/serena-mcp-best-practices.md
 
-# Testing & Verification
 verification:
   manual_testing: true
   cross_platform_testing: required
 
-# Automation
 automation:
   auto_update: true
   backup_before_changes: true
-  
-# Development Patterns
+
 patterns:
   - cross_platform_compatibility
   - modular_configuration
   - automated_setup
   - version_controlled_dotfiles
+
+ignore_all_files_in_gitignore: true
+ignored_paths:
+  - '.DS_Store'
+  - '*.log'
+  - 'node_modules/**'
+  - '.git/**'
+  - '.venv/**'
+  - 'venv/**'
+  - '__pycache__/**'
+  - '*.tmp'
+  - '*.temp'
+
+read_only: false
+
+languages:
+  - shell
+  - lua
+
+initial_prompt: |
+  You are working on a personal dotfiles project, primarily configuring shell and Lua for a cross-platform development environment (macOS & Linux).
+  Prioritize simplicity, safety, recoverability, and automation.
+  There is no complex backend code or frontend framework, only focus on optimizing the personal development environment.
+  Always carefully check shell and Lua files for syntax errors and keep everything cross-platform.
