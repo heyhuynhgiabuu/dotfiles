@@ -42,10 +42,10 @@
         "webfetch": false,
         "todowrite": false
       }
-},
+    },
     "devops-deployer": {
       "description": "Docker and infrastructure optimization",
-      "model": "openrouter/qwen/qwen3-coder:free",
+      "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/devops-deployer.md}",
       "tools": {
         "write": false,
@@ -68,7 +68,7 @@
     },
     "docs-writer": {
       "description": "Essential developer documentation",
-      "model": "openrouter/qwen/qwen3-coder:free",
+      "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/docs-writer.md}",
       "tools": {
         "bash": false,
@@ -78,7 +78,7 @@
     },
     "backend-troubleshooter": {
       "description": "Debug backend issues and analyze logs",
-      "model": "openrouter/qwen/qwen3-coder:free",
+      "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/backend-troubleshooter.md}",
       "tools": {
         "write": false,
@@ -90,7 +90,7 @@
     },
     "simple-researcher": {
       "description": "Find code examples when searches fail",
-      "model": "openrouter/qwen/qwen3-coder:free",
+      "model": "github-copilot/gpt-4.1",
       "prompt": "{file:agent/simple-researcher.md}",
       "tools": {
         "write": false,
@@ -113,7 +113,7 @@
     },
     "session-summarizer": {
       "description": "Create conversation summaries",
-      "model": "openrouter/qwen/qwen3-coder:free",
+      "model": "github-copilot/gpt-4.1",
       "temperature": 0.2,
       "prompt": "{file:agent/session-summarizer.md}",
       "tools": {
@@ -175,28 +175,12 @@
       }
     }
   },
-  "provider": {
-    "openrouter": {
-      "models": {
-        "qwen/qwen3-coder:free": {},
-        "qwen/qwen3-coder": {}
-      }
-    },
-    "github-copilot": {
-      "models": {
-        "claude-sonnet-4": {},
-        "gpt-4.1": {}
-      }
-    }
-  },
   "mcp": {
     "context7": {
       "type": "local",
       "command": ["npx", "-y", "@upstash/context7-mcp@latest"],
       "enabled": true,
-      "environment": {
-        "DEFAULT_MINIMUM_TOKENS": "2000"
-      }
+      "environment": { "DEFAULT_MINIMUM_TOKENS": "2000" }
     },
     "serena": {
       "type": "local",
@@ -209,32 +193,18 @@
         "ide-assistant",
       ],
       "enabled": true,
-      "environment": {
-        "SERENA_READ_ONLY": "false"
-      }
+      "environment": { "SERENA_READ_ONLY": "false" }
     }
   },
   "lsp": {
-    "ruby-lsp": {
-      "disabled": true
-    },
-    "pyright": {
-      "disabled": true
-    },
-    "elixir-ls": {
-      "disabled": true
-    },
-    "zls": {
-      "disabled": true
-    },
-    "csharp": {
-      "disabled": true
-    }
+    "ruby-lsp": { "disabled": true },
+    "pyright": { "disabled": true },
+    "elixir-ls": { "disabled": true },
+    "zls": { "disabled": true },
+    "csharp": { "disabled": true }
   },
   "theme": "opencode",
   "model": "github-copilot/gpt-4.1",
-  "small_model": "openrouter/qwen/qwen3-coder:free",
   "share": "disabled",
-  "autoupdate": true,
-  "instructions": []
+  "autoupdate": true
 }
