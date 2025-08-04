@@ -195,3 +195,30 @@ vim.api.nvim_create_autocmd("FileType", {
     end, vim.tbl_extend("force", opts, { desc = "Test method" }))
   end,
 })
+
+-- VIM-VISUAL-MULTI ENHANCED KEYBINDINGS  
+-- Alternative keybindings for vim-visual-multi if defaults don't work
+
+map("n", "<leader>mn", function()
+	if vim.fn.exists(':VMulti') > 0 then
+		vim.cmd('normal! <Plug>(VM-Find-Under)')
+	else
+		print("vim-visual-multi not available")
+	end
+end, { desc = "Multi-cursor: Find word (alternative)" })
+
+map("n", "<leader>ma", function()
+	if vim.fn.exists(':VMulti') > 0 then
+		vim.cmd('normal! <Plug>(VM-Select-All)')
+	else
+		print("vim-visual-multi not available")
+	end
+end, { desc = "Multi-cursor: Select all occurrences" })
+
+map("v", "<leader>mn", function()
+	if vim.fn.exists(':VMulti') > 0 then
+		vim.cmd('normal! <Plug>(VM-Find-Subword-Under)')
+	else
+		print("vim-visual-multi not available")
+	end
+end, { desc = "Multi-cursor: Find selection (alternative)" })
