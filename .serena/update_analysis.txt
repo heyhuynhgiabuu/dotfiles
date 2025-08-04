@@ -1,0 +1,45 @@
+# Serena Update Analysis Report
+Generated: Sun Aug  3 01:31:13 +07 2025
+
+## New Features Found:
+  default shell reconfiguration imposed by Claude Code)
+   * Experimental language server implementations can now be accessed by users through configuring the `language` field
+   * Serena config, modes and contexts can now be adjusted from the user's home directory.
+   * Extended CLI to help with configuration
+  * Displaying tool usage statistics if enabled in the config
+* **Better multi-project support and zero-config setup**: We significantly simplified the config setup, you no longer need to manually
+* Important new feature: **configurability of mode and context**, allowing better integration in a variety of clients.
+>  and (optionally) set `ignore_paths` in your project configs. See [updated config template](myproject.template.yml)
+    * Native support for gitignore files for configuring files to be ignored by serena. See also
+        * Add central Serena configuration in `serena_config.yml`, which 
+            * allows to configure whether project activation is enabled
+            * now contains the GUI logging configuration (project configurations no longer do)
+        * Providing a project configuration file in the launch parameters is now optional
+
+## Configuration Changes:
+  default shell reconfiguration imposed by Claude Code)
+* Configuration:
+   * Extended CLI to help with configuration
+* Fix `ExecuteShellCommandTool` and `GetCurrentConfigTool` hanging on Windows
+> **Breaking Config Changes**: make sure to set `ignore_all_files_in_gitignore`, remove `ignore_dirs`
+        * Add central Serena configuration in `serena_config.yml`, which 
+            * now contains the GUI logging configuration (project configurations no longer do)
+        * Providing a project configuration file in the launch parameters is now optional
+
+## Recommended Actions:
+1. Update project.yml with multi-language support
+2. Enable new dashboard features
+3. Configure tool usage statistics
+4. Add language-specific configurations
+
+## Multi-Language Support Detected:
+Based on the changelog, Serena now supports:
+- Python, TypeScript/JavaScript, PHP, Go, Rust, C#, Java
+- Elixir, Clojure, C/C++, Ruby, Kotlin, Dart
+
+## New Configuration Fields Available:
+- languages: [list of languages in project]
+- language: mixed (for multi-language projects)
+- record_tool_usage_stats: true
+- web_dashboard_open_on_launch: true/false
+- token_count_estimator: enabled
