@@ -42,7 +42,7 @@
         "webfetch": false,
         "todowrite": false
       }
-    },
+},
     "devops-deployer": {
       "description": "Docker and infrastructure optimization",
       "model": "openrouter/qwen/qwen3-coder:free",
@@ -185,7 +185,7 @@
     "github-copilot": {
       "models": {
         "claude-sonnet-4": {},
-        "gpp-4.1": {}
+        "gpt-4.1": {}
       }
     }
   },
@@ -220,6 +220,23 @@
       "command": ["npx", "playwright-mcp-server"],
       "enabled": true,
       "environment": {}
+    }
+  },
+  "lsp": {
+    "ruby-lsp": {
+      "disabled": true
+    },
+    "pyright": {
+      "disabled": true
+    },
+    "elixir-ls": {
+      "disabled": true
+    },
+    "zls": {
+      "disabled": true
+    },
+    "csharp": {
+      "disabled": true
     }
   },
   "theme": "opencode",

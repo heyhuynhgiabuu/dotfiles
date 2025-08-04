@@ -1,0 +1,7 @@
+{
+  "name": "dotfiles",
+  "description": "Personal dotfiles project. Only shell and lua languages are enabled.",
+  "languages": ["shell", "lua"],
+  "type": "dotfiles",
+  "maintainer": "killerkidbo"
+}
