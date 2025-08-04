@@ -9,7 +9,9 @@ local options = {
     "css",
     "markdown",
     "markdown_inline",
-    "c"
+    "c",
+    "regex",
+    "bash"
     -- Temporarily remove Go and Java until highlighter issues are fixed
   },
 

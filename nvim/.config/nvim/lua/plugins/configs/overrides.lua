@@ -14,6 +14,8 @@ M.treesitter = {
     "markdown_inline",
     "go",
     "java",
+    "regex",
+    "bash",
   },
   indent = {
     enable = true,
