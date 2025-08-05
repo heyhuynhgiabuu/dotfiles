@@ -1,0 +1,38 @@
+{
+  "name": "opencode-vectorcode-plugin",
+  "version": "1.0.0",
+  "description": "OpenCode plugin for VectorCode CLI integration",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "echo \"Run manual tests as described in README.md\""
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "vectorcode",
+    "cli",
+    "integration"
+  ],
+  "author": "DX Optimizer Agent",
+  "license": "MIT",
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

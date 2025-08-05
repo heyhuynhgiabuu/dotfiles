@@ -225,19 +225,25 @@ local default_plugins = {
 		event = "VeryLazy", -- Ensure plugin loads after UI is ready
 		config = function()
 			-- Configure vim-visual-multi for optimal experience
-			vim.g.VM_leader = "\\"                    -- Use backslash as leader (default)
-			vim.g.VM_default_mappings = 1              -- Enable default mappings
+			vim.g.VM_leader = "\\" -- Use backslash as leader (default)
+			vim.g.VM_default_mappings = 1 -- Enable default mappings
 			vim.g.VM_maps = {
-				['Find Under'] = '<C-n>',              -- Primary multi-cursor key
-				['Find Subword Under'] = '<C-n>',
-				['Add Cursor Down'] = '<C-j>',         -- Add cursor down
-				['Add Cursor Up'] = '<C-k>',           -- Add cursor up
-				['Skip Region'] = 'q',                 -- Skip current selection
-				['Remove Region'] = 'Q',               -- Remove current selection
+				["Find Under"] = "<C-n>", -- Primary multi-cursor key
+				["Find Subword Under"] = "<C-n>",
+				["Add Cursor Down"] = "<C-j>", -- Add cursor down
+				["Add Cursor Up"] = "<C-k>", -- Add cursor up
+				["Skip Region"] = "q", -- Skip current selection
+				["Remove Region"] = "Q", -- Remove current selection
 			}
-			
+
 			-- Notify that plugin is loaded
 			vim.notify("🎯 vim-visual-multi loaded with optimized keybindings", vim.log.levels.INFO)
+		end,
+	},
+	{
+		"Davidyz/VectorCode",
+		config = function()
+			require("vectorcode").setup({})
 		end,
 	},
 }

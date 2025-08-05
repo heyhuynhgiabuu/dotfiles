@@ -16,7 +16,7 @@ function scheme_for_appearance(appearance)
 end
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
-config.font = wezterm.font('JetBrains Mono', { weight = 'Medium' })
+config.font = wezterm.font('JetBrainsMono Nerd Font', { weight = 'Medium' })
 config.font_size = 15.0
 config.window_background_opacity = 0.85
 config.macos_window_background_blur = 25

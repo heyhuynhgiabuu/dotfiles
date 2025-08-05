@@ -196,7 +196,7 @@
       "environment": { "SERENA_READ_ONLY": "false" }
     }
   },
-  "theme": "opencode",
+  "theme": "system",
   "model": "github-copilot/gpt-4.1",
   "share": "disabled",
   "autoupdate": true

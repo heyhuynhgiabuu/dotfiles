@@ -38,3 +38,7 @@ if vim.fn.filereadable(im_select_helper_path) == 1 then
     dofile(im_select_helper_path)
 end
 
+-- Add LualineReload command for hot reload
+vim.api.nvim_create_user_command("LualineReload", function()
+  require("lualine").setup(require("lualine").get_config())
+end, {})
