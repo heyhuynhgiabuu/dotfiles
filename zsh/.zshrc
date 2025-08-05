@@ -54,9 +54,13 @@ export PATH
 
 # Prompt
 
+# Starship prompt (modern, theme Kanagawa compatible)
+export STARSHIP_CONFIG="$HOME/dotfiles/zsh/.zsh/starship.toml"
+eval "$(starship init zsh)"
+
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+# [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # Plugins & oh-my-zsh
 

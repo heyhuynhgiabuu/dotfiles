@@ -1,0 +1,125 @@
+# Starship prompt config - Real World Dev/DevOps, Kanagawa friendly (no bold, pastel powerline layout)
+
+format = """
+[](fg:#6C7086)$os$username$hostname[](fg:#6C7086 bg:#FAB387)$directory[](fg:#FAB387 bg:#A6E3A1)$git_branch$git_status[](fg:#A6E3A1 bg:#F5C2E7)$time[](fg:#F5C2E7)$git_state$docker_context$nodejs$python$rust$golang$java$kubernetes$terraform$aws$gcloud$azure$package
+$jobs$character
+"""
+
+[os]
+style = "fg:#CDD6F4 bg:#6C7086"
+format = "[$symbol ]($style)"
+disabled = false
+symbols = { Arch = "", Macos = "", Ubuntu = "", Debian = "", Unknown = "" }
+
+[username]
+show_always = false
+style_user = "yellow"
+style_root = "red"
+format = "[ $user ]($style)@"
+
+[hostname]
+ssh_only = false
+format = "[$hostname](fg:#CDD6F4 bg:#6C7086)"
+
+[directory]
+style = "fg:#45475A bg:#FAB387"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = "…/"
+read_only = " "
+read_only_style = "red"
+
+[git_branch]
+symbol = " "
+style = "fg:#45475A bg:#A6E3A1"
+format = "[ $symbol$branch ]($style)"
+
+[time]
+disabled = false
+style = "fg:#45475A bg:#F5C2E7"
+format = "[  $time ]($style)"
+time_format = "%H:%M"
+
+[character]
+success_symbol = "[→](white)"
+error_symbol = "[\n→](white)"
+
+# --- Các module phụ giữ nguyên cấu hình cũ ---
+[git_status]
+style = "fg:#45475A bg:#A6E3A1"
+format = "[$all_status$ahead_behind]($style)"
+
+[git_state]
+format = "[$state( $progress_current/$progress_total)](red) "
+
+[docker_context]
+symbol = " "
+style = "cyan"
+format = "[$symbol$context]($style) "
+
+[nodejs]
+symbol = " "
+style = "fg:#45475A bg:#A6E3A1"
+format = "[$symbol($version )]($style)"
+
+[python]
+symbol = " "
+style = "blue"
+format = "[$symbol($version )]($style)"
+
+[rust]
+symbol = " "
+style = "red"
+format = "[$symbol($version )]($style)"
+
+[golang]
+symbol = " "
+style = "cyan"
+format = "[$symbol($version )]($style)"
+
+[java]
+symbol = " "
+style = "purple"
+format = "[$symbol($version )]($style)"
+
+[kubernetes]
+symbol = "☸️ "
+style = "blue"
+format = "[$symbol$context( $namespace)]($style) "
+
+[terraform]
+symbol = "💠 "
+style = "cyan"
+format = "[$symbol$workspace]($style) "
+
+[aws]
+symbol = " "
+style = "yellow"
+format = "[$symbol$profile]($style) "
+
+[gcloud]
+symbol = " "
+style = "blue"
+format = "[$symbol$account(@$domain)(:$project)]($style) "
+
+[azure]
+symbol = " "
+style = "blue"
+format = "[$symbol$subscription]($style) "
+
+[package]
+symbol = "📦 "
+style = "208"
+format = "[$symbol$version]($style) "
+
+[jobs]
+symbol = "✦"
+style = "purple"
+format = "[$symbol$number]($style) "
+
+[status]
+disabled = false
+symbol = "✗"
+success_symbol = ""
+format = "[$symbol$status]($style) "

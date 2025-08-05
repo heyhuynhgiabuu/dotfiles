@@ -9,9 +9,9 @@ end
 -- === THEME & APPEARANCE ===
 function scheme_for_appearance(appearance)
   if appearance:find "Dark" then
-    return "Tokyo Night Storm"
+    return "Kanagawa"
   else
-    return "Tokyo Night Day"
+    return "Kanagawa (Dragon)"
   end
 end
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
@@ -162,5 +162,11 @@ table.insert(config.keys, {
 --     username = 'your-username',
 --   },
 -- }
+
+config.default_cursor_style = "BlinkingBlock"
+config.colors = config.colors or {}
+config.colors.cursor_bg = "#ffffff"
+config.colors.cursor_fg = "#1a1b26"
+config.colors.cursor_border = "#ffffff"
 
 return config
