@@ -70,3 +70,5 @@ vim.api.nvim_create_autocmd("FileType", {
     
     -- Enhanced Go run/test commands with go.nvim
     vim.keymap.set("n", "<leader>gr", ":split | terminal go run %<CR>", vim.tbl_extend("force", opts, { desc = "Go run in terminal" }))
+  end
+})

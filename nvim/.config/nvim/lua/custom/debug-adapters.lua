@@ -7,13 +7,10 @@ local M = {}
 -- ===============================================
 -- 🔧 UTILITY FUNCTIONS
 -- ===============================================
-local function notify_debug(message, level)
-  vim.notify("🐛 " .. message, level or vim.log.levels.INFO)
-end
+-- notify_debug function removed (unused)
 
-local function ensure_executable(cmd, install_msg)
+local function ensure_executable(cmd)
   if vim.fn.executable(cmd) ~= 1 then
-    notify_debug(install_msg, vim.log.levels.WARN)
     return false
   end
   return true
@@ -24,39 +21,36 @@ end
 -- ===============================================
 function M.setup_go_adapter()
   local dap = require("dap")
-  
-  if not ensure_executable("dlv", "Delve not found! Install: go install github.com/go-delve/delve/cmd/dlv@latest") then
+
+  if not ensure_executable("dlv") then
     return false
   end
-  
+
   -- Enhanced delve adapter with better error handling
-  dap.adapters.go = function(callback, config)
+  dap.adapters.go = function(callback)
     local stdout = vim.loop.new_pipe(false)
     local handle
-    local pid_or_err
     local port = 38697
     local opts = {
       stdio = {nil, stdout},
       args = {"dap", "-l", "127.0.0.1:" .. port},
       detached = true
     }
-    
-    handle, pid_or_err = vim.loop.spawn("dlv", opts, function(code)
+
+    handle = vim.loop.spawn("dlv", opts, function(code)
       stdout:close()
       handle:close()
-      if code ~= 0 then
-        notify_debug("Delve exited with code " .. code, vim.log.levels.ERROR)
-      end
+      -- Error handling logs removed for quiet operation
     end)
-    
+
     if not handle then
-      notify_debug("Error running dlv: " .. tostring(pid_or_err), vim.log.levels.ERROR)
+      -- Error handling logs removed for quiet operation
       return
     end
-    
+
     stdout:read_start(function(err, chunk)
       if err then
-        notify_debug("Delve stdout error: " .. err, vim.log.levels.ERROR)
+        -- Error handling logs removed for quiet operation
         return
       end
       if chunk then
@@ -65,13 +59,13 @@ function M.setup_go_adapter()
         end)
       end
     end)
-    
+
     -- Wait for delve to start
     vim.defer_fn(function()
       callback({type = "server", host = "127.0.0.1", port = port})
     end, 100)
   end
-  
+
   -- Go debugging configurations (enhanced)
   dap.configurations.go = {
     {
@@ -140,8 +134,7 @@ function M.setup_go_adapter()
       end,
     },
   }
-  
-  notify_debug("Go debugging with delve configured!")
+
   return true
 end
 
@@ -150,12 +143,10 @@ end
 -- ===============================================
 function M.setup_java_adapter()
   local dap = require("dap")
-  
+
   -- Java debug adapter is handled by nvim-jdtls
-  -- We just need to ensure proper configurations exist
   dap.configurations.java = dap.configurations.java or {}
-  
-  -- Add enhanced Java configurations
+
   local java_configs = {
     {
       type = "java",
@@ -198,13 +189,11 @@ function M.setup_java_adapter()
       internalConsoleOptions = "openOnSessionStart"
     },
   }
-  
-  -- Merge with existing configurations
+
   for _, config in ipairs(java_configs) do
     table.insert(dap.configurations.java, config)
   end
-  
-  notify_debug("Java debugging configurations enhanced!")
+
   return true
 end
 
@@ -213,18 +202,17 @@ end
 -- ===============================================
 function M.setup_node_adapter()
   local dap = require("dap")
-  
-  if not ensure_executable("node", "Node.js not found! Install Node.js first") then
+
+  if not ensure_executable("node") then
     return false
   end
-  
-  -- Node.js debug adapter
+
   dap.adapters.node2 = {
     type = 'executable',
     command = 'node',
     args = {vim.fn.stdpath("data") .. "/mason/packages/node-debug2-adapter/out/src/nodeDebug.js"},
   }
-  
+
   dap.configurations.javascript = {
     {
       name = 'Launch Node.js Program',
@@ -251,8 +239,7 @@ function M.setup_node_adapter()
       end,
     }
   }
-  
-  notify_debug("Node.js debugging configured!")
+
   return true
 end
 
@@ -261,18 +248,17 @@ end
 -- ===============================================
 function M.setup_python_adapter()
   local dap = require("dap")
-  
-  if not ensure_executable("python", "Python not found! Install Python first") then
+
+  if not ensure_executable("python") then
     return false
   end
-  
-  -- Python debug adapter
+
   dap.adapters.python = {
     type = 'executable',
     command = 'python',
     args = { '-m', 'debugpy.adapter' },
   }
-  
+
   dap.configurations.python = {
     {
       type = 'python',
@@ -299,8 +285,7 @@ function M.setup_python_adapter()
       console = "internalConsole",
     }
   }
-  
-  notify_debug("Python debugging configured!")
+
   return true
 end
 
@@ -310,31 +295,28 @@ end
 function M.setup()
   local dap_ok, dap = pcall(require, "dap")
   if not dap_ok then
-    notify_debug("nvim-dap not available! Install it first", vim.log.levels.ERROR)
     return false
   end
-  
-  -- Set up all debug adapters
+
   local adapters_setup = {
     go = M.setup_go_adapter,
     java = M.setup_java_adapter,
     node = M.setup_node_adapter,
     python = M.setup_python_adapter,
   }
-  
+
   local success_count = 0
   local total_count = 0
-  
+
   for name, setup_func in pairs(adapters_setup) do
     total_count = total_count + 1
     if setup_func() then
       success_count = success_count + 1
     end
   end
-  
-  notify_debug(string.format("Debug adapters setup complete: %d/%d configured", success_count, total_count))
-  
-  -- Create useful commands
+
+  -- No info-level logs
+
   vim.api.nvim_create_user_command('DebugAdapters', function()
     local message = [[
 🐛 Available Debug Adapters:
@@ -354,16 +336,15 @@ function M.setup()
   • Left: Variables, Call Stack, Breakpoints, Watches
   • Bottom: Console, REPL
     ]]
-    vim.notify(message, vim.log.levels.INFO)
+    -- No info-level logs
   end, { desc = 'Show available debug adapters' })
-  
+
   return true
 end
 
 -- ===============================================
 -- 🔧 AUTO-SETUP ON LOAD
 -- ===============================================
--- Automatically set up when this module is loaded
 vim.defer_fn(function()
   M.setup()
 end, 100)

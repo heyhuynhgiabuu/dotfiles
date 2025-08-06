@@ -39,7 +39,6 @@ function M.setup()
     dap.repl.open()
   end, { desc = 'Open debug REPL' })
 
-  vim.notify("📚 DAP helper commands configured!", vim.log.levels.INFO)
 end
 
 return M

@@ -6,8 +6,6 @@
 local dap_ok, dap = pcall(require, "dap")
 if dap_ok then
   -- DAP is available, set up everything in modular fashion
-  
-  -- Load and setup all DAP modules in proper order
   local modules = {
     "custom.dap.keymaps",      -- Keybindings must be loaded first
     "custom.dap.signs",        -- Visual indicators  
@@ -22,34 +20,21 @@ if dap_ok then
     local ok, module = pcall(require, module_name)
     if ok then
       module.setup(dap) -- Pass dap instance to modules that need it
-      vim.notify("✅ Loaded: " .. module_name, vim.log.levels.DEBUG)
-    else
-      vim.notify("❌ Failed to load: " .. module_name .. " - " .. module, vim.log.levels.ERROR)
     end
   end
-
-  vim.notify("🐛 Enhanced debugging configured! Use <Leader>d? for help, <Leader>dL for layout info", vim.log.levels.INFO)
-
-  -- Return the dap module for other configurations to use
   return dap
 else
-  -- DAP not available yet, set up minimal keymaps that will work when it loads
+  -- DAP chưa sẵn sàng, setup keymaps tối thiểu
   local keymaps_ok, keymaps = pcall(require, "custom.dap.keymaps")
   if keymaps_ok then
     keymaps.setup()
   end
-  
-  -- Defer full setup
+
+  -- Deferred setup khi DAP đã sẵn sàng
   vim.defer_fn(function()
-    local deferred_ok, deferred_dap = pcall(require, "dap")
+    local deferred_ok = pcall(require, "dap")
     if deferred_ok then
-      vim.notify("🐛 nvim-dap loaded (deferred) - full setup complete", vim.log.levels.INFO)
-      -- Re-source this file to get full setup
       dofile(debug.getinfo(1).source:match("@?(.*)"))
-    else
-      vim.notify("❌ nvim-dap still not available after deferring", vim.log.levels.WARN)
     end
   end, 500)
-  
-  vim.notify("🐛 DAP keymaps set up, waiting for nvim-dap to load...", vim.log.levels.INFO)
 end

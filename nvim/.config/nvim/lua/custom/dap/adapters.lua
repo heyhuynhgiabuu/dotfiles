@@ -8,7 +8,6 @@ function M.setup()
   local adapters_ok, debug_adapters = pcall(require, "custom.debug-adapters")
   if adapters_ok then
     debug_adapters.setup()
-    vim.notify("🚀 All debug adapters loaded successfully!", vim.log.levels.INFO)
   else
     vim.notify("⚠️  Debug adapters module not found - using basic configuration", vim.log.levels.WARN)
   end

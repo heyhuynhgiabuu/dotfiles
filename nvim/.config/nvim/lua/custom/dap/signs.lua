@@ -11,7 +11,6 @@ function M.setup()
   vim.fn.sign_define('DapStopped', config.signs.stopped)
   vim.fn.sign_define('DapLogPoint', config.signs.logpoint)
 
-  vim.notify("🎨 DAP signs configured successfully!", vim.log.levels.INFO)
 end
 
 return M

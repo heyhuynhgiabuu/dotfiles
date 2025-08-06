@@ -110,8 +110,8 @@ format = "[$symbol$subscription]($style)"
 
 [package]
 symbol = "📦 "
-style = "208"
-format = "[$symbol$version]($style)"
+style = "fg:#45475A bg:#F5C2E7"
+format = "[ $symbol$version]($style)"
 
 [jobs]
 symbol = "✦"

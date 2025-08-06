@@ -65,8 +65,25 @@ map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 map("n", "<leader>cp", function()
   local filepath = vim.fn.expand("%:p")
   vim.fn.setreg("+", filepath)
-  print("Copied: " .. filepath)
-end, { desc = "Copy file path" })
+  vim.notify("Copied file path: " .. filepath)
+end, { desc = "Copy file path to clipboard" })
+
+-- Copy current line content to clipboard
+map("n", "<leader>cl", function()
+  local line = vim.api.nvim_get_current_line()
+  vim.fn.setreg("+", line)
+  vim.notify("Copied current line to clipboard")
+end, { desc = "Copy current line content to clipboard" })
+
+-- Copy function/class under cursor to clipboard (requires textobject 'af')
+map("n", "<leader>cf", "vaf\"+y", { desc = "Copy function/class under cursor to clipboard", noremap = true, silent = true })
+
+-- Copy symbol name under cursor to clipboard
+map("n", "<leader>cs", function()
+  local symbol = vim.fn.expand("<cword>")
+  vim.fn.setreg("+", symbol)
+  vim.notify("Copied symbol name: " .. symbol)
+end, { desc = "Copy symbol name under cursor to clipboard" })
 
 -- Enhanced line number toggle
 map("n", "<leader>tn", function()
@@ -195,6 +212,32 @@ vim.api.nvim_create_autocmd("FileType", {
     end, vim.tbl_extend("force", opts, { desc = "Test method" }))
   end,
 })
+
+-- Copy opencode reference: @file#Lstart-end
+map("v", "<leader>y", function()
+  local buf_path = vim.fn.expand("%:~:.")
+  local start_line = vim.fn.line("v")
+  local end_line = vim.fn.line(".")
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+  local ref = string.format("@%s#L%d-%d", buf_path, start_line, end_line)
+  vim.fn.setreg("+", ref)
+  vim.notify("Copied: " .. ref)
+end, { desc = "Copy file reference for opencode" })
+
+-- Copy selected lines content to clipboard
+map("v", "<leader>c", function()
+  local start_line = vim.fn.line("v")
+  local end_line = vim.fn.line(".")
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local content = table.concat(lines, "\n")
+  vim.fn.setreg("+", content)
+  vim.notify("Copied selected lines to clipboard")
+end, { desc = "Copy selected lines content to clipboard" })
 
 -- VIM-VISUAL-MULTI ENHANCED KEYBINDINGS  
 -- Alternative keybindings for vim-visual-multi if defaults don't work

@@ -16,7 +16,7 @@ table.sort(plugin_files)
 -- Load each plugin file
 for _, file in ipairs(plugin_files) do
 	local filename = vim.fn.fnamemodify(file, ":t:r") -- Get filename without extension
-	
+
 	-- Skip if it's the main plugins.lua to avoid recursion
 	if filename ~= "plugins" then
 		local ok, plugin_config = pcall(require, "custom.plugins." .. filename)
@@ -35,23 +35,24 @@ end
 local load_order_info = {
 	-- Core dependencies (loaded first)
 	"nvim-nio",
-	"neoconf", 
+	"neoconf",
 	"nvim-dap",
 	"nvim-web-devicons",
-	
+
 	-- LSP and completion stack
 	"nvim-lspconfig",
-	"nvim-treesitter", 
+	"nvim-treesitter",
 	"nvim-cmp",
-	
+
 	-- Language-specific
 	"nvim-jdtls",
 	"go",
-	
+	"typescript-tools",
+
 	-- Debug stack
 	"nvim-dap-ui",
 	"nvim-dap-virtual-text",
-	
+
 	-- UI enhancements
 	"fidget",
 	"nvim-notify",
@@ -64,7 +65,7 @@ local load_order_info = {
 	"nvim-spectre",
 	"toggleterm",
 	"indent-blankline",
-	
+
 	-- User experience
 	"better-escape",
 	"vim-visual-multi",
@@ -81,11 +82,9 @@ vim.defer_fn(function()
 			vim.log.levels.INFO
 		)
 	else
-		vim.notify(
-			string.format("✅ All %d plugins loaded successfully", loaded_count),
-			vim.log.levels.INFO
-		)
+		vim.notify(string.format("✅ All %d plugins loaded successfully", loaded_count), vim.log.levels.INFO)
 	end
 end, 2000)
 
 return plugins
+

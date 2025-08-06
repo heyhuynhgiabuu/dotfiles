@@ -134,4 +134,8 @@ lspconfig.gopls.setup {
 lspconfig.jdtls.setup({})
 
 -- 
--- lspconfig.pyright.setup { blabla}
+-- Python LSP server (pyright)
+lspconfig.pyright.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
