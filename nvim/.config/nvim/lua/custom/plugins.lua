@@ -42,6 +42,7 @@ local load_order_info = {
 	-- LSP and completion stack
 	"nvim-lspconfig",
 	"nvim-treesitter",
+	"flash.nvim",
 	"nvim-cmp",
 
 	-- Language-specific
@@ -70,6 +71,7 @@ local load_order_info = {
 	"better-escape",
 	"vim-visual-multi",
 	"augment",
+	"comment",
 }
 
 -- Add load order information as comments for debugging

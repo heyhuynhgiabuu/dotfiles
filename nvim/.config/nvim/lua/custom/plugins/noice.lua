@@ -1,4 +1,4 @@
--- Enhanced Command Line UI with floating input
+--Enhanced Command Line UI with floating input
 return {
 	"folke/noice.nvim",
 	event = "VeryLazy",
