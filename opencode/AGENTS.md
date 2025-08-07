@@ -291,10 +291,13 @@ Always communicate clearly and concisely in a casual, friendly yet professional 
 ### **Idle Notification Protocol**
 
 At the end of responses, when user input is needed:
-- Reply with a paragraph in the format of *Summary:* <summary>, where 'summary' is a summary of your response.
+- The last line of every message MUST be a real, context-specific summary (never an example, placeholder, or instruction).
+- Do NOT output any example, placeholder, or instruction as the summary line.
 - Avoid summaries like "awaiting user input" or "waiting for your response." Instead, summarise your response.
 - Limit summary to 10 words.
-- If a question was answered, summarise the answer. Example: *Summary:* Yes, Bun supports TypeScript.
+- If a question was answered, summarise the answer concisely.
+
+Note: The plugin will automatically ignore placeholder/instruction lines if they appear, but the assistant must always output a real summary.
 
 This enables plugin-based notifications to display concise, relevant summaries when sessions become idle.
 
