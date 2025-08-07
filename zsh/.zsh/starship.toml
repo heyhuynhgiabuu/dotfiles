@@ -12,14 +12,15 @@ disabled = false
 symbols = { Arch = "", Macos = "", Ubuntu = "", Debian = "", Unknown = "" }
 
 [username]
-show_always = false
-style_user = "yellow"
+show_always = true
+style_user = "fg:#CDD6F4 bg:#6C7086"
 style_root = "red"
-format = "[ $user ]($style)@"
+format = "[$user]($style)"
 
 [hostname]
-ssh_only = false
+ssh_only = true
 format = "[$hostname](fg:#CDD6F4 bg:#6C7086)"
+# style = "fg:#CDD6F4 bg:#6C7086"
 
 [directory]
 style = "fg:#45475A bg:#FAB387"
