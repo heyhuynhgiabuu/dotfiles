@@ -46,6 +46,41 @@
 
 ---
 
+## 🏗️ Project Prompt Patterns & Best Practices
+
+### Project Context Files
+- Each project can include its own `AGENTS.md` for custom rules.
+- Project-level `AGENTS.md` overrides global rules.
+- Example: If both exist, project rules take precedence for that repo.
+
+### Slash Commands & Prompt Templates (Planned)
+- Custom slash commands will be supported in `.opencode/commands/`.
+- Document your most-used workflows as templates for your team.
+
+### Writing Clear Instructions
+- Be specific! Example:
+  - Good: “Add a zsh alias for ‘git status’ as ‘gs’.”
+  - Bad: “Make my shell better.”
+- Use checklists for complex tasks.
+
+### Session Context Management
+- Use `/compact` to summarize and focus long sessions.
+- Start a new session for a true reset.
+
+### Continuous Improvement
+- Update `AGENTS.md` as workflows evolve.
+- Contribute improvements to the global prompt.
+
+### Feedback & Reporting
+- Report issues or suggest improvements via [GitHub/issues link].
+- Use comments in `AGENTS.md` for team-specific notes.
+
+### Onboarding & Discoverability
+- New users: Read `AGENTS.md` and run `/compact` for a session summary.
+- Explore `.opencode/commands/` (when available) for team workflows.
+
+---
+
 ### 🔒 Opencode Permissions & Safety Controls
 
 - **Explicit Approval for Sensitive Actions:**  
@@ -328,6 +363,10 @@ This protocol ensures every task is handled with deep contextual awareness, curr
 ## 💡 Advanced Operation Patterns
 
 ### **For Large/Complex Tasks**
+- **Context Compaction:** Agents must periodically review and compact their working context, removing any information not directly relevant to the current phase.
+- **Sub-Agent Utilization:** For each major phase (research, planning, implementation, review), agents should invoke specialized sub-agents or prompts to maximize focus and quality.
+- **Markdown-First Planning:** All plans must be written in markdown, with explicit checklists and review steps.
+- **Human-in-the-Loop:** Agents must identify and pause at key checkpoints for human review, or escalate to a review sub-agent if human input is unavailable.
 1. **Deep Understanding**: Break down problem using research and codebase investigation  
 2. **Comprehensive Planning**: Create detailed 13-step plan (##1-13) with clear phases
 3. **Chat-based Tracking**: Manage checklist and progress directly in the conversation (chat)
