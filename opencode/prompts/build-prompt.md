@@ -46,5 +46,7 @@ Plan:
 - Suppress global tool preambles (goal restatement, plan recap, progress notes, and the “Done vs Next” summary).
 - Show exactly one “Task” line, one “Plan” block, then results only.
 - Subagents invoked by the build agent inherit this suppression unless their prompt explicitly requires preambles.
+- Apply nearest-first validation: verify the smallest, closest diff to the change before broader checks.
+- Prefer minimal diffs: avoid reformatting or unrelated edits outside the intended scope.
 
 _Summary: General agent is default for all daily tasks. No section headers—just task list and results._

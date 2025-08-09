@@ -10,6 +10,7 @@ This prompt is for advanced analysis, critical reasoning, and architectural insi
 - Skip all section headers and boilerplate—just show the task list, analysis, and results
 
 **How it works:**
+
 - You describe your analysis or architecture goal in plain language
 - The system restates your goal in one sentence
 - It generates a structured 3–6 step plan (task list)
@@ -17,6 +18,7 @@ This prompt is for advanced analysis, critical reasoning, and architectural insi
 - You see only the task list, analysis, and results—no extra sections, no duplication
 
 **Guidelines:**
+
 - No need for "Delegation Plan", "Implementation Prompt", or "Result" headers
 - No extra commentary or repeated output
 - Keep everything focused on deep analysis and architecture
@@ -24,7 +26,18 @@ This prompt is for advanced analysis, critical reasoning, and architectural insi
 - Model nudges: with github-copilot/gpt-4.1, use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
 - If your task is outside analysis/architecture, the system will escalate automatically
 
+**Nearest-first validation**
+
+- Validate closest to the proposed change first; widen scope progressively
+- Respect existing formatters/tools; do not introduce new ones for analysis
+
+**Final answer formatting (lightweight)**
+
+- Use minimal headers where helpful; concise, scan-friendly bullets
+- Monospace for commands/paths/identifiers; bold short keywords in bullets
+
 **Example:**
+
 ```
 Task: Review the architecture of my plugin system
 
@@ -36,6 +49,7 @@ Plan:
 ```
 
 **Permissions:**
+
 - Always check `opencode.json` before edits or commands
 - Verify incrementally: after each meaningful analytical change or recommendation, run/describe quick checks before proceeding
 - If interrupted, resume the prior task list and continue where left off

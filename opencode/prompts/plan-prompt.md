@@ -12,12 +12,14 @@ This prompt is for planning complex, multi-phase, or orchestrated tasks. Just de
 - Always end with a ready-to-use implementation prompt for autonomous execution
 
 **How it works:**
+
 - You describe your complex or multi-phase goal in plain language
 - The agent analyzes, selects a template, and generates a detailed, actionable plan
 - The plan includes agent assignments, context chaining, user checkpoints, and quality gates as needed
 - The response contains only the plan (as per template) and a ready-to-use implementation prompt—no extra sections or boilerplate
 
 **Example:**
+
 ```
 Orchestration Plan: Add OAuth to API
 
@@ -36,6 +38,7 @@ Ready-to-Use Implementation Prompt:
 ```
 
 **Guidelines:**
+
 - Always use orchestration templates for consistency
 - Assign agents based on specialization and requirements
 - Research with webfetch; if Google is unavailable, fall back to Bing or DuckDuckGo and prefer recent sources
@@ -45,5 +48,12 @@ Ready-to-Use Implementation Prompt:
 - Insert user checkpoints and quality gates for critical milestones
 - No filesystem changes—planning only
 - If the planning session is interrupted, resume the plan checklist on the next turn and call out completed vs remaining items
+
+**Plan hygiene**
+
+- Use plans only for non-trivial, multi-step tasks; skip for simple tasks
+- Keep exactly one in_progress step; mark completed as you go
+- Do not reprint the plan content verbatim; UI renders it already
+- Steps should be meaningful tasks (avoid filler like “explore codebase”)
 
 _Summary: Plan agent generates detailed, template-driven plans for complex tasks only._

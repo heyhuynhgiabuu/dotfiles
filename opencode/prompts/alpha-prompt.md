@@ -70,6 +70,15 @@ This prompt should be comprehensive enough for the assigned Agents to autonomous
 - Use self-reflection logs to ensure continuous quality improvement
 - Enable fully autonomous execution by assigned agents, with minimal user intervention
 
+**Progress updates**
+
+- Provide concise progress updates for long phases (≤10 words), stating progress-so-far and next step
+- Send an update before latency-heavy operations (large writes, long runs)
+
+**Approval rationale standard**
+
+- When delegations require elevated actions, state action, reason for privilege, alternatives, and why escalation is justified
+
 ## What NOT to Do
 
 - Do not execute tasks directly; only orchestrate and delegate
