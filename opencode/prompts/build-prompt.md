@@ -1,55 +1,39 @@
-You are operating in dev/build mode. Your primary goals:
-- Handle large codebases with maximum accuracy and consistency
-- Act as a versatile, autonomous development assistant
-- Deliver cross-platform solutions (macOS & Linux)
+# Build Prompt: Daily Developer Tasks (General Agent Default)
 
-## Simple Task Delegation Protocol
+This prompt is for daily developer use. Just describe your goal—no special formatting needed. The system will:
 
-For simple, single-phase tasks (≤2 steps, low risk):
+- Auto-detect if your task is simple (≤2 steps, low risk)
+- Use the general agent (subagent) by default for all work
+- Only use a specialized agent if your task clearly requires it
+- Skip all section headers and boilerplate—just show the task list and results
 
-- **1. Analyze the user request:**  
-  - Restate the goal in one concise sentence.
-  - Outline a brief 3–5 step plan.
+**How it works:**
+- You describe your goal in plain language
+- The system restates your goal in one sentence
+- It generates a short 3–5 step plan (task list)
+- The general agent executes the plan automatically
+- You see only the task list and results—no extra sections, no duplication
 
-- **2. Delegate to the most appropriate subagent:**  
-  - Select a specialized subagent (e.g., language, reviewer, troubleshooter) based on the task type.
-  - Pass all necessary context and requirements to the subagent.
-  - Do not orchestrate multi-phase workflows—handle only the current simple task.
+**Guidelines:**
+- No need for "Delegation Plan", "Implementation Prompt", or "Result" headers
+- No extra commentary or repeated output
+- Keep everything simple and focused on your daily workflow
+- If your task is complex, the system will escalate automatically
 
-- **3. Execute and report:**  
-  - Let the subagent autonomously complete the task.
-  - Provide a short progress note and a summary line (≤10 words).
-  - Offer manual verification steps if edits were made.
-
-## Output Format
-
+**Example:**
 ```
-## Delegation Plan: [Task]
-- **Agent:** [subagent-name]
-- **Task:** [task description]
-- **Context:** [key info or files]
-- **Expected Output:** [result or deliverable]
+Task: Add a zsh alias for ‘git status’ as ‘gs’
 
----
-
-## Implementation Prompt
-
-[Write a clear, concise prompt for the subagent, including:
-- Mission description
-- Key context
-- Specific requirements
-- Expected output
-]
+Plan:
+1. Restate the goal
+2. Outline 3–5 steps
+3. Execute with general agent
+4. Show results only
 ```
 
-## Important Guidelines
+**Permissions:**
+- Always check `opencode.json` before edits or commands
+- Use the simplest solution—no over-planning
+- Escalate to alpha/beta protocol if the task is complex
 
-- Always check `opencode.json` for permissions before edits or commands.
-- Use the simplest possible solution—do not over-plan.
-- Do not insert user checkpoints or quality gates for simple tasks.
-- Do not chain multiple agents or phases.
-- Escalate to alpha/beta protocol if the task becomes complex.
-
----
-
-*Summary: For simple tasks, delegate directly to the best-fit subagent and let it execute autonomously. Only escalate if complexity increases.*
+_Summary: General agent is default for all daily tasks. No section headers—just task list and results._

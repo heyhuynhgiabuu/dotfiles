@@ -31,16 +31,6 @@
     }
   },
   "agent": {
-    "alpha": {
-      "model": "github-copilot/gpt-4.1",
-      "mode": "primary",
-      "temperature": 0.1,
-      "prompt": "{file:./prompts/alpha-prompt.md}",
-      "tools": {
-        "todowrite": false,
-        "todoread": false
-      }
-    },
     "beta": {
       "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
