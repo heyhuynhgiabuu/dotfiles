@@ -529,6 +529,48 @@ _These requirements are inspired by state-of-the-art research in hierarchical se
 
 ---
 
+## 🔁 Context Engineering Protocol (Mandatory)
+
+The reliability of agent workflows depends more on engineered context than on the number of agents or tools. The following principles are mandatory across all workflows and agents.
+
+### Single Source of Truth (SSOT) & No Hidden State
+- All relevant state, decisions, assumptions, and tool results must be present in the explicit, active context.
+- Do not rely on implicit/hidden state (ephemeral memory, unstated assumptions). If it matters, write it into the explicit context.
+- When state changes (after tool calls, phase completion, or external events), immediately update the explicit context.
+
+### Context Handoff Protocol
+- After every major step (tool call, sub-phase completion, agent invocation), perform a context handoff:
+  1) Summarize results and decisions in 3–7 bullet points.
+  2) Update the explicit context with the new state and next-step options.
+  3) Prune irrelevant or stale details from the active window.
+  4) Archive completed context chunks for reference (outside the active window).
+- Treat the context window as the API between phases/agents; design handoffs with the same rigor as interface design.
+
+### Aggressive Summarization
+- Summarize after every major step or tool call; do not wait until the end of a phase.
+- Use hierarchical summaries: step-level, phase-level, global session summary.
+- Keep the active context minimal, relevant, and up to date; move older details to archived context.
+
+### Context-Driven Planning
+- Let the current explicit context dictate the next action; adapt plans dynamically based on new evidence.
+- Never follow a static plan blindly—update tasks and priorities after each context handoff.
+- When signals conflict, escalate once (research or clarification), then proceed with the best-supported path.
+
+### Context as API
+- Consider the explicit context the interface between phases/subagents: inputs = current goals + constraints + state; outputs = decisions + results + updated state.
+- Validate that required fields are present before proceeding (e.g., user goal, constraints, environment facts, tool results).
+- Refuse to proceed if critical context is missing; collect it first per Research Protocol.
+
+### Enforcement & Integration
+- Integrate SSOT, handoff, and summarization with the existing Serena 'think' tools:
+  - After data gathering: run think_about_collected_information and write the results into the explicit context.
+  - Before modification: run think_about_task_adherence and update the next actions in the context.
+  - At completion: run think_about_whether_you_are_done and append a final summary to the context.
+- At chunk boundaries (see Dynamic Chunking), persist a concise archive record and compact the active context.
+- During verification, explicitly check that handoffs occurred and that the active context reflects the final state.
+
+---
+
 ## 🎯 Quality Standards
 
 ### **Core Maxims**
