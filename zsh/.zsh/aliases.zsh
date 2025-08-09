@@ -1,3 +1,22 @@
+# --- Modern Search/Edit Tool Aliases ---
+# These aliases optimize your workflow for both AI and human use.
+# All tools are cross-platform (macOS/Linux) and installed via Homebrew or apt.
+# - rg: Fastest code/text search (ripgrep)
+# - fd: Fast file search (find alternative)
+# - bat: Syntax-highlighted file preview (cat alternative)
+# - delta: Beautiful git diff viewer
+# - sd: Fast, safe find & replace (sed alternative)
+# - jq: JSON processor
+# - fzf: Fuzzy finder (already aliased below)
+
+alias rg='rg --smart-case --color=always'
+alias rgrep='rg --smart-case --color=always'  # For compatibility with grep workflows
+alias fd='fd --color=always'
+alias bat='bat --style=plain --paging=never'
+alias delta='delta'
+alias sd='sd'
+alias jq='jq'
+
 #Basics
 alias ll='eza --color=always --icons --long'
 alias ls='eza --color=always --icons --long --no-user --git --no-time --no-filesize --no-permissions'

@@ -1,6 +1,6 @@
 # Serena Configuration
 # Auto-updated: Mon Aug  4 17:37:52 +07 2025
-read_only: false
+read_only: true
 
 # Dashboard Configuration
 dashboard:
@@ -43,7 +43,7 @@ security:
 # Tool Configuration
 tools:
   execute_shell_command:
-    enabled: true
+    enabled: false
     restricted_commands: 
       - "rm -rf"
       - "dd"
@@ -54,11 +54,11 @@ tools:
   find_symbol:
     enabled: true
   replace_lines:
-    enabled: true
+    enabled: false
   read_file:
     enabled: true
   insert_at_line:
-    enabled: true
+    enabled: false
   search_for_pattern:
     enabled: true
   get_symbols_overview:

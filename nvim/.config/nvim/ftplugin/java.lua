@@ -415,6 +415,63 @@ local config = {
     -- ===============================================
     -- ⌨️ KEYMAPS
     -- ===============================================
+
+    -- Gradle/Maven helpers
+    local function gradle_cmd(task)
+      local cwd = vim.fn.getcwd()
+      if vim.fn.filereadable(cwd .. "/gradlew") == 1 then
+        return "./gradlew " .. task
+      else
+        return "gradle " .. task
+      end
+    end
+
+    local function maven_cmd(goals)
+      local cwd = vim.fn.getcwd()
+      if vim.fn.filereadable(cwd .. "/mvnw") == 1 then
+        return "./mvnw " .. goals
+      else
+        return "mvn " .. goals
+      end
+    end
+
+    local function build_action(action)
+      local project_type = detect_project_type()
+      local cmd
+      if project_type == "spring-gradle" or project_type == "gradle" then
+        if action == "build" then cmd = gradle_cmd("build")
+        elseif action == "clean" then cmd = gradle_cmd("clean")
+        elseif action == "rebuild" then cmd = gradle_cmd("clean build")
+        elseif action == "test" then cmd = gradle_cmd("test")
+        elseif action == "package" then cmd = gradle_cmd("assemble")
+        end
+      elseif project_type == "spring-maven" or project_type == "maven" then
+        if action == "build" then cmd = maven_cmd("package")
+        elseif action == "clean" then cmd = maven_cmd("clean")
+        elseif action == "rebuild" then cmd = maven_cmd("clean package")
+        elseif action == "test" then cmd = maven_cmd("test")
+        elseif action == "package" then cmd = maven_cmd("package")
+        end
+      else
+        vim.notify("No Gradle/Maven project detected for build action", vim.log.levels.WARN)
+        return
+      end
+      if cmd then
+        vim.cmd("split | terminal " .. cmd)
+      end
+    end
+
+    local function run_custom_task()
+      local project_type = detect_project_type()
+      local is_gradle = project_type == "spring-gradle" or project_type == "gradle"
+      local prompt = is_gradle and "Gradle task (e.g., clean build): " or "Maven goals (e.g., clean package): "
+      vim.ui.input({ prompt = prompt, default = "" }, function(input)
+        if not input or input == "" then return end
+        local cmd = is_gradle and gradle_cmd(input) or maven_cmd(input)
+        vim.cmd("split | terminal " .. cmd)
+      end)
+    end
+
     local opts = { noremap = true, silent = true, buffer = bufnr }
     
     -- Basic LSP
@@ -454,6 +511,14 @@ local config = {
     vim.keymap.set("n", "<leader>jC", function() run_with_command(true) end, 
       { desc = "Debug with Command", buffer = bufnr })
     
+    -- Build/CI keymaps (Gradle/Maven)
+    vim.keymap.set("n", "<leader>jB", function() build_action("build") end, { desc = "Build (Gradle/Maven)", buffer = bufnr })
+    vim.keymap.set("n", "<leader>jL", function() build_action("clean") end, { desc = "Clean (Gradle/Maven)", buffer = bufnr })
+    vim.keymap.set("n", "<leader>jR", function() build_action("rebuild") end, { desc = "Rebuild (clean+build)", buffer = bufnr })
+    vim.keymap.set("n", "<leader>jT", function() build_action("test") end, { desc = "Test (Gradle/Maven)", buffer = bufnr })
+    vim.keymap.set("n", "<leader>jP", function() build_action("package") end, { desc = "Package/Assemble", buffer = bufnr })
+    vim.keymap.set("n", "<leader>jg", function() run_custom_task() end, { desc = "Run custom task/goal", buffer = bufnr })
+
     -- Debug setup
     local dap_ok, dap = pcall(require, "dap")
     if dap_ok then
@@ -475,6 +540,12 @@ local config = {
         { "<leader>jm", function() require('jdtls').extract_method(true) end, desc = "Extract Method", buffer = bufnr, mode = "v" },
         
         { "<leader>jr", function() run_with_profile_and_args(false) end, desc = "Run with Args/Profile", buffer = bufnr },
+        { "<leader>jB", function() build_action("build") end, desc = "Build (Gradle/Maven)", buffer = bufnr },
+        { "<leader>jL", function() build_action("clean") end, desc = "Clean (Gradle/Maven)", buffer = bufnr },
+        { "<leader>jR", function() build_action("rebuild") end, desc = "Rebuild (clean+build)", buffer = bufnr },
+        { "<leader>jT", function() build_action("test") end, desc = "Test (Gradle/Maven)", buffer = bufnr },
+        { "<leader>jP", function() build_action("package") end, desc = "Package/Assemble", buffer = bufnr },
+        { "<leader>jg", function() run_custom_task() end, desc = "Run custom task/goal", buffer = bufnr },
         { "<leader>jd", function() run_with_profile_and_args(true) end, desc = "Debug with Args/Profile", buffer = bufnr },
         { "<leader>jc", function() run_with_command(false) end, desc = "Run Command (Spring)", buffer = bufnr },
         { "<leader>jC", function() run_with_command(true) end, desc = "Debug Command (Spring)", buffer = bufnr },

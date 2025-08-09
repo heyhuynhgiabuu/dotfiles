@@ -13,6 +13,7 @@ local on_attach = function(client, bufnr)
   -- Basic LSP keymaps - fixing overlaps with which-key warnings
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
+  vim.keymap.set("n", "<C-LeftMouse>", vim.lsp.buf.definition, opts "Ctrl+LeftClick go to definition")
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts "Hover")
   vim.keymap.set("n", "gri", vim.lsp.buf.implementation, opts "Go to implementation")
   vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts "Show signature")

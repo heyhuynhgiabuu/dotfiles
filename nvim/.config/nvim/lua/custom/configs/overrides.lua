@@ -54,6 +54,11 @@ M.mason = {
 M.nvimtree = {
   git = {
     enable = true,
+    ignore = false, -- show files ignored by .gitignore
+  },
+
+  filters = {
+    dotfiles = false, -- show dotfiles in the tree
   },
 
   renderer = {

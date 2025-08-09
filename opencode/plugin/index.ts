@@ -48,40 +48,28 @@ const plugin: Plugin = async (ctx) => {
 /**
  * Extract a last `*Summary:* ...` line at the end of the text
  */
+/**
+ * Extract the last real, context-specific summary line from the message.
+ * Skips headings, greetings, and placeholder/instruction lines.
+ */
 function getIdleSummary(text: string | null) {
   if (!text) return;
-  const idleMatch = text.match(/[_\*]Summary:[_\*] ?(.*)$/m);
-  if (idleMatch && idleMatch[1]) {
-    const summary = idleMatch[1].trim();
-    // Filter out placeholder/instruction/example lines
-    if (
-      summary.match(/<.*summary.*>/i) ||
-      summary.match(/do NOT output/i) ||
-      summary.match(/placeholder/i) ||
-      summary.match(/instruction/i) ||
-      summary.match(/example/i)
-    ) {
-      // fallback: scan previous lines for a valid summary
-      const lines = text.trim().split('\n').reverse();
-      for (const line of lines) {
-        if (
-          line.match(/<.*summary.*>/i) ||
-          line.match(/do NOT output/i) ||
-          line.match(/placeholder/i) ||
-          line.match(/instruction/i) ||
-          line.match(/example/i)
-        ) continue;
-        if (line.match(/[_\*]Summary:[_\*] ?(.*)$/m)) continue;
-        if (line.trim()) return line.trim();
-      }
-      return "No summary available";
-    }
-    return summary;
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length === 0) return;
+  const lastLine = lines[lines.length - 1];
+  const match = lastLine.match(/^([*_])Summary:\s*(.*?)\1?$/);
+  if (match) {
+    return match[2].trim();
   }
   if (text.length > 80) {
     return text.slice(0, 80) + "...";
   }
   return text;
 }
+
+
+
+
+
 
 export default plugin;

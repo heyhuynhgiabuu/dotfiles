@@ -21,6 +21,7 @@
     - At the end of the workflow, call `think_about_whether_you_are_done` to confirm all tasks are complete and nothing is missed.
 - Log or report the results of these tools as part of the verification checklist and final report.
 - This pattern is mandatory for all OpenCode/Serena agent integrations.
+- Editing policy: Serena MCP is strictly read-only. Do NOT use Serena editing/mutation tools (e.g., replace_regex, replace_symbol_body, insert_after_symbol, insert_before_symbol). For any code/content edits and searches, use OpenCode native tools: Read/Edit/Write/Grep/Glob, and follow the Anchor Robustness Protocol and opencode.json permissions.
 
 ---
 
@@ -245,9 +246,44 @@ Final Outcome:
 
 ## 🛠️ Tool Selection Hierarchy
 
+### 🔍 Modern Search/Edit Tooling Policy
+
+- **Preferred CLI tools for all codebase search/edit operations:**
+  - `rg` (ripgrep): Fastest recursive code/text search. Always use instead of `grep` for codebase or config search.
+  - `fd`: Fast, user-friendly file search. Prefer over `find` for file discovery.
+  - `bat`: Syntax-highlighted file preview. Use for readable file output in scripts, reviews, and AI workflows.
+  - `delta`: Syntax-highlighted git diff viewer. Use for reviewing code changes.
+  - `sd`: Fast, safe find & replace. Prefer over `sed` for batch replacements.
+  - `jq`: For all JSON parsing/editing in scripts or AI workflows.
+  - `fzf`: For interactive fuzzy finding in terminal or scripts.
+
+- **Implementation Guidance:**
+  - All agents, scripts, and workflows MUST use `rg` for code/text search and `fd` for file search, falling back to `grep`/`find` only if the preferred tool is unavailable.
+  - When previewing or displaying file content, use `bat` for readability.
+  - For batch replacements, use `sd` instead of `sed` for safety and simplicity.
+  - For JSON, always use `jq` for parsing and manipulation.
+  - For reviewing diffs, use `delta` for clarity.
+  - Document these conventions in all onboarding and developer docs.
+  - When writing new scripts or agent logic, check for tool availability and prefer the modern tool.
+
+- **Sample Usage Patterns:**
+  ```sh
+  rg "pattern" path/
+  fd pattern path/
+  bat file.txt
+  sd 'foo' 'bar' file.txt
+  jq '.' file.json
+  git diff | delta
+  fzf
+  ```
+
+- **Rationale:**  
+  These tools are cross-platform, fast, and provide a superior developer and AI experience. They are required for all new workflows and strongly recommended for legacy script modernization.
+
+
 ### **Code Analysis**
-1. **Serena** - For codebase relationships and symbol analysis
-2. **Read/Grep** - For file content and simple searches
+1. **Serena** (read-only think/symbol tools only; no edit/mutation) - For codebase relationships and symbol analysis
+2. **OpenCode Read/Edit/Write/Grep/Glob** - For file content, searches, and all edits
 
 ### **Information Retrieval**
 1. **API/CLI** (bash + curl/gh) - For structured data sources

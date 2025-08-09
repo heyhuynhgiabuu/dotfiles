@@ -31,143 +31,41 @@
     }
   },
   "agent": {
-    "security-audit": {
-      "description": "Security scan for backend code and configs",
-      "model": "github-copilot/claude-sonnet-4",
-      "prompt": "{file:agent/security-audit.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "webfetch": false,
-        "todowrite": false
-      }
-    },
-    "devops-deployer": {
-      "description": "Docker and infrastructure optimization",
+    "alpha": {
       "model": "github-copilot/gpt-4.1",
-      "prompt": "{file:agent/devops-deployer.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "webfetch": false,
-        "todowrite": false
-      }
-    },
-    "api-reviewer": {
-      "description": "Backend API performance and architecture review",
-      "model": "github-copilot/claude-sonnet-4",
-      "prompt": "{file:agent/api-reviewer.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "webfetch": false,
-        "todowrite": false
-      }
-    },
-    "docs-writer": {
-      "description": "Essential developer documentation",
-      "model": "github-copilot/gpt-4.1",
-      "prompt": "{file:agent/docs-writer.md}",
-      "tools": {
-        "bash": false,
-        "webfetch": false,
-        "todowrite": false
-      }
-    },
-    "backend-troubleshooter": {
-      "description": "Debug backend issues and analyze logs",
-      "model": "github-copilot/gpt-4.1",
-      "prompt": "{file:agent/backend-troubleshooter.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "webfetch": false,
-        "todowrite": false
-      }
-    },
-    "simple-researcher": {
-      "description": "Find code examples when searches fail",
-      "model": "github-copilot/gpt-4.1",
-      "prompt": "{file:agent/simple-researcher.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "todowrite": false
-      }
-    },
-    "context-analyst": {
-      "description": "Analyze OpenCode context and billing",
-      "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.2,
-      "prompt": "{file:agent/context_analyst.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "todowrite": false
-      }
-    },
-    "session-summarizer": {
-      "description": "Create conversation summaries",
-      "model": "github-copilot/gpt-4.1",
-      "temperature": 0.2,
-      "prompt": "{file:agent/session-summarizer.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false,
-        "webfetch": false,
-        "todowrite": false
-      }
-    }
-  },
-  "mode": {
-    "dev": {
-      "description": "Daily development with Qwen3 Coder (Free)",
-      "model": "github-copilot/gpt-4.1",
+      "mode": "primary",
       "temperature": 0.1,
-      "prompt": "{file:prompts/dev-prompt.md}"
+      "prompt": "{file:./prompts/alpha-prompt.md}",
+      "tools": {
+        "todowrite": false,
+        "todoread": false
+      }
     },
-    "beast": {
-      "description": "Beast mode - Unleash Claude Sonnet 4 power",
+    "beta": {
+      "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.2,
-      "prompt": "{file:prompts/beast-prompt.md}",
+      "prompt": "{file:./prompts/beta-prompt.md}",
       "tools": {
         "todowrite": false,
         "todoread": false
       }
     },
     "build": {
-      "description": "Large codebase mode with 262K context",
-      "model": "openrouter/qwen/qwen3-coder",
+      "mode": "primary",
+      "model": "github-copilot/gpt-4.1",
       "temperature": 0.1,
-      "prompt": "{file:prompts/build-prompt.md}",
+      "prompt": "{file:./prompts/build-prompt.md}",
       "tools": {
         "todowrite": false,
         "todoread": false
       }
     },
     "plan": {
-      "description": "Read-only analysis and planning",
       "model": "github-copilot/gpt-4.1",
+      "mode": "primary",
       "temperature": 0.1,
-      "prompt": "{file:prompts/plan-prompt.md}",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false
-      }
-    },
-    "bmad": {
-      "description": "BMAD-enhanced planning and orchestration",
-      "model": "github-copilot/gpt-4.1",
-      "temperature": 0.1,
-      "prompt": "{file:prompts/plan-prompt-unified.md}",
+      "prompt": "{file:./prompts/plan-prompt.md}",
       "tools": {
         "write": false,
         "edit": false,
@@ -193,11 +91,11 @@
         "ide-assistant"
       ],
       "enabled": true,
-      "environment": { "SERENA_READ_ONLY": "false" }
+      "environment": { "SERENA_READ_ONLY": "true" }
     }
   },
   "theme": "kanagawa",
-  "model": "github-copilot/gpt-4.1",
+  "model": "github-copilot/gpt-5",
   "share": "disabled",
   "autoupdate": true
 }
