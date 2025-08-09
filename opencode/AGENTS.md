@@ -135,6 +135,12 @@ _Reference: These maxims apply throughout all workflow steps and quality standar
 }
 ```
 
+#### Token-Efficient Permission Checks
+- Do not include explicit permission-check steps in user-visible plans.
+- Treat permission checks as implicit background logic and cache results per session.
+- Read `opencode/opencode.json` only for the first privileged action, upon a permissions error, or when explicitly instructed by the user.
+- Pure read/search actions may proceed without checks; perform a lightweight check once before the first privileged action and reuse thereafter.
+
 <instruction_hierarchy>
 
 1. Permissions & Safety Controls (opencode.json)
@@ -151,15 +157,8 @@ Note: Always respect project-specific commit message policies as defined in repo
 ### Compressed Intents (Fast Path)
 
 - Behavior: Treat these as low-verbosity flows—skip preambles; return results and a one-line summary.
-- Approvals: Where opencode.json requires "ask", accept y/yes for Tier 1 operations. (Emoji approvals are not used.)
+- Approvals: Where opencode.json requires "ask", accept y/yes for single-file anchored edits. (Emoji approvals are not used.)
 
-### Risk-Tiered Approvals (within Permissions)
-
-- Tier 0 (Read/Query/Search): Allowed per opencode.json allowlist.
-- Tier 1 (Single-file, anchored edits; local tooling): When opencode.json is "ask", accept y/yes as explicit approval.
-- Tier 2 (Multi-file edits, refactors): Require explicit phrase "Approve Tier 2" in the same message.
-- Tier 3 (External side-effects such as network or system-wide changes): Prohibited unless exact commands are allowlisted in opencode.json.
-- Always fall back to the most restrictive rule when in doubt; never bypass opencode.json.
 
 ## 🚀 The Enhanced Operating Protocol
 
