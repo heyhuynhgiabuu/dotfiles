@@ -41,9 +41,7 @@ Ready-to-Use Implementation Prompt:
 
 - Always use orchestration templates for consistency
 - Assign agents based on specialization and requirements
-- Research with webfetch; if Google is unavailable, fall back to Bing or DuckDuckGo and prefer recent sources
-- Model nudges: with github-copilot/gpt-4.1, MUST use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
-- Research with webfetch; if Google is unavailable, fall back to Bing or DuckDuckGo and prefer recent sources
+- Use webfetch for third-party/unknown or ambiguous topics; otherwise skip to minimize latency. Prefer current official docs and apply early-stop criteria.
 - Model nudges: with github-copilot/gpt-4.1, MUST use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
 - Insert user checkpoints and quality gates for critical milestones
 - No filesystem changes—planning only
