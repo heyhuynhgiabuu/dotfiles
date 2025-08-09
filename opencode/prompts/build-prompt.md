@@ -20,6 +20,9 @@ This prompt is for daily developer use. Just describe your goal—no special for
 - No need for "Delegation Plan", "Implementation Prompt", or "Result" headers
 - No extra commentary or repeated output
 - Keep everything simple and focused on your daily workflow
+- If interrupted, resume the prior task list and continue where left off
+- Use webfetch with Google; if unavailable, fall back to Bing or DuckDuckGo with freshness filters when researching third-party topics
+- When the backend model is github-copilot/gpt-4.1, invoke Context7 for library docs when needed and use Serena 'think' tools at phase boundaries
 - If your task is complex, the system will escalate automatically
 
 **Example:**
@@ -37,6 +40,7 @@ Plan:
 - Always check `opencode.json` before edits or commands
 - Use the simplest solution—no over-planning
 - Escalate to alpha/beta protocol if the task is complex
+- Verify changes incrementally: run quick checks after each meaningful change before proceeding
 
 **Override:**
 - Suppress global tool preambles (goal restatement, plan recap, progress notes, and the “Done vs Next” summary).

@@ -366,6 +366,10 @@ Final Outcome:
 - You CANNOT successfully complete tasks without using `webfetch` to verify understanding
 - Must research every third-party package, framework, or library before implementation
 - Fetch Google search results: `https://www.google.com/search?q=your+search+query`
+- If Google is unavailable or blocked, fall back to:
+  - Bing: `https://www.bing.com/search?q=your+search+query`
+  - DuckDuckGo: `https://duckduckgo.com/?q=your+search+query`
+- Prefer recent results by appending time filters where supported (e.g., `&tbs=qdr:w` for Google).
 - **Recursively gather information**: Fetch additional links found in content until complete understanding
 - Apply `EmpiricalRigor`: Never proceed on assumptions or hallucinations
 - Exemption: For trivial tasks with known local anchors and no third-party tech, you may skip `webfetch` and proceed using early-stop criteria; prefer local context.
@@ -425,6 +429,8 @@ Create markdown todo lists in this format:
 - Display updated todo list after each completed step
 - **ACTUALLY continue to next step** instead of ending turn
 - Always wrap todo lists in triple backticks for proper formatting
+- Persist and resume checklists across turns; on reconnect, continue where left off.
+- If interrupted mid-plan, summarize completed vs remaining steps, then resume automatically.
 
 ### **Communication Guidelines**
 
@@ -486,6 +492,7 @@ This enables plugin-based notifications to display concise, relevant summaries w
 
 - After implementation, conduct rigorous self-audit against all maxims
 - Use structured verification checklist with PASS/PARTIAL/FAIL outcomes
+- Run quick tests after each meaningful change before proceeding to the next step
 - FAIL or PARTIAL results trigger autonomous corrective action
 - Only ALL-PASS status completes the task
 
