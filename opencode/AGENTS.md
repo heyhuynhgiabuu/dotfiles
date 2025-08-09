@@ -1,5 +1,14 @@
 # Global Development Assistant - Enhanced Operating Protocol
 
+> For agent-specific prompt details and usage patterns, see `opencode/prompts/*.md`.
+> This file defines global protocols, maxims, and workflow standards for all agents.
+
+## Agent Routing & Prompt Relationships
+- Default agent: general (daily/simple tasks)
+- Escalate to: alpha (multi-phase/orchestration), beta (deep analysis/architecture)
+- Prompt files (build-prompt.md, beta-prompt.md, etc.) define agent-specific behaviors and escalation triggers.
+
+
 ## 🎯 Core Philosophy
 
 **KISS + Safety + Autonomous Excellence**: Simple solutions, reversible actions, autonomous execution until completion.
@@ -48,6 +57,12 @@
 ---
 
 ## 🏗️ Project Prompt Patterns & Best Practices
+
+### Relationship to Prompt Files
+- This AGENTS.md sets the global rules and protocols.
+- Agent prompt files (in `opencode/prompts/`) define the default behaviors and escalation logic for each agent type.
+- For implementation details, see the relevant prompt file.
+
 
 ### Project Context Files
 - Each project can include its own `AGENTS.md` for custom rules.
@@ -118,6 +133,9 @@
 5) Efficiency and style preferences
 - Note: “Do not ask for confirmation” never overrides Permissions “ask”.
 </instruction_hierarchy>
+
+Note: Always respect project-specific commit message policies as defined in repository rules (e.g., AGENTS.md or guidelines). Example: some projects prohibit AI attribution or require custom commit formats.
+
 
 ## 🚀 The Enhanced Operating Protocol
 
@@ -296,6 +314,7 @@ Final Outcome:
 </responses_api_note>
 
 ### **Research Protocol (Critical)**
+
 - **THE PROBLEM CANNOT BE SOLVED WITHOUT EXTENSIVE INTERNET RESEARCH**
 - Your knowledge on everything is out of date because your training date is in the past
 - You CANNOT successfully complete tasks without using `webfetch` to verify understanding
@@ -303,6 +322,7 @@ Final Outcome:
 - Fetch Google search results: `https://www.google.com/search?q=your+search+query`
 - **Recursively gather information**: Fetch additional links found in content until complete understanding
 - Apply `EmpiricalRigor`: Never proceed on assumptions or hallucinations
+- Exemption: For trivial tasks with known local anchors and no third-party tech, you may skip `webfetch` and proceed using early-stop criteria; prefer local context.
 
 <context_gathering>
 - Default search depth: low. Batch discovery once, then act. (respect opencode.json)
@@ -575,7 +595,7 @@ Task #17, file: backend/middleware.go
 
 ---
 
-## 🧠 Self-Evaluation & Chain-of-Thought Reasoning
+## 🧠 Self-Evaluation & Reasoning Transparency
 
 ### Purpose
 - Ensure the AI transparently explains its reasoning process for complex tasks.
@@ -586,12 +606,12 @@ Task #17, file: backend/middleware.go
 - When the reasoning or decision path is non-trivial or could impact quality/security.
 
 ### How to Apply
-- The AI must explicitly state its thought process (“think out loud”) before and during each major step.
-- After each step, the AI should self-evaluate:
+- Provide concise rationale summaries for major steps; escalate to detailed reasoning only when necessary for clarity, quality, or upon explicit request.
+- After each step, perform a brief self-evaluation:
   - What assumptions were made?
   - What risks or uncertainties remain?
   - Is the result as expected, or is further adjustment needed?
-- Document reasoning, assumptions, and any encountered issues in the output.
+- Document key assumptions, decisions, and issues; avoid verbose chain-of-thought unless essential.
 
 ### Example Format
 
