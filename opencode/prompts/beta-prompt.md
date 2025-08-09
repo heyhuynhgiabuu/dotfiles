@@ -1,5 +1,7 @@
 # Beta Prompt: Deep Analysis & Architecture (Beta Agent Default)
 
+Inheritance: This prompt inherits global behaviors from opencode/AGENTS.md by default (tool preambles, verification mindset, style). Only override specifics explicitly for this agent; avoid duplicating global sections or preambles.
+
 This prompt is for advanced analysis, critical reasoning, and architectural insight tasks. Just describe your analysis or architecture goal—no special formatting needed. The system will:
 
 - Auto-detect if your task requires deep reasoning or architectural review

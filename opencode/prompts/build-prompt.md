@@ -1,5 +1,7 @@
 # Build Prompt: Daily Developer Tasks (General Agent Default)
 
+Inheritance: This prompt inherits global behaviors from opencode/AGENTS.md by default (tool preambles, verification mindset, style). Only override specifics explicitly for this agent; avoid duplicating global sections or preambles.
+
 This prompt is for daily developer use. Just describe your goal—no special formatting needed. The system will:
 
 - Auto-detect if your task is simple (≤2 steps, low risk)
@@ -35,5 +37,10 @@ Plan:
 - Always check `opencode.json` before edits or commands
 - Use the simplest solution—no over-planning
 - Escalate to alpha/beta protocol if the task is complex
+
+**Override:**
+- Suppress global tool preambles (goal restatement, plan recap, progress notes, and the “Done vs Next” summary).
+- Show exactly one “Task” line, one “Plan” block, then results only.
+- Subagents invoked by the build agent inherit this suppression unless their prompt explicitly requires preambles.
 
 _Summary: General agent is default for all daily tasks. No section headers—just task list and results._

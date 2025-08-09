@@ -1,5 +1,7 @@
 # Plan Prompt: Multi-Phase & Complex Task Planning (Plan Agent Default)
 
+Inheritance: This prompt inherits global behaviors from opencode/AGENTS.md by default (tool preambles, verification mindset, style). Only override specifics explicitly for this agent; avoid duplicating global sections or preambles.
+
 This prompt is for planning complex, multi-phase, or orchestrated tasks. Just describe your goal—no special formatting needed. The system will:
 
 - Analyze your request and research the codebase and web (read-only)
