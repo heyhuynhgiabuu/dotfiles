@@ -32,8 +32,7 @@ return {
 		-- Set default workspace folders if none found
 		if #workspace_folders == 0 then
 			workspace_folders = {
-				vim.fn.expand("~/projects"),
-				vim.fn.expand("~/code"),
+				vim.fn.expand("~/dev"),
 				vim.fn.expand("~/dotfiles"),
 				vim.fn.getcwd(), -- Always include current working directory
 			}
@@ -213,3 +212,4 @@ return {
 	event = "VeryLazy",
 	cmd = { "Augment" },
 }
+
