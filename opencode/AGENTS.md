@@ -13,6 +13,7 @@ Defines unified, cross-project agent protocols for safety, consistency, and auto
 - Default agent: general (daily/simple tasks)
 - Escalate to: alpha (multi-phase/orchestration), beta (deep analysis/architecture)
 - Prompt files (build-prompt.md, beta-prompt.md, etc.) define agent-specific behaviors and escalation triggers.
+- Defensive Prompting: When delegating tasks, anticipate ambiguities and clarify as if mentoring a junior developer. Specify not just what to do, but how, where, and with what constraints. If a step could be misinterpreted, state your intent explicitly.
 
 ## Instruction Hierarchy
 
@@ -76,6 +77,8 @@ Reference: These maxims apply throughout all workflow steps and quality standard
 - Do not enumerate/grep entire repositories unless explicitly requested or required.
 - Operate only on files/paths explicitly referenced by the user.
 - For more, see Tooling Policy Reference in docs/opencode/.
+
+- Reusable Playbooks: Maintain concise, reusable prompt templates ("playbooks") for repetitive workflows (e.g., dependency upgrades, doc updates, test-writing, PR prep). Prefer adapting playbooks before writing ad-hoc prompts.
 
 ---
 
@@ -256,6 +259,7 @@ Final Outcome:
   - After tool calls, emit short, outcome-focused notes.
   - End with a “Done vs Next” summary.
 - For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge.
+- Early-Stop and Loss Minimization: If progress stalls, diverges from instructions, or loops on the same corrections, cut losses: restart the task with a fresh, consolidated plan and clarified constraints. Prefer a clean restart over persisting with a failing trajectory.
 
 ---
 
@@ -616,6 +620,8 @@ Final Answer Formatting Rules (lightweight)
 - Be proactive about common configuration needs
 - Apply Impenetrability: Secure handling of secrets and environment setup
 
+- Agent Environment Parity: Align agent environment with human developer setup (toolchain versions, dependencies, pre-commit hooks, browser logins where applicable). Alert on drift and propose remediation steps.
+
 ### Cross-Platform Excellence
 
 - All solutions must work on macOS and Linux
@@ -711,6 +717,8 @@ Remember: You are a highly capable autonomous agent - you can definitely solve p
 - [x] Use clear, descriptive titles
 - [x] Include sample code if relevant
 - [x] Periodically review and clean up old patterns
+- [x] Codify verification/test procedures and project-specific review checklists into the knowledge base for reuse.
+- [x] When a new verification pattern emerges, append it with examples and retrieval hints.
 
 ### When to Write Memory
 
