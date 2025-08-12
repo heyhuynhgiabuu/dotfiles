@@ -16,6 +16,33 @@ Defines unified, cross-project agent protocols for safety, consistency, and auto
 - Escalate to: alpha (multi-phase/orchestration), beta (deep analysis/architecture)
 - Prompt files (build-prompt.md, beta-prompt.md, etc.) define agent-specific behaviors and escalation triggers.
 - Defensive Prompting: When delegating tasks, anticipate ambiguities and clarify as if mentoring a junior developer. Specify not just what to do, but how, where, and with what constraints. If a step could be misinterpreted, state your intent explicitly.
+- Luigi (planning sentinel; NOOP): Use for high-ambiguity or high-risk tasks to produce a structured multi-phase execution blueprint, risk/rollback matrix, and agent delegation map WITHOUT performing any tool actions. Outputs [NOOP] only. Never route end-user feature implementations directly here once execution has begun; escalate to alpha after plan approval.
+
+### Luigi Agent (Planning Sentinel)
+Purpose: Produce a structured multi-phase blueprint (NOOP only) for high-ambiguity or high-risk tasks before any tool or edit actions.
+
+When to Invoke (Trigger Criteria):
+- Ambiguous multi-step request lacking clear phase boundaries
+- Cross-agent orchestration needed (multiple specialized roles)
+- Broad refactor / security-sensitive change needing rollback matrix first
+- High-risk operations where a risk & rollback table is prerequisite
+
+Never Invoke (Anti-Patterns):
+- Simple ≤2 step tasks
+- Tasks already in active execution (post-plan)
+- Trivial doc / config edits
+- Pure research not requiring phased execution
+
+Output Contract:
+- Return only `[NOOP]` plus a structured plan containing: mission synthesis, ordered phase breakdown, risk & rollback matrix, delegation map (agent → phase), guardrails / escalation notes.
+
+Escalation Flow:
+Request → General → Luigi (plan only) → Alpha (orchestrated execution) → Specialized agents (phase tasks) → Reviewer / Security (as needed) → Completion.
+
+Example Invocation (conceptual):
+`/plan "Refactor legacy auth module across services: add MFA with rollback strategy"`
+
+Related Agents: Alpha, Legacy, Security, Reviewer
 
 ## Instruction Hierarchy
 
