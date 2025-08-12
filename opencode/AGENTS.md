@@ -325,17 +325,83 @@ Final Outcome:
 
 ---
 
-## Execution Rules: Checklists, Minimal Reasoning Scaffold
+## Checklist & Summarization Protocol (Unified)
 
-- For complex tasks (3+ steps), use markdown checklists; manage progress in chat.
-- Minimal Reasoning Scaffold:
-  - Brief 3–5 bullet plan before tools.
-  - Run one parallel batch of tool calls; retry once if validation fails.
-  - Persist until all sub-requests are fulfilled before yielding the turn.
-  - After tool calls, emit short, outcome-focused notes.
-  - End with a “Done vs Next” summary.
-- For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge.
-- Early-Stop and Loss Minimization: If progress stalls, diverges from instructions, or loops on the same corrections, cut losses: restart the task with a fresh, consolidated plan and clarified constraints. Prefer a clean restart over persisting with a failing trajectory.
+Consolidates and replaces prior: Execution Rules, Autonomous Execution Rules, Todo List Management, Communication Guidelines, Preamble Discipline, Plan Hygiene, and duplicate Minimal Reasoning Scaffold blocks. (Former section titles removed to eliminate drift.)
+
+### 1. Applicability
+- Simple tasks (≤2 steps): Execute directly; skip checklist & scaffold.
+- Complex tasks (≥3 steps) or multi-phase scope: Use this protocol end‑to‑end.
+
+### 2. Minimal Reasoning Scaffold (Pre-Tool Preamble)
+Provide exactly once before first tool batch (or when materially changed):
+1. One-sentence goal restatement.
+2. 3–5 bullet actionable micro-plan (only current phase; no speculative later phases).
+3. State intended batching (what tools, why) and expected stop condition (unique anchor, diff presence, etc.).
+4. Omit if task is simple fast-path.
+Update ONLY when plan changes; otherwise do not repost unchanged plan.
+
+### 3. Checklist Construction
+- Format: fenced markdown code block; each line: `- [ ] Step N: Imperative, concise outcome`.
+- Use phases optionally: `### Phase X` headings inside the fenced block (keep terse).
+- Steps must be SMART enough to verify; avoid vague verbs ("handle", "update") without objects.
+- Maintain ordering by dependency; append new steps instead of rewriting history when scope legitimately expands.
+
+### 4. Progress Lifecycle
+- After completing a step (or coherent batch) mark `[x]` and show ONLY the updated checklist (fenced) plus a micro handoff summary (see §6).
+- Do NOT reprint unchanged checklist.
+- Never pause for confirmation after approval unless permissions or ambiguity force clarification.
+
+### 5. Tool Batching & Early Stop
+- Batch independent reads/searches together; serialize only when later steps depend on earlier outputs.
+- Stop search when: (a) unique anchor confirmed OR (b) top ~70% hits converge OR (c) additional results are redundant.
+- Retry a failing batch at most once with adjusted parameters (anchor expansion, alternative pattern). Then escalate (clarify, fallback, or luigi plan) if still blocked.
+
+### 6. Handoff & Summarization Cadence
+Every state change (batch completion, phase end) emit 3–7 bullets:
+- Objective segment addressed
+- Actions executed (concise verbs)
+- Key results / diffs / anchors validated
+- Risks or deviations encountered & mitigations
+- Next planned action (single decisive step) OR decision fork
+Include a final line summary per Idle Notification Protocol (see §10) when awaiting user input.
+
+### 7. Early-Stop & Restart Criteria
+If: looping corrections, anchor ambiguity persists, or progress stalls for 2 consecutive batches → perform one consolidated restart: restate refined goal, prune obsolete steps, reissue scaffold. Prefer clean restart over incremental thrashing.
+
+### 8. Integrity & Safety Hooks
+- Anchor uniqueness: validate before edit (delegate details to Anchor Robustness Protocol; do not restate here).
+- Scope discipline: only referenced files/paths unless explicit user expansion.
+- Permissions: honor `opencode.json`; do not expose internal permission logic in user-facing plan.
+- No hidden state: all decisions visible in handoff bullets.
+
+### 9. Autonomy Rules
+- After initial checklist approval proceed through all steps; only pause for: permission denial, unexpected destructive diff, or unresolved ambiguity impacting correctness/safety.
+- Combine low-impact cosmetic edits into nearest functional step; avoid noise commits.
+
+### 10. Final Summaries (Idle Notification Integration)
+- Last line of any response needing user input must follow: `*Summary: <≤10 words>*` (or underscore variant) and be context-specific.
+- Do not echo examples; produce real state.
+
+### 11. Preambles & Answer Style Tags
+These semantic tags retained for downstream tooling; content consolidated above.
+
+<tool_preambles>
+- One-sentence goal before first tool use.
+- 3–6 step plan (only current scope); update only on change.
+- Succinct progress notes after each batch (what changed, what next).
+- Conclude with “Done vs Next” micro line before awaiting input.
+</tool_preambles>
+
+<answer_style>
+- Low verbosity for narration/status; high for code/diffs.
+- Reasoning effort: minimal (simple) vs high (complex/refactor/security).
+- Prefer clarity over cleverness; minimal necessary comments.
+- Always honor permission gating in opencode.json.
+</answer_style>
+
+### 12. Deprecated Sections Removed
+Replaced: "Execution Rules", "⚡ Autonomous Execution Rules", "Todo List Management", "Communication Guidelines", duplicate Minimal Reasoning sections. Refer here instead.
 
 ---
 
