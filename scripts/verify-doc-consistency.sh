@@ -3,6 +3,7 @@
 # Guardrail: prevent reintroduction of deprecated legacy section headings.
 # Fails (non-zero exit) if forbidden legacy headings/phrases are present
 # outside the consolidated unified protocol context in opencode/AGENTS.md.
+# Archive directory (docs/archive) is ignored to allow historical backups containing these headings.
 # Cross-platform: uses POSIX shell + grep; optionally uses rg if available for speed.
 #
 # Forbidden exact heading lines (case-sensitive):
