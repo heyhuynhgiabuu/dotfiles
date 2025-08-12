@@ -161,7 +161,8 @@ Reference: These maxims apply throughout all workflow steps and quality standard
 Always check for project-level overrides in `AGENTS.md` before applying these rules.
 
 - Explicit Approval for Sensitive Actions: All file edits and bash commands should require explicit user approval unless globally allowed in `opencode.json`.
-- Permission-Driven Automation: Agents must check and respect the `permission` settings in `opencode.json` before performing any edit or shell operation.
+- Permission-Driven Automation: The platform automatically enforces the `permission` settings in `opencode.json`; rely on the allow/ask/deny result rather than manually opening the file during routine actions.
+- Manual Config Inspection: Only read `opencode/opencode.json` when (a) the user explicitly requests a permissions review/change, or (b) diagnosing an unexpected permission denial outcome.
 - Recommended Defaults for Safety:
   - `"edit": "ask"` — Prompt before editing files.
   - `"bash": "ask"` — Prompt before running shell commands.
@@ -186,8 +187,9 @@ Example:
 
 - Do not include explicit permission-check steps in user-visible plans.
 - Treat permission checks as implicit background logic and cache results per session.
-- Read `opencode/opencode.json` only for the first privileged action, upon a permissions error, or when explicitly instructed by the user.
-- Pure read/search actions may proceed without checks; perform a lightweight check once before the first privileged action and reuse thereafter.
+- Do not manually open `opencode/opencode.json` during normal operation; permission gating is handled automatically by the platform.
+- Read the file only on explicit user request or when investigating an unexpected denial (e.g., an action denied when configuration suggests allow).
+- Pure read/search actions never require a permission prompt; privileged actions will auto-trigger gating as needed.
 
 ---
 
