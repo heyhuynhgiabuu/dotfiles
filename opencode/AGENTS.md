@@ -249,7 +249,7 @@ Policy Interaction Points (cross‑references, not restatements):
 - Minimal Reasoning Scaffold: Supplies seed for initial SCS.
 - Checklist & Summarization Protocol (Unified): Provides formal checklist formatting consumed here.
 - Dynamic Chunking & Hierarchical Context Management + Context Engineering Protocol: Define summarization hierarchy; this policy adds numeric triggers.
-- Autonomous Execution Rules: Parallelization respects threshold logic above.
+- Autonomy Rules (Unified Protocol §9): Parallelization respects SCS threshold criteria defined here.
 
 Escalation & Safeguards:
 - Escalate to context agent if: (a) SCS >80% threshold twice within 4 batches, or (b) required future phase estimated to add ≥50% SCS.
@@ -404,7 +404,7 @@ Final Outcome:
 
 ## Checklist & Summarization Protocol (Unified)
 
-Consolidates and replaces prior: Execution Rules, Autonomous Execution Rules, Todo List Management, Communication Guidelines, Preamble Discipline, Plan Hygiene, and duplicate Minimal Reasoning Scaffold blocks. (Former section titles removed to eliminate drift.)
+Consolidates and replaces prior deprecated execution, autonomy, checklist, communication, preamble, and plan hygiene sections plus duplicate minimal reasoning scaffold blocks (legacy section titles removed to eliminate drift).
 
 ### 1. Applicability
 - Simple tasks (≤2 steps): Execute directly; skip checklist & scaffold.
@@ -478,7 +478,7 @@ These semantic tags retained for downstream tooling; content consolidated above.
 </answer_style>
 
 ### 12. Deprecated Sections Removed
-Replaced: "Execution Rules", "⚡ Autonomous Execution Rules", "Todo List Management", "Communication Guidelines", duplicate Minimal Reasoning sections. Refer here instead.
+Replaced legacy sections (execution rules, autonomous execution rules, todo list management, communication guidelines, duplicate minimal reasoning scaffolds). This unified protocol is now authoritative.
 
 ---
 
@@ -566,7 +566,7 @@ fzf
 
 <!-- Deprecated block removed: Content consolidated into 'Checklist & Summarization Protocol (Unified)'. Idle Notification Protocol retained below. -->
 
-<!-- (Former heading: ## ⚡ Autonomous Execution Rules) -->
+<!-- Former heading pruned: historical "Autonomous Execution Rules" section has been merged into unified protocol -->
 
 ### State Management for Complex Tasks
 
@@ -589,7 +589,9 @@ fzf
 - Batch independent tool calls once; avoid serializing unnecessarily.
 - Stop early when unique anchors are identified or top hits converge (~70%).
 
-### Todo List Management
+### (Integrated) Checklist Management
+
+<!-- Legacy heading renamed; content retained but concept now governed by Checklist & Summarization Protocol (Unified) -->
 
 Create markdown todo lists in this format:
 
