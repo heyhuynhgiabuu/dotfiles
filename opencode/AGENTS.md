@@ -114,7 +114,7 @@ Note: “Do not ask for confirmation” never overrides Permissions “ask”. A
   - Use the 13-step structured workflow (see below).
   - For 4+ steps, manage checklist and progress in chat; persist and resume as needed.
 
-Minimal Reasoning Scaffold: For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge (~70%). See Execution Rules for details.
+Minimal Reasoning Scaffold: For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge (~70%). See Checklist & Summarization Protocol (Unified) for details.
 
 ---
 
@@ -564,7 +564,9 @@ fzf
 
 ---
 
-## ⚡ Autonomous Execution Rules
+<!-- Deprecated block removed: Content consolidated into 'Checklist & Summarization Protocol (Unified)'. Idle Notification Protocol retained below. -->
+
+<!-- (Former heading: ## ⚡ Autonomous Execution Rules) -->
 
 ### State Management for Complex Tasks
 
