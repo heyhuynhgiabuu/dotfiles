@@ -32,6 +32,7 @@
   },
   "agent": {
     "beta": {
+      "description": "Beta agent for testing new features",
       "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.2,
@@ -42,8 +43,12 @@
       }
     },
     "build": {
+      "description": "Build agent for compiling and packaging code",
       "mode": "primary",
-      "model": "github-copilot/gpt-4.1",
+      "model": "github-copilot/gpt-5",
+      "reasoningEffort": "medium",
+      "textVerbosity": "medium",
+      "reasoningSummary": "auto",
       "temperature": 0.1,
       "prompt": "{file:./prompts/build-prompt.md}",
       "tools": {
@@ -52,6 +57,7 @@
       }
     },
     "plan": {
+      "description": "Plan agent for project planning and task management",
       "model": "github-copilot/gpt-4.1",
       "mode": "primary",
       "temperature": 0.1,

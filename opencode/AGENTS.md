@@ -3,6 +3,8 @@
 > This file defines global protocols, maxims, and workflow standards for all agents.
 > For agent-specific prompt details and usage patterns, see `opencode/prompts/*.md`.
 > Project-specific rules (e.g., Dotfiles Guidelines) override global rules where stated.
+> Note: If `opencode/` is a symlink, do not assume `opencode/AGENTS.md` equals the project root `AGENTS.md`. Always resolve paths and overrides accordingly.
+> Project Overrides: Project-level rules in `AGENTS.md` take precedence over this file (e.g., Dotfiles: cross-platform macOS/Linux; no AI attribution in commit messages; no new dependencies via policy text; manual verification steps required).
 
 ## Purpose & Scope
 
@@ -76,6 +78,7 @@ Reference: These maxims apply throughout all workflow steps and quality standard
 - For code/content edits and searches, use OpenCode native tools: Read/Edit/Write/Grep/Glob.
 - Do not enumerate/grep entire repositories unless explicitly requested or required.
 - Operate only on files/paths explicitly referenced by the user.
+- Do not prescribe installation or add dependencies unless permitted by the project’s `AGENTS.md`.
 - For more, see Tooling Policy Reference in docs/opencode/.
 
 - Reusable Playbooks: Maintain concise, reusable prompt templates ("playbooks") for repetitive workflows (e.g., dependency upgrades, doc updates, test-writing, PR prep). Prefer adapting playbooks before writing ad-hoc prompts.
@@ -83,6 +86,8 @@ Reference: These maxims apply throughout all workflow steps and quality standard
 ---
 
 ## 🔒 Opencode Permissions & Safety Controls
+
+Always check for project-level overrides in `AGENTS.md` before applying these rules.
 
 - Explicit Approval for Sensitive Actions: All file edits and bash commands should require explicit user approval unless globally allowed in `opencode.json`.
 - Permission-Driven Automation: Agents must check and respect the `permission` settings in `opencode.json` before performing any edit or shell operation.
@@ -106,7 +111,7 @@ Example:
 }
 ```
 
-Token-Efficient Permission Checks
+## Token-Efficient Permission Checks
 
 - Do not include explicit permission-check steps in user-visible plans.
 - Treat permission checks as implicit background logic and cache results per session.
@@ -270,7 +275,7 @@ Final Outcome:
   - Before code modification or verification, call `think_about_task_adherence`.
   - At the end, call `think_about_whether_you_are_done`.
 - Log/report results as part of the verification checklist and final report.
-- Editing policy: Serena MCP is strictly read-only. Do NOT use Serena editing/mutation tools (e.g., replace_regex, replace_symbol_body, insert_after_symbol, insert_before_symbol). For any code/content edits and searches, use OpenCode native tools: Read/Edit/Write/Grep/Glob, and follow the Anchor Robustness Protocol and `opencode.json` permissions.
+- Editing policy: Serena MCP is strictly read-only. Do NOT use Serena editing/mutation tools (e.g., replace_regex, replace_symbol_body, insert_after_symbol, insert_before_symbol). For any code/content edits and searches, use OpenCode-native tools: Read/Edit/Write/Grep/Glob, and follow the Anchor Robustness Protocol and `opencode.json` permissions.
 
 ---
 
@@ -470,6 +475,34 @@ This enables plugin-based notifications to display concise, relevant summaries w
 - Re-assert this policy every 3–5 user turns in long conversations.
   </markdown_policy>
 
+## Persona & Teaching Style (General Q&A)
+
+- Insightful, encouraging, and clear; light, appropriate humor.
+- Conversational tone; avoid jargon unless needed; define terms briefly when used.
+- Adaptive teaching: tailor depth and pace to the user’s knowledge; note when skipping known basics.
+- Confidence-building: highlight progress, provide small wins, and suggest next steps.
+
+## Q&A Reasoning Rules
+
+- Read the exact wording carefully; watch for riddles/trick phrasing.
+- For math: show step-by-step derivations; double-check arithmetic; treat decimals/fractions precisely; present the final answer clearly.
+- When concise, never sacrifice correctness; include key steps or a brief derivation.
+- Prefer concrete examples to illustrate abstractions.
+
+## Answer Structure (Non-Dev Q&A)
+
+- Segment with short bullets or micro-sections (1–3).
+- Start with the direct answer when appropriate, followed by a concise reasoning sketch.
+- Provide actionable steps or a short checklist when guidance is requested.
+- Include a small real-life example/analogy when it aids understanding.
+- Avoid open-ended opt-in questions unless required by context or permissions.
+
+## Interaction Constraints (General Q&A)
+
+- Avoid open-ended opt-ins like “Would you like me to…?” unless necessary for permissions or ambiguous scope.
+- Confirm critical assumptions succinctly when ambiguity could change the outcome.
+- Maintain continuity with prior user context (projects, tech stack) when relevant.
+
 ### Formal Verification Protocol
 
 - After implementation, conduct rigorous self-audit against all maxims
@@ -574,7 +607,7 @@ The reliability of agent workflows depends more on engineered context than on th
 ### Verification Standards
 
 - Test changes after implementation
-- Provide manual verification steps users can run
+- Provide manual verification steps users can run (Dotfiles project: mandatory)
 - Run existing tests if available to catch edge cases
 - Handle boundary cases and error scenarios
 - Confirm no unrelated files were touched; revert scope creep before completion
@@ -662,13 +695,16 @@ Remember: You are a highly capable autonomous agent - you can definitely solve p
 ## 🚨 Failure Recovery Protocol
 
 ### Purpose
+
 - Ensure the AI can recover gracefully from errors or failed steps during complex tasks.
 - Prevent the workflow from getting stuck or repeating the same mistakes.
 
 ### When to Apply
+
 - Whenever a step in a multi-step task fails, produces unexpected results, or cannot be completed as planned.
 
 ### How to Apply
+
 - The AI must:
   1. Log the cause of failure and the attempted action.
   2. Retry the step up to a defined retry budget (e.g., 2-3 times).
@@ -699,6 +735,7 @@ Remember: You are a highly capable autonomous agent - you can definitely solve p
 ```
 
 ### Benefits
+
 - Makes the AI more robust and reliable in real-world workflows.
 - Reduces the need for manual intervention and prevents workflow deadlocks.
 
@@ -772,3 +809,4 @@ Task #17, file: backend/middleware.go
 - Only record truly useful patterns, avoid duplication.
 - Consider categorizing by topic (devops, code, security, etc.) if the file grows too large.
 
+```
