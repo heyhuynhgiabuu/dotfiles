@@ -51,7 +51,7 @@ Legend:
 
 1. Routing Order: general → (luigi optional) → alpha → specialized agents → reviewer/security → summarizer/context.
 2. Blueprint First: If ambiguity > moderate or multiple domains involved, invoke luigi to produce a NOOP plan; alpha executes orchestration after approval.
-3. Parallelization: Alpha may fan out independent specialized agents only when shared context slice < 2k tokens and no ordering dependency; otherwise sequence.
+3. Parallelization: Alpha may fan out independent specialized agents only when Shared Context Slice (SCS) ≤ SCS_THRESHOLD (default 2k) and no ordering dependency; otherwise sequence. (See Token & Context Budget Policy)
 4. Context Chaining: Each agent must emit: Objective, Inputs Consumed, Outputs Produced, Next Agent Hint. Context agent compresses after every 2–3 hops.
 5. Escalation Triggers: Security risk → security; Architectural divergence → reviewer; Legacy hotspot → legacy; Network anomalies → network; Performance regression → troubleshooter.
 6. Tier Adjustment: Start minimal; elevate to standard when branching logic emerges; elevate to high only for: multi-phase refactor, security-critical path, or cross-cutting architecture change.
