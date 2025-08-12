@@ -20,30 +20,31 @@ Defines unified, cross-project agent protocols for safety, consistency, and auto
 
 ### Subagent Role Matrix
 
-| Agent | Purpose (1-line) | Invoke When (Primary Trigger) | Avoid / Not For | Reasoning Tier | Proactive? | Escalates To |
-|-------|------------------|-------------------------------|-----------------|----------------|-----------|--------------|
-| general | Default executor for simple, low-risk tasks | 1–2 step, low ambiguity requests | Deep analysis, multi-phase orchestration | minimal→standard | No | alpha |
-| alpha | Orchestrates multi-phase, multi-agent workflows | Complex missions needing phased delegation | Direct feature implementation of atomic task | high | Yes (when complexity detected) | reviewer / security |
-| luigi | NOOP planning sentinel & safe pause | High ambiguity; need blueprint before action | Actual execution, trivial edits | minimal | No | alpha |
-| analyst | Analyze context mgmt, caching, billing | Need insight into token/billing/caching behavior | Direct code edits or orchestration | standard→high | Yes (periodic audits) | optimizer / alpha |
-| context | Maintain & distribute long-running session state | Project/session >10k tokens or multi-agent continuity | Feature implementation, security audit | standard | Yes (size/complexity threshold) | alpha |
-| database-expert | SQL, schema, migrations, DB tuning | Schema design, query perf, migration planning | General app logic, frontend UI | standard→high | No (on-demand) | reviewer |
-| devops | Docker, IaC, deployment, pipeline optimization | Infra changes, container/pipeline review | Pure business logic or minor code tweaks | standard→high | Yes (security/perf infra gaps) | security / reviewer |
-| frontend-uiux | UI components, UX flows, accessibility | Building/auditing frontend or UX design | Backend-only tasks, DB tuning | standard | No | reviewer |
-| language | Idiomatic multi-language coding & refactors | Need advanced code patterns or optimization | Pure orchestration, UX design | standard→high | No | reviewer |
-| legacy | Incremental modernization & migration | Refactoring outdated frameworks / tech debt | Greenfield feature w/ modern stack | high | Yes (legacy hotspots) | security / reviewer |
-| navigator | Locate files, patterns, architecture mapping | Need codebase discovery / pattern search | Writing new features directly | minimal→standard | No | alpha |
-| network | Connectivity, DNS, SSL/TLS, traffic analysis | Network issues, perf/bottleneck, load balancing | Pure application logic | standard→high | Yes (network anomalies) | security |
-| optimizer | Developer experience & workflow improvements | Friction, slow onboarding, repetitive toil | Product feature implementation | standard | Yes (detecting DX friction) | reviewer |
-| prompt | Optimize LLM/system prompts | Creating/improving AI prompts/pipelines | General coding, infra changes | standard→high | No | reviewer |
-| researcher | Deep web/code research & synthesis | Unknown tech, ambiguous domain questions | Simple known tasks | standard→high | Yes (when gaps found) | alpha |
-| reviewer | Code/API/architecture quality & security review | Post-implementation audit needed | Planning or execution of changes | standard | Yes (after major change) | security (if issues) |
-| security | Rapid security audits & vuln detection | New backend code, pre-deploy, config changes | Non-security cosmetic review | high | Yes (critical paths) | reviewer / alpha |
-| summarizer | Concise actionable session/project summaries | Need continuity or handoff clarity | Deep technical refactor | minimal→standard | Yes (handoffs) | context |
-| troubleshooter | Debugging, performance, incident response | Failures, outages, perf regressions | Planned feature dev | standard→high | Yes (incident triggers) | reviewer / optimizer |
-| writer | Essential dev-focused documentation | After new feature/refactor needing docs | Brainstorming architecture plans | minimal→standard | Yes (post-change) | reviewer |
+| Agent           | Purpose (1-line)                                 | Invoke When (Primary Trigger)                         | Avoid / Not For                              | Reasoning Tier   | Proactive?                      | Escalates To         |
+| --------------- | ------------------------------------------------ | ----------------------------------------------------- | -------------------------------------------- | ---------------- | ------------------------------- | -------------------- |
+| general         | Default executor for simple, low-risk tasks      | 1–2 step, low ambiguity requests                      | Deep analysis, multi-phase orchestration     | minimal→standard | No                              | alpha                |
+| alpha           | Orchestrates multi-phase, multi-agent workflows  | Complex missions needing phased delegation            | Direct feature implementation of atomic task | high             | Yes (when complexity detected)  | reviewer / security  |
+| luigi           | NOOP planning sentinel & safe pause              | High ambiguity; need blueprint before action          | Actual execution, trivial edits              | minimal          | No                              | alpha                |
+| analyst         | Analyze context mgmt, caching, billing           | Need insight into token/billing/caching behavior      | Direct code edits or orchestration           | standard→high    | Yes (periodic audits)           | optimizer / alpha    |
+| context         | Maintain & distribute long-running session state | Project/session >10k tokens or multi-agent continuity | Feature implementation, security audit       | standard         | Yes (size/complexity threshold) | alpha                |
+| database-expert | SQL, schema, migrations, DB tuning               | Schema design, query perf, migration planning         | General app logic, frontend UI               | standard→high    | No (on-demand)                  | reviewer             |
+| devops          | Docker, IaC, deployment, pipeline optimization   | Infra changes, container/pipeline review              | Pure business logic or minor code tweaks     | standard→high    | Yes (security/perf infra gaps)  | security / reviewer  |
+| frontend-uiux   | UI components, UX flows, accessibility           | Building/auditing frontend or UX design               | Backend-only tasks, DB tuning                | standard         | No                              | reviewer             |
+| language        | Idiomatic multi-language coding & refactors      | Need advanced code patterns or optimization           | Pure orchestration, UX design                | standard→high    | No                              | reviewer             |
+| legacy          | Incremental modernization & migration            | Refactoring outdated frameworks / tech debt           | Greenfield feature w/ modern stack           | high             | Yes (legacy hotspots)           | security / reviewer  |
+| navigator       | Locate files, patterns, architecture mapping     | Need codebase discovery / pattern search              | Writing new features directly                | minimal→standard | No                              | alpha                |
+| network         | Connectivity, DNS, SSL/TLS, traffic analysis     | Network issues, perf/bottleneck, load balancing       | Pure application logic                       | standard→high    | Yes (network anomalies)         | security             |
+| optimizer       | Developer experience & workflow improvements     | Friction, slow onboarding, repetitive toil            | Product feature implementation               | standard         | Yes (detecting DX friction)     | reviewer             |
+| prompt          | Optimize LLM/system prompts                      | Creating/improving AI prompts/pipelines               | General coding, infra changes                | standard→high    | No                              | reviewer             |
+| researcher      | Deep web/code research & synthesis               | Unknown tech, ambiguous domain questions              | Simple known tasks                           | standard→high    | Yes (when gaps found)           | alpha                |
+| reviewer        | Code/API/architecture quality & security review  | Post-implementation audit needed                      | Planning or execution of changes             | standard         | Yes (after major change)        | security (if issues) |
+| security        | Rapid security audits & vuln detection           | New backend code, pre-deploy, config changes          | Non-security cosmetic review                 | high             | Yes (critical paths)            | reviewer / alpha     |
+| summarizer      | Concise actionable session/project summaries     | Need continuity or handoff clarity                    | Deep technical refactor                      | minimal→standard | Yes (handoffs)                  | context              |
+| troubleshooter  | Debugging, performance, incident response        | Failures, outages, perf regressions                   | Planned feature dev                          | standard→high    | Yes (incident triggers)         | reviewer / optimizer |
+| writer          | Essential dev-focused documentation              | After new feature/refactor needing docs               | Brainstorming architecture plans             | minimal→standard | Yes (post-change)               | reviewer             |
 
 Legend:
+
 - Reasoning Tier guidance: minimal (fast path), standard (balanced), high (deep analysis). Escalate tier only when ambiguity/risk justifies cost.
 - Proactive? = Should agent be invoked without explicit user request when trigger conditions are auto-detected.
 
@@ -63,21 +64,25 @@ Legend:
 ---
 
 ### Luigi Agent (Planning Sentinel)
+
 Purpose: Produce a structured multi-phase blueprint (NOOP only) for high-ambiguity or high-risk tasks before any tool or edit actions.
 
 When to Invoke (Trigger Criteria):
+
 - Ambiguous multi-step request lacking clear phase boundaries
 - Cross-agent orchestration needed (multiple specialized roles)
 - Broad refactor / security-sensitive change needing rollback matrix first
 - High-risk operations where a risk & rollback table is prerequisite
 
 Never Invoke (Anti-Patterns):
+
 - Simple ≤2 step tasks
 - Tasks already in active execution (post-plan)
 - Trivial doc / config edits
 - Pure research not requiring phased execution
 
 Output Contract:
+
 - Return only `[NOOP]` plus a structured plan containing: mission synthesis, ordered phase breakdown, risk & rollback matrix, delegation map (agent → phase), guardrails / escalation notes.
 
 Escalation Flow:
@@ -139,6 +144,18 @@ KISS + Safety + Autonomous Excellence: Simple solutions, reversible actions, aut
 - Consistency: Reuse existing project patterns, libraries, and architectural choices
 
 Reference: These maxims apply throughout all workflow steps and quality standards. Avoid repeating them in other sections—refer to this list as needed.
+
+## Quality Standards (Condensed)
+
+- Security: No plaintext secrets; least privilege; validate external inputs early; sanitize/log conservatively; escalate on potential secret exposure.
+- Cross-Platform: All scripts/config must run on macOS & Linux (avoid macOS-only flags like `sed -i` without portable form; prefer POSIX sh; guard platform-specific code paths).
+- Minimal Complexity: Choose the smallest stable solution; defer abstractions until duplication emerges (≥3 occurrences) or explicit scalability need.
+- Verification: Always provide manual verification steps; re-read files after edit; confirm anchor uniqueness pre-edit.
+- Purity & Cleanup: Remove dead code, stale docs, superseded plan blocks immediately; never leave TODOs without owner/context.
+- Consistency: Follow existing naming, tool choices (`rg`, `fd`, `bat`, `sd`, `jq`, `delta`, `fzf`), and formatting patterns.
+- Performance & Context Efficiency: Avoid unnecessary large reads; compress context per triggers before expansion.
+- Resilience: Anticipate failure modes (permissions, ambiguous anchors, token bursts) and apply Failure Recovery Recap.
+
 
 ---
 
@@ -208,6 +225,7 @@ Example:
 Purpose: Resolve forward reference from Multi-Context Orchestration Guidelines (#3) and standardize when to parallelize, summarize, compress, or escalate based on live context/token utilization without duplicating existing summarization protocols.
 
 Key Concepts:
+
 - Shared Context Slice (SCS): Minimal token subset all concurrently active agents MUST share (objective, current phase plan, open risks, active anchors). Excludes historical chatter already summarized.
 - SCS_THRESHOLD (default: 2000 tokens): Upper bound for safe parallel fan‑out (see Guideline #3). Adjustable only via Change Control (below).
 - Active Working Set (AWS): Full token span currently kept in the conversation window (SCS + supplemental details).
@@ -218,6 +236,7 @@ Key Concepts:
 - Delta Payload: Net new tokens introduced by the last batch (post-compression).
 
 Parallelization Criteria (applies before launching independent specialized agents):
+
 1. SCS size ≤ SCS_THRESHOLD (2000 default).
 2. Predicted aggregate Delta Payload for parallel branch set ≤ 40% of remaining threshold.
 3. No unresolved ordering dependencies (data or decision).
@@ -225,12 +244,14 @@ Parallelization Criteria (applies before launching independent specialized agent
 5. Compression backlog < 2 events (i.e., no more than one deferred compression trigger outstanding).
 
 Measurement & Instrumentation:
+
 - Track (a) SCS size, (b) AWS size, (c) Delta Payload per batch, (d) Compression Events count.
 - After each batch: recompute SCS by extracting: active mission, current phase checklist slice, open risks, unresolved decisions, anchors.
 - Predict Token Burst = sum(estimated sizes of planned file reads + agent prompts) – budget remaining.
 - Abort fan‑out if predicted SCS post‑merge > 90% of threshold.
 
 Summarization & Compression Triggers (fire smallest satisfying tier; multiple may coalesce into a single event):
+
 1. Post‑Phase Boundary (always).
 2. SCS > 70% of SCS_THRESHOLD → Micro or Phase summary (whichever yields ≥12% SCS reduction).
 3. AWS contains ≥25% Context Debt (heuristic: duplicated plan versions, superseded reasoning) → compress.
@@ -240,6 +261,7 @@ Summarization & Compression Triggers (fire smallest satisfying tier; multiple ma
 7. Emergency: If SCS projected > threshold, immediate targeted pruning of stale anchors then summarize.
 
 Reduction Strategies (ordered preference):
+
 1. Deduplicate unchanged plan / checklist blocks (keep latest only).
 2. Collapse verbose reasoning paragraphs into bullet outcome lines.
 3. Abstract repeated file path references into a short anchor index.
@@ -248,24 +270,28 @@ Reduction Strategies (ordered preference):
 6. Replace large code excerpts with hash + line span + diff-only anchors (retain security-sensitive snippets verbatim).
 
 Policy Interaction Points (cross‑references, not restatements):
+
 - Minimal Reasoning Scaffold: Supplies seed for initial SCS.
 - Checklist & Summarization Protocol (Unified): Provides formal checklist formatting consumed here.
 - Dynamic Chunking & Hierarchical Context Management + Context Engineering Protocol: Define summarization hierarchy; this policy adds numeric triggers.
 - Autonomy Rules (Unified Protocol §9): Parallelization respects SCS threshold criteria defined here.
 
 Escalation & Safeguards:
+
 - Escalate to context agent if: (a) SCS >80% threshold twice within 4 batches, or (b) required future phase estimated to add ≥50% SCS.
 - Escalate to alpha if parallelization repeatedly denied (≥3 times) due to Context Debt >30%.
 - Escalate to user ONLY when compression would drop semantically necessary unresolved details (edge case).
 - Fallback Compression (when urgent) applies in sequence: remove duplicate plans → collapse reasoning → trim unchanged code blocks → macro summarize earliest resolved phases.
 
 SCS_THRESHOLD Change Control:
+
 - Default 2000; proposals must cite 7‑day median SCS utilization, max SCS Δ, and parallelization denial rate.
 - Raise when median SCS >75% AND denial rate >30%.
 - Lower when median SCS <40% AND >2 macro summaries/week are no‑ops.
 - Adjustment process: propose → pilot on ≥3 complex tasks → record metrics → adopt or revert.
 
-Implementation Quick Checklist (internal reference):
+Implementation Quick Checklist (internal reference – not user-facing):
+
 - [ ] Recompute SCS each batch
 - [ ] Predict burst before large reads
 - [ ] Evaluate triggers
@@ -274,6 +300,7 @@ Implementation Quick Checklist (internal reference):
 - [ ] Log compression event (tier, tokens saved)
 
 Non-Goals:
+
 - Not a duplication of summarization mechanics already defined elsewhere.
 - Not optimizing for absolute minimal spend at the cost of decision quality.
 - Not forcing early summarization when AWS growth is stable and low.
@@ -406,80 +433,162 @@ Final Outcome:
 
 ## Checklist & Summarization Protocol (Unified)
 
-Consolidates and replaces prior deprecated execution, autonomy, checklist, communication, preamble, and plan hygiene sections plus duplicate minimal reasoning scaffold blocks (legacy section titles removed to eliminate drift).
+Consolidates and replaces prior deprecated execution, autonomy, checklist, communication, preamble, and plan hygiene sections plus duplicate minimal reasoning scaffold blocks (legacy section titles removed to eliminate drift). For explicit summary line formatting rules see the Idle Notification Protocol section below.
 
 ### 1. Applicability
+
 - Simple tasks (≤2 steps): Execute directly; skip checklist & scaffold.
 - Complex tasks (≥3 steps) or multi-phase scope: Use this protocol end‑to‑end.
 
 ### 2. Minimal Reasoning Scaffold (Pre-Tool Preamble)
+
 Provide exactly once before first tool batch (or when materially changed):
+
 1. One-sentence goal restatement.
 2. 3–5 bullet actionable micro-plan (only current phase; no speculative later phases).
 3. State intended batching (what tools, why) and expected stop condition (unique anchor, diff presence, etc.).
 4. Omit if task is simple fast-path.
-Update ONLY when plan changes; otherwise do not repost unchanged plan.
+   Update ONLY when plan changes; otherwise do not repost unchanged plan.
 
 ### 3. Checklist Construction
+
 - Format: fenced markdown code block; each line: `- [ ] Step N: Imperative, concise outcome`.
 - Use phases optionally: `### Phase X` headings inside the fenced block (keep terse).
 - Steps must be SMART enough to verify; avoid vague verbs ("handle", "update") without objects.
 - Maintain ordering by dependency; append new steps instead of rewriting history when scope legitimately expands.
 
 ### 4. Progress Lifecycle
+
 - After completing a step (or coherent batch) mark `[x]` and show ONLY the updated checklist (fenced) plus a micro handoff summary (see §6).
 - Do NOT reprint unchanged checklist.
 - Never pause for confirmation after approval unless permissions or ambiguity force clarification.
 
 ### 5. Tool Batching & Early Stop
+
 - Batch independent reads/searches together; serialize only when later steps depend on earlier outputs.
 - Stop search when: (a) unique anchor confirmed OR (b) top ~70% hits converge OR (c) additional results are redundant.
 - Retry a failing batch at most once with adjusted parameters (anchor expansion, alternative pattern). Then escalate (clarify, fallback, or luigi plan) if still blocked.
 
 ### 6. Handoff & Summarization Cadence
+
 Every state change (batch completion, phase end) emit 3–7 bullets:
+
 - Objective segment addressed
 - Actions executed (concise verbs)
 - Key results / diffs / anchors validated
 - Risks or deviations encountered & mitigations
 - Next planned action (single decisive step) OR decision fork
-Include a final line summary per Idle Notification Protocol (see §10) when awaiting user input.
+  Include a final line summary per Idle Notification Protocol (see §10) when awaiting user input.
 
 ### 7. Early-Stop & Restart Criteria
+
 If: looping corrections, anchor ambiguity persists, or progress stalls for 2 consecutive batches → perform one consolidated restart: restate refined goal, prune obsolete steps, reissue scaffold. Prefer clean restart over incremental thrashing.
 
 ### 8. Integrity & Safety Hooks
+
 - Anchor uniqueness: validate before edit (delegate details to Anchor Robustness Protocol; do not restate here).
 - Scope discipline: only referenced files/paths unless explicit user expansion.
 - Permissions: honor `opencode.json`; do not expose internal permission logic in user-facing plan.
 - No hidden state: all decisions visible in handoff bullets.
 
 ### 9. Autonomy Rules
+
 - After initial checklist approval proceed through all steps; only pause for: permission denial, unexpected destructive diff, or unresolved ambiguity impacting correctness/safety.
 - Combine low-impact cosmetic edits into nearest functional step; avoid noise commits.
 
 ### 10. Final Summaries (Idle Notification Integration)
+
 - Last line of any response needing user input must follow: `*Summary: <≤10 words>*` (or underscore variant) and be context-specific.
 - Do not echo examples; produce real state.
 
+### Idle Notification Protocol
+
+Defines mandatory final summary line format when awaiting user input.
+
+Rules:
+
+1. Position: MUST be the last non-empty line of the response.
+2. Prefix: Either `*Summary:` or `_Summary:` (asterisk or underscore style permitted; tools must accept both).
+3. Content: ≤10 words, concrete & state-specific (no placeholders like "Awaiting input" alone).
+4. Scope: Reflects the most recent completed action + the immediate next expected action or waiting condition.
+5. Uniqueness: Avoid repeating the identical summary consecutively unless state truly unchanged.
+6. Prohibited: Filler words, examples from docs, or generic phrases (e.g., "Task done" without context).
+7. Multi-request Responses: If no user input required, omit the summary line entirely.
+8. Error State: If blocked, include concise cause (e.g., "Need permission for edit").
+
+Extraction Guidance (for tooling):
+
+- Scan last 5 lines in reverse for regex: `^[*_]Summary:\s*(.+)$`.
+- Reject if content matches /await(ing)? input/i without additional context.
+- Truncate internal storage to first 140 characters.
+
+Examples (valid):
+_Summary: Edited AGENTS.md added idle protocol_
+_Summary: Waiting user to approve doc changes_
+
+Example (invalid):
+_Summary: Awaiting input_
+
+### Communication & Handoff Guidelines (Concise)
+
+#### Failure Recovery Recap (Playbook)
+1. Stall Detection: Two consecutive batches without checklist advancement → restart minimal scaffold (retain objective).
+2. Anchor Integrity: Halt edits until a unique anchor or symbol path is confirmed; expand multi-line context up to 2 times.
+3. Permission Denial: Narrow file/command scope; retry once; if still denied, surface required permission change (no repeated attempts).
+4. Ambiguous Matches: Broaden search (symbol/grep) ≤2 iterations; if still non-unique escalate (luigi plan or user clarification).
+5. Token Burst Control: If projected AWS growth >15%, perform compression (dedupe → collapse → prune) before new large reads.
+6. Plan Divergence: Prune obsolete steps; micro-summarize retained decisions (≤50 tokens) before proceeding.
+7. Security Flag: Potential secret/injection/misconfig → pause; invoke security agent before continuation.
+8. Recurrent Failure: Same step fails twice after adjustments → luigi blueprint then alpha orchestrates.
+9. Post-Recovery Log: Record one-line cause + mitigation to prevent silent repetition.
+10. Retry Budget: Limit reattempt of same failing action to one adjusted retry; on second failure escalate (clarify, luigi plan, or specialized agent) instead of looping.
+
+
+Provides a compact pattern for consistent, low-noise interaction outputs (supplements §6 of Checklist & Summarization Protocol and the Idle Notification Protocol).
+
+Core Output Types:
+
+- Goal Restatement: Single sentence, present tense.
+- Micro-Plan: 3–5 bullets for current phase only (no future speculation).
+- Progress Handoff Bullets (order): Objective segment | Actions executed (verbs) | Key results / anchors | Risks/deviations + mitigation | Next step (imperative) or decision fork.
+- Checklist: Only reprint when state changes; mark completion with [x].
+- Final Summary Line: Required when awaiting user input; see Idle Notification Protocol.
+
+Rules & Style:
+
+- Do NOT duplicate unchanged plans; restate ONLY on material change.
+- Keep bullet verbs sharp: Gather, Read, Edit, Verify, Commit, Summarize.
+- Use past tense for results, imperative for next action.
+- Collapse trivial/no-op steps instead of emitting empty handoffs.
+- Surface blockers immediately with cause + intended remedy.
+- Exactly one \*Summary:/\_Summary: line when waiting; none otherwise.
+
+Failure/Restart Cue:
+
+- If two consecutive stalled batches (no progress), perform a scoped restart: refine goal, prune stale steps, issue fresh minimal scaffold.
+
 ### 11. Preambles & Answer Style Tags
+
 These semantic tags retained for downstream tooling; content consolidated above.
 
 <tool_preambles>
+
 - One-sentence goal before first tool use.
 - 3–6 step plan (only current scope); update only on change.
 - Succinct progress notes after each batch (what changed, what next).
 - Conclude with “Done vs Next” micro line before awaiting input.
-</tool_preambles>
+  </tool_preambles>
 
 <answer_style>
+
 - Low verbosity for narration/status; high for code/diffs.
 - Reasoning effort: minimal (simple) vs high (complex/refactor/security).
 - Prefer clarity over cleverness; minimal necessary comments.
 - Always honor permission gating in opencode.json.
-</answer_style>
+  </answer_style>
 
 ### 12. Deprecated Sections Removed
+
 Replaced legacy sections (execution rules, autonomous execution rules, todo list management, communication guidelines, duplicate minimal reasoning scaffolds). This unified protocol is now authoritative.
 
 ---
@@ -566,19 +675,11 @@ fzf
 
 ---
 
-<!-- Deprecated block removed: Content consolidated into 'Checklist & Summarization Protocol (Unified)'. Idle Notification Protocol retained below. -->
-
-<!-- Former heading pruned: historical "Autonomous Execution Rules" section has been merged into unified protocol -->
-
 ### State Management for Complex Tasks
 
 - For tasks requiring 4+ steps, the checklist and progress MUST be managed directly in the conversation (chat).
 - Workflow: Post a markdown checklist in the chat → Execute each step → Mark each step as complete in the chat → Repeat until all steps are done
 - Autonomous Execution: Once the checklist is posted and approved in the chat, the agent must autonomously execute the entire plan without stopping for further approval after each step.
-
-<!--
-Canonical blocks for <tool_preambles>, <answer_style>, <minimal_reasoning_scaffold>, and Idle Notification Protocol are now defined in the Unified Protocol and referenced by prompts. All duplicate or legacy versions have been removed for clarity and deduplication. For checklist, communication, and reasoning scaffold rules, see the "Checklist & Summarization Protocol (Unified)" and "Minimal Reasoning Scaffold" sections above. For notification summary formatting, see "Idle Notification Protocol." For SCS, AWS, Context Debt, Token Burst, and Delta Payload definitions, see the new Glossary below.
--->
 
 ## Glossary
 
@@ -592,4 +693,23 @@ Canonical blocks for <tool_preambles>, <answer_style>, <minimal_reasoning_scaffo
 
 **Delta Payload:** Net new tokens introduced by the last batch (post-compression).
 
-*For all checklist, communication, and reasoning scaffold rules, see the "Checklist & Summarization Protocol (Unified)" and "Minimal Reasoning Scaffold" sections above. For notification summary formatting, see "Idle Notification Protocol."*
+_For all checklist, communication, and reasoning scaffold rules, see the "Checklist & Summarization Protocol (Unified)" and "Minimal Reasoning Scaffold" sections above. For notification summary formatting, see "Idle Notification Protocol."_
+
+### Memory Use & Criteria
+
+Use contextual memory only when all apply:
+1. Durable Value: Benefit expected beyond current task (multi-session workflow, recurring policy, architectural decision).
+2. Reusability: Pattern/procedure applicable to ≥2 future scenarios.
+3. Compression Benefit: Storing externally reduces Active Working Set or prevents repetition.
+
+Avoid storing: transient diffs, single-use reasoning, ephemeral numeric metrics, or speculative ideas without decision.
+
+Memory Insertion Guidelines: Summarize to minimal actionable bullet form; omit verbose rationale; include date + purpose tag.
+
+### Hierarchical Context Bridge
+
+At each phase boundary emit the smallest summary tier preserving the Shared Context Slice (objective, active checklist slice, open risks, anchors); escalate to Macro only when AWS > 8000 tokens or compression triggers (context debt ≥25% or predicted burst >15%) fire; always prune context debt before expansion.
+
+**Context as API Principle:** Treat context (SCS + AWS deltas) as a formal interface: define required inputs, emit structured outputs, and avoid leaking internal intermediate reasoning beyond what downstream agents need.
+
+

@@ -54,17 +54,46 @@ const plugin: Plugin = async (ctx) => {
  */
 function getIdleSummary(text: string | null) {
   if (!text) return;
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  if (lines.length === 0) return;
-  const lastLine = lines[lines.length - 1];
-  const match = lastLine.match(/^([*_])Summary:\s*(.*?)\1?$/);
-  if (match) {
-    return match[2].trim();
+  const MAX_SCAN = 10;
+  const MAX_LEN = 140;
+
+  const rawLines = text.split(/\r?\n/);
+  // Trim trailing blank lines
+  while (rawLines.length && rawLines[rawLines.length - 1].trim() === "") rawLines.pop();
+  if (!rawLines.length) return;
+
+  // Accept simple variants: optional bullet / decoration, case-insensitive, colon or dash family
+  const summaryRegex = /^(?:[*_`\-\u2022]\s*)?(?:Summary|SUMMARY|summary)\s*[:\-–—]\s*(.+)$/;
+
+  const isReject = (s: string) =>
+    !s ||
+    s.length < 2 ||
+    /^(awaiting|waiting|placeholder|example|tbd|n\/a)$/i.test(s) ||
+    /^[\.!]+$/.test(s);
+
+  const truncate = (s: string) => (s.length > MAX_LEN ? s.slice(0, MAX_LEN - 3).trimEnd() + "..." : s);
+
+  // Backward scan last N non-empty lines (skip fences/headings/rules)
+  let scanned = 0;
+  for (let i = rawLines.length - 1; i >= 0 && scanned < MAX_SCAN; i--, scanned++) {
+    const line = rawLines[i].trim();
+    if (!line) continue;
+    if (/^```/.test(line)) continue;     // skip code fence markers
+    if (/^#/.test(line)) continue;       // skip headings
+    if (/^---+$/.test(line)) continue;   // skip horizontal rules
+
+    const m = line.match(summaryRegex);
+    if (m) {
+      const content = m[1].trim().replace(/[*_`"]+$/,'');
+      if (!isReject(content)) {
+        return truncate(content);
+      }
+    }
   }
-  if (text.length > 80) {
-    return text.slice(0, 80) + "...";
-  }
-  return text;
+
+  // Fallback: last non-empty line truncated to legacy 80 char style
+  const fallback = rawLines.slice().reverse().find(l => l.trim())!.trim();
+  return fallback.length > 80 ? fallback.slice(0, 80) + "..." : fallback;
 }
 
 
