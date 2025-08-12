@@ -11,3 +11,6 @@
 # Deprecated files and old configurations
 deprecated/
 *.class
+
+# Serena memory artifacts
+.serena/memories/

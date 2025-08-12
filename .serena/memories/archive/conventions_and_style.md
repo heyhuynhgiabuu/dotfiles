@@ -1,5 +1,0 @@
-- Nguyên tắc KISS (Keep It Simple, Stupid) được tuân thủ.
-- Cấu hình phải tương thích trên cả macOS và Linux.
-- Sử dụng Lua cho cấu hình Neovim (.lua), shell script cho các kịch bản (.sh, .zsh).
-- Các commit không được chứa thông báo "Generated with opencode".
-- Cấu trúc thư mục hiện có phải được tôn trọng.
