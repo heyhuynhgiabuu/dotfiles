@@ -46,9 +46,10 @@
       "description": "Build agent for compiling and packaging code",
       "mode": "primary",
       "model": "github-copilot/gpt-5",
-      "reasoningEffort": "medium",
+      "reasoningEffort": "high",
       "textVerbosity": "medium",
       "reasoningSummary": "auto",
+      "include": ["reasoning.encrypted_content"],
       "temperature": 0.1,
       "prompt": "{file:./prompts/build-prompt.md}",
       "tools": {
