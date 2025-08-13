@@ -72,8 +72,26 @@ else
   esac
 fi
 ```
-
 Supported managers (priority order): Homebrew (macOS), apt, yum, pacman.
+
+### ffmpeg Helper & Transcript Extraction
+Use scripts/ffmpeg-helper.sh to detect (and optionally install) ffmpeg or extract plaintext from an SRT file.
+
+Examples:
+```bash
+# Detect only
+./scripts/ffmpeg-helper.sh
+
+# Auto-install (if supported manager present)
+./scripts/ffmpeg-helper.sh --auto-install
+
+# Extract transcript text from SRT
+./scripts/ffmpeg-helper.sh video.en.srt video.txt --extract
+```
+By default subtitle artifacts (*.srt, *.vtt) are ignored via .gitignore.
+
+### Neovim Performance Guards
+Large or extreme long-line files can degrade performance. The custom module custom/perf-guards.lua automatically disables expensive features (Treesitter highlight/indent, semantic tokens) for files >200KB, and applies more aggressive simplifications >1MB.
 
 ## 💻 Development Workflows
 

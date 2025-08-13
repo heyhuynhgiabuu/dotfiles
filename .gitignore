@@ -14,3 +14,7 @@ deprecated/
 
 # Serena memory artifacts
 .serena/memories/
+
+# Transcripts and subtitle artifacts (ignored by default)
+*.srt
+*.vtt

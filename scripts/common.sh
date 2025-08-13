@@ -94,34 +94,41 @@ detect_package_manager() {
     fi
 }
 
-# Cross-platform package installation
+# Cross-platform package installation (refactored to use detect_package_manager)
 install_package() {
     local package="$1"
-    local brew_package="${2:-$package}"
-    
-    if [[ "$PLATFORM" == "macos" ]]; then
-        if cmd_exists brew; then
+    local alt_name="${2:-$package}"
+
+    local manager
+    manager=$(detect_package_manager)
+    if [[ "$manager" == "unknown" ]]; then
+        log_error "No supported package manager found. Please install $package manually."
+        return 1
+    fi
+
+    case "$manager" in
+        brew)
+            if ! cmd_exists brew; then
+                log_error "Homebrew not found. Please install $package manually."
+                return 1
+            fi
             log_info "Installing $package via Homebrew..."
-            brew install "$brew_package"
-        else
-            log_error "Homebrew not found. Please install $package manually."
-            return 1
-        fi
-    elif [[ "$PLATFORM" == "linux" ]]; then
-        if cmd_exists apt-get; then
+            # Attempt install, fallback to upgrade if already installed
+            brew install "$alt_name" || brew upgrade "$alt_name" || true
+            ;;
+        apt)
             log_info "Installing $package via apt..."
-            sudo apt-get update && sudo apt-get install -y "$package"
-        elif cmd_exists yum; then
+            sudo apt-get update -y && sudo apt-get install -y "$package"
+            ;;
+        yum)
             log_info "Installing $package via yum..."
             sudo yum install -y "$package"
-        elif cmd_exists pacman; then
+            ;;
+        pacman)
             log_info "Installing $package via pacman..."
             sudo pacman -S --noconfirm "$package"
-        else
-            log_error "No supported package manager found. Please install $package manually."
-            return 1
-        fi
-    fi
+            ;;
+    esac
 }
 
 # Node.js and NVM utilities

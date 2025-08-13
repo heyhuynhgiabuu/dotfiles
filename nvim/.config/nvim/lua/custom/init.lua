@@ -17,7 +17,8 @@ local optional_modules = {
   "custom.help-floating",
   "custom.snipets",
   "custom.vim-helpers",
-  "custom.browser-preview"
+  "custom.browser-preview",
+  "custom.perf-guards", -- performance safeguards for large / long-line files
 }
 
 for _, module in ipairs(optional_modules) do
