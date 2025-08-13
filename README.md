@@ -87,6 +87,9 @@ Risk Tag Principles:
 - missing_test_delta: Significant additions without related test change
 - performance / security / high_churn / high_concentration: Contextual heuristics
 
+CI Gating (GitHub Actions):
+A workflow (.github/workflows/review-scope.yml) runs the suite on pull requests. It always uploads artifacts and fails the job (exit 2) when gating risks are detected (security / large_change / missing_test_delta / hotspot). This provides early signal without blocking artifact visibility.
+
 Extensibility Ideas (future):
 - --strict flag in review-scope.sh to exit non-zero on security or missing_test_delta findings
 - Optional CI job invoking the suite for PR gating

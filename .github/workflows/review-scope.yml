@@ -1,0 +1,88 @@
+name: review-scope
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/review-scope.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+  # (No write permissions required; gating occurs via exit code.)
+
+jobs:
+  review-scope:
+    name: Generate Review Artifacts & Gate Risks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for diff base)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine base branch
+        id: base
+        run: |
+          # Use PR base if available, else default branch
+          BASE="${{ github.base_ref }}"
+          if [ -z "$BASE" ]; then BASE="${{ github.event.repository.default_branch }}"; fi
+          echo "Base branch: $BASE"
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch base branch
+        run: git fetch origin "${{ steps.base.outputs.base }}"
+
+      - name: Run review-scope (strict gating)
+        id: review
+        run: |
+          set +e
+          BASE="${{ steps.base.outputs.base }}"
+          echo "Running review-scope against base $BASE"
+          ./scripts/review-scope.sh --base "$BASE" --strict || RC=$?
+          RC=${RC:-0}
+          echo "Script exit code: $RC"
+          echo "exit_code=$RC" >> "$GITHUB_OUTPUT"
+          # Always continue to allow artifact upload & summary
+          exit 0
+
+      - name: Upload review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review_artifacts
+          path: review_artifacts
+          if-no-files-found: warn
+
+      - name: Job summary
+        if: always()
+        run: |
+          if [ -f review_artifacts/all.json ]; then
+            echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
+            echo "Base: ${ { steps.base.outputs.base } }" >> $GITHUB_STEP_SUMMARY  # NOTE: curly braces spaced to avoid template inside template; harmless if literal
+            jq '.summary | {file_count, risk_tag_counts, hotspot_count: (.hotspots|length), missing_test_delta_files: (.missing_test_delta_files|length)}' review_artifacts/all.json >> $GITHUB_STEP_SUMMARY || true
+            echo "\nArtifacts uploaded as 'review_artifacts'." >> $GITHUB_STEP_SUMMARY
+            if [ "${{ steps.review.outputs.exit_code }}" = "2" ]; then
+              echo "\n**GATING RISKS DETECTED** (exit code 2)." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
+            echo "No all.json produced (jq missing or script error)." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Evaluate gating result
+        if: always()
+        run: |
+          EC='${{ steps.review.outputs.exit_code }}'
+          if [ "$EC" != "0" ]; then
+            if [ "$EC" = "2" ]; then
+              echo "Gating risks detected (exit 2). Failing job." >&2
+              exit 2
+            else
+              echo "Script error (exit $EC)." >&2
+              exit 1
+            fi
+          fi
