@@ -49,17 +49,16 @@ is_test_file() {
 }
 
 # Build arrays
-code_files=()
-declare -A adds_map dels_map status_map
+code_files=""
 while IFS=$'\t' read -r adds dels path; do
   [ -z "$path" ] && continue
   status=$(echo "$changed_files" | awk -v p="$path" '$2==p {print $1}' | head -1)
   [ -z "$status" ] && status="M"
-  adds_map["$path"]="${adds//-/0}"; dels_map["$path"]="${dels//-/0}"; status_map["$path"]="$status"
+  adds=${adds//-/0}; dels=${dels//-/0}
   if ! is_test_file "$path"; then
     case "$path" in
       *.md|docs/*|*.yml|*.yaml|*.json|config/*|*.toml|Dockerfile*|ops/*|infra/*) ;; # skip non-code
-      *) code_files+=("$path") ;;
+      *) code_files+="$path"$'\n' ;;
     esac
   fi
 done <<<"$diff_numstat"
@@ -70,12 +69,15 @@ changed_test_files=$(echo "$changed_files" | awk '$1 ~ /[ACMDTRU]/ {print $2}' |
 first=true
 json_output="["
 md_rows=""
-for f in "${code_files[@]}"; do
-  adds=${adds_map[$f]:-0}; dels=${dels_map[$f]:-0}; st=${status_map[$f]:-M}
+echo "$code_files" | while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  # Recompute adds/dels/status from diff_numstat (avoid associative arrays)
+  adds=$(echo "$diff_numstat" | awk -v p="$f" -F '\t' '$3==p {print $1}' | head -1); adds=${adds//-/0}
+  dels=$(echo "$diff_numstat" | awk -v p="$f" -F '\t' '$3==p {print $2}' | head -1); dels=${dels//-/0}
+  st=$(echo "$changed_files" | awk -v p="$f" '$2==p {print $1}' | head -1); [ -z "$st" ] && st="M"
   base_name=$(basename "$f")
   core=${base_name%%.*}
   core=${core#test_}
-  # derive candidate test name patterns
   guess1="test_${base_name}"
   guess2="${core}_test"
   guess3="${core}_test.${base_name#*.}"
@@ -86,17 +88,16 @@ for f in "${code_files[@]}"; do
       related_changed=true; break
     fi
   done <<<"$changed_test_files"
-  risk_tags=()
-  if [ "$related_changed" = false ] && [ "$adds" -gt 30 ]; then risk_tags+=("missing_test_delta"); fi
-  # Build JSON arrays
+  risk_tag=""
+  if [ "$related_changed" = false ] && [ "$adds" -gt 30 ]; then risk_tag="missing_test_delta"; fi
   guesses_json="[\"$guess1\",\"$guess2\",\"$guess3\"]"
-  risks_json="[]"; if [ ${#risk_tags[@]} -gt 0 ]; then risks_json="[\"$(printf '%s" ,"' "${risk_tags[@]}" | sed 's/",$//')"]"; fi
+  risks_json="[]"; [ -n "$risk_tag" ] && risks_json="[\"$risk_tag\"]"
   entry=$(printf '{"file":"%s","adds":%s,"dels":%s,"status":"%s","test_changed":%s,"guessed_tests":%s,"risks":%s}' \
     "$f" "$adds" "$dels" "$st" "$related_changed" "$guesses_json" "$risks_json")
   if ! $first; then json_output+=" ,"; fi
   first=false
   json_output+="$entry"
-  md_risks="-"; [ ${#risk_tags[@]} -gt 0 ] && md_risks=$(printf '%s ' "${risk_tags[@]}" | sed 's/ *$//')
+  md_risks="-"; [ -n "$risk_tag" ] && md_risks="$risk_tag"
   md_rows+="| $f | $adds | $dels | $st | $related_changed | $md_risks |\n"
 
 done
