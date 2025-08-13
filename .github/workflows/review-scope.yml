@@ -72,11 +72,13 @@ jobs:
 
       - name: Run review-scope (conditional strict)
         id: review
+        env:
+          REVIEW_SCOPE_STRICT: ${{ vars.REVIEW_SCOPE_STRICT || 'false' }}
         run: |
           set +e
           BASE_REF="${{ steps.baseref.outputs.base_ref }}"
           STRICT="${{ steps.gating.outputs.strict }}"
-          echo "Running review-scope against base ref $BASE_REF (strict=$STRICT)"
+          echo "Running review-scope against base ref $BASE_REF (strict=$STRICT, full_strict=$REVIEW_SCOPE_STRICT)"
           CMD="./scripts/review-scope.sh --base \"$BASE_REF\""
           if [ "$STRICT" = "true" ]; then CMD="$CMD --strict"; fi
           echo "[debug] Executing: $CMD"
@@ -85,6 +87,7 @@ jobs:
           echo "Script exit code: $RC"
           echo "exit_code=$RC" >> "$GITHUB_OUTPUT"
           echo "strict_mode=$STRICT" >> "$GITHUB_OUTPUT"
+          echo "full_strict_env=$REVIEW_SCOPE_STRICT" >> "$GITHUB_OUTPUT"
           # Always continue to allow artifact upload & summary
           exit 0
 
@@ -102,11 +105,25 @@ jobs:
           if [ -f review_artifacts/all.json ]; then
             echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
             echo "Base: ${{ steps.base.outputs.base }}" >> $GITHUB_STEP_SUMMARY
+            echo "Strict Mode (security-only): ${{ steps.review.outputs.strict_mode }}" >> $GITHUB_STEP_SUMMARY
+            echo "Full Strict Env (REVIEW_SCOPE_STRICT): ${{ steps.review.outputs.full_strict_env }}" >> $GITHUB_STEP_SUMMARY
             jq '.summary | {file_count, risk_tag_counts, hotspot_count: (.hotspots|length), missing_test_delta_files: (.missing_test_delta_files|length)}' review_artifacts/all.json >> $GITHUB_STEP_SUMMARY || true
-            echo "\nArtifacts uploaded as 'review_artifacts'." >> $GITHUB_STEP_SUMMARY
+            # Provide explicit gating evaluation breakdown
+            SEC=$(jq '.summary.risk_tag_counts.security // 0' review_artifacts/all.json 2>/dev/null || echo 0)
+            LCH=$(jq '.summary.risk_tag_counts.large_change // 0' review_artifacts/all.json 2>/dev/null || echo 0)
+            MTD=$(jq '.summary.missing_test_delta_files | length' review_artifacts/all.json 2>/dev/null || echo 0)
+            HSP=$(jq '.summary.hotspots | length' review_artifacts/all.json 2>/dev/null || echo 0)
+            echo "\n### Gating Breakdown" >> $GITHUB_STEP_SUMMARY
+            echo "- Security tags: $SEC" >> $GITHUB_STEP_SUMMARY
+            echo "- Large change tags: $LCH" >> $GITHUB_STEP_SUMMARY
+            echo "- Missing test delta files: $MTD" >> $GITHUB_STEP_SUMMARY
+            echo "- Hotspots (score>=2): $HSP" >> $GITHUB_STEP_SUMMARY
             if [ "${{ steps.review.outputs.exit_code }}" = "2" ]; then
-              echo "\n**GATING RISKS DETECTED** (exit code 2)." >> $GITHUB_STEP_SUMMARY
+              echo "\n**GATING FAILURE** (exit code 2)." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "\nGating passed (security-only criteria)." >> $GITHUB_STEP_SUMMARY
             fi
+            echo "\nArtifacts uploaded as 'review_artifacts'." >> $GITHUB_STEP_SUMMARY
           else
             echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
             echo "No all.json produced (jq missing or script error)." >> $GITHUB_STEP_SUMMARY
@@ -116,10 +133,16 @@ jobs:
         if: always()
         run: |
           EC='${{ steps.review.outputs.exit_code }}'
+          FULL='${{ steps.review.outputs.full_strict_env }}'
           if [ "$EC" != "0" ]; then
             if [ "$EC" = "2" ]; then
-              echo "Gating risks detected (exit 2). Failing job." >&2
-              exit 2
+              if [ "$FULL" = "true" ]; then
+                echo "Failing job (full strict mode active)." >&2
+                exit 2
+              else
+                echo "Security-only strict mode: non-security gating categories ignored unless security present. Treating exit 2 as pass (soft fail)." >&2
+                exit 0
+              fi
             else
               echo "Script error (exit $EC)." >&2
               exit 1

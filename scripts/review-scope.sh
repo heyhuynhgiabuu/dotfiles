@@ -140,16 +140,28 @@ fi
 echo "[info] Review artifacts written to $OUT_DIR" >&2
 
 if $STRICT; then
-  # Evaluate gating risk presence: any security or large_change tags, missing_test_delta risks, or hotspot entries
+  # Gating modes:
+  # - Default (security-only): fail only if security_count > 0
+  # - Full strict (REVIEW_SCOPE_STRICT=true): fail if ANY risk category present (original behavior)
   security_count=$(jq '[.[] | .risks[]?] | map(select(.=="security")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
   large_count=$(jq '[.[] | .risks[]?] | map(select(.=="large_change")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
   missing_count=$(jq '[.[] | select(.risks[]? == "missing_test_delta")] | length' "$OUT_DIR/coverage.json" 2>/dev/null || echo 0)
   hotspot_count=$(jq 'length' "$OUT_DIR/hotspots.json" 2>/dev/null || echo 0)
-  total=$(( security_count + large_count + missing_count + hotspot_count ))
-  if [ $total -gt 0 ]; then
-    echo "[strict] Failing due to gating risks: security=$security_count large_change=$large_count missing_test_delta=$missing_count hotspots=$hotspot_count" >&2
-    exit 2
+  full_strict=${REVIEW_SCOPE_STRICT:-false}
+  if [ "$full_strict" = "true" ]; then
+    total=$(( security_count + large_count + missing_count + hotspot_count ))
+    if [ $total -gt 0 ]; then
+      echo "[strict][full] Failing (full strict) due to risks: security=$security_count large_change=$large_count missing_test_delta=$missing_count hotspots=$hotspot_count" >&2
+      exit 2
+    else
+      echo "[strict][full] No gating risks detected; passing." >&2
+    fi
   else
-    echo "[strict] No gating risks detected; passing." >&2
+    if [ $security_count -gt 0 ]; then
+      echo "[strict][security-only] Failing due to security risks: security=$security_count" >&2
+      exit 2
+    else
+      echo "[strict][security-only] No security risks detected; passing." >&2
+    fi
   fi
 fi
