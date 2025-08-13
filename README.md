@@ -163,7 +163,9 @@ To enable lean setups, the monolithic Brewfile is split into layers under `homeb
 - homebrew/Brewfile.min   — Minimal baseline (core shell + editor + terminal tooling)
 - homebrew/Brewfile.dev   — Development stack (languages, build tools, services, language servers)
 - homebrew/Brewfile.extra — Optional extras (fonts, large GUI/CLI set, niche tools)
-- homebrew/Brewfile.vscode — VSCode extensions layer (apply only if using VSCode)
+-   homebrew/Brewfile.vscode — VSCode extensions layer (apply only if using VSCode)
+-   homebrew/Brewfile.fonts  — Large Nerd Fonts layer (optional)
+
 
 Usage examples (apply in order as needed):
 ```bash
@@ -178,6 +180,9 @@ brew bundle --file=homebrew/Brewfile.extra
 
 # (Optional) Install VSCode extensions
 brew bundle --file=homebrew/Brewfile.vscode
+
+# (Optional) Install fonts
+brew bundle --file=homebrew/Brewfile.fonts
 ```
 Each file declares only the taps it needs. You can safely skip dev or extra on constrained machines.
 
@@ -190,7 +195,7 @@ To reproduce the core environment on macOS:
 # Review before execution (never blindly run on prod machines)
 brew bundle --file=homebrew/Brewfile
 ```
-Only install what you actually need; fonts / GUI casks are optional.
+Only install what you actually need; fonts / GUI casks are optional. For scripted automation use scripts/brew-apply-layer.sh which supports --dry-run and skips macOS-only casks on Linux.
 
 ### Routine Maintenance (Quarterly or After Issues)
 ```bash

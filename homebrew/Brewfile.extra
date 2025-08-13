@@ -31,24 +31,8 @@ brew "php@8.3"
 tap "sst/tap"
 brew "sst/tap/opencode"
 
-# Fonts (large; optional)
-cask "font-0xproto-nerd-font"
-cask "font-3270-nerd-font"
-cask "font-agave-nerd-font"
-cask "font-anonymice-nerd-font"
-cask "font-arimo-nerd-font"
-cask "font-aurulent-sans-mono-nerd-font"
-cask "font-bigblue-terminal-nerd-font"
-cask "font-bitstream-vera-sans-mono-nerd-font"
-cask "font-blex-mono-nerd-font"
-cask "font-caskaydia-cove-nerd-font"
-cask "font-caskaydia-mono-nerd-font"
-cask "font-code-new-roman-nerd-font"
-cask "font-comic-shanns-mono-nerd-font"
-cask "font-commit-mono-nerd-font"
-cask "font-cousine-nerd-font"
-cask "font-d2coding-nerd-font"
-cask "font-hack-nerd-font"
+# Fonts moved to separate layer: homebrew/Brewfile.fonts
+# Apply optionally via: brew bundle --file=homebrew/Brewfile.fonts
 
 # GUI / subscription
 cask "setapp"

@@ -383,21 +383,25 @@ verify_serena() {
     # Test configuration validation
     log_info "Validating configuration files..."
     
-    # Check YAML syntax
-    if command -v python3 >/dev/null 2>&1; then
-        if python3 -c "import yaml; yaml.safe_load(open('$CONFIG_FILE'))" 2>/dev/null; then
-            log_success "✓ serena_config.yaml syntax valid"
+    # Check YAML syntax (prefer yq if python3+PyYAML unavailable)
+    if command -v python3 >/dev/null 2>&1 && python3 -c "import yaml,sys" 2>/dev/null; then
+        if python3 - <<PYEOF 2>/dev/null; then
+import yaml,sys
+yaml.safe_load(open('$CONFIG_FILE'))
+yaml.safe_load(open('$PROJECT_FILE'))
+PYEOF
+            log_success "✓ YAML syntax valid (python3 + PyYAML)"
         else
-            log_error "✗ serena_config.yaml syntax invalid"
-            return 1
+            log_error "✗ YAML syntax invalid (python3)"; return 1
         fi
-        
-        if python3 -c "import yaml; yaml.safe_load(open('$PROJECT_FILE'))" 2>/dev/null; then
-            log_success "✓ project.yml syntax valid"
+    elif command -v yq >/dev/null 2>&1; then
+        if yq eval '.' "$CONFIG_FILE" >/dev/null 2>&1 && yq eval '.' "$PROJECT_FILE" >/dev/null 2>&1; then
+            log_success "✓ YAML syntax valid (yq)"
         else
-            log_error "✗ project.yml syntax invalid"
-            return 1
+            log_error "✗ YAML syntax invalid (yq)"; return 1
         fi
+    else
+        log_warn "⚠ No YAML validator (python3+PyYAML or yq) available; skipping syntax validation"
     fi
     
     # Test dashboard accessibility
