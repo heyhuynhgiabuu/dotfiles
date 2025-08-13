@@ -28,36 +28,63 @@ jobs:
         id: base
         run: |
           # Use PR base if available, else default branch
-          BASE="${{ github.base_ref }}"
-          if [ -z "$BASE" ]; then BASE="${{ github.event.repository.default_branch }}"; fi
-          echo "Base branch: $BASE"
-          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+            BASE="${{ github.base_ref }}"
+            if [ -z "$BASE" ]; then BASE="${{ github.event.repository.default_branch }}"; fi
+            echo "Base branch: $BASE"
+            echo "base=$BASE" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve base ref
+        id: baseref
+        run: |
+          RAW="${{ steps.base.outputs.base }}"
+          git fetch --quiet origin "$RAW" || true
+          if git rev-parse --verify "$RAW" >/dev/null 2>&1; then REF="$RAW";
+          elif git rev-parse --verify "origin/$RAW" >/dev/null 2>&1; then REF="origin/$RAW";
+          else REF="$RAW"; fi
+          echo "Resolved base ref: $REF";
+          echo "base_ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Determine strict gating
+        id: gating
+        run: |
+          STRICT=true
+          # Allow an opt-out label on the PR (e.g., allow-risk)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo '${{ toJson(github.event.pull_request.labels) }}' | grep -qi 'allow-risk' && STRICT=false || true
+          fi
+          echo "Strict gating: $STRICT"
+          echo "strict=$STRICT" >> "$GITHUB_OUTPUT"
 
       - name: Fetch base branch
         run: git fetch origin "${{ steps.base.outputs.base }}:${{ steps.base.outputs.base }}" || git fetch origin "${{ steps.base.outputs.base }}"
 
       - name: Debug base refs
         run: |
-          echo "[debug] Base ref: ${{ steps.base.outputs.base }}"
+          echo "[debug] Base (raw): ${{ steps.base.outputs.base }}"
+          echo "[debug] Base (resolved): ${{ steps.baseref.outputs.base_ref }}"
           echo "[debug] HEAD SHA: $(git rev-parse HEAD)"
-          echo "[debug] Verifying base ref presence (local then remote):"
-          git show-ref "refs/heads/${{ steps.base.outputs.base }}" || echo "[debug] Local branch not present"
-          git show-ref "refs/remotes/origin/${{ steps.base.outputs.base }}" || echo "[debug] Remote tracking ref missing (unexpected)"
-          echo "[debug] Attempting merge-base (local, fallback origin):"
-          git merge-base "${{ steps.base.outputs.base }}" HEAD || git merge-base "origin/${{ steps.base.outputs.base }}" HEAD || echo "[warn] merge-base failed"
-          echo "[debug] Preview of first 20 changed paths vs base (three-dot):"
-          git diff --name-only "${{ steps.base.outputs.base }}"...HEAD | head -20 || true
+          echo "[debug] Verifying resolved base ref presence:"
+          git rev-parse "${{ steps.baseref.outputs.base_ref }}" >/dev/null 2>&1 && echo "[debug] Resolved base ref reachable" || echo "[warn] Resolved base ref not directly reachable"
+          echo "[debug] Attempting merge-base with resolved ref:"
+          git merge-base "${{ steps.baseref.outputs.base_ref }}" HEAD || echo "[warn] merge-base failed"
+          echo "[debug] Preview of first 20 changed paths vs resolved base (three-dot):"
+          git diff --name-only "${{ steps.baseref.outputs.base_ref }}"...HEAD | head -20 || true
 
-      - name: Run review-scope (strict gating)
+      - name: Run review-scope (conditional strict)
         id: review
         run: |
           set +e
-          BASE="${{ steps.base.outputs.base }}"
-          echo "Running review-scope against base $BASE"
-          ./scripts/review-scope.sh --base "$BASE" --strict || RC=$?
+          BASE_REF="${{ steps.baseref.outputs.base_ref }}"
+          STRICT="${{ steps.gating.outputs.strict }}"
+          echo "Running review-scope against base ref $BASE_REF (strict=$STRICT)"
+          CMD="./scripts/review-scope.sh --base \"$BASE_REF\""
+          if [ "$STRICT" = "true" ]; then CMD="$CMD --strict"; fi
+          echo "[debug] Executing: $CMD"
+          eval "$CMD" || RC=$?
           RC=${RC:-0}
           echo "Script exit code: $RC"
           echo "exit_code=$RC" >> "$GITHUB_OUTPUT"
+          echo "strict_mode=$STRICT" >> "$GITHUB_OUTPUT"
           # Always continue to allow artifact upload & summary
           exit 0
 
