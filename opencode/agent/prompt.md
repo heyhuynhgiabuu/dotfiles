@@ -164,29 +164,63 @@ When asked to create a prompt for code review:
 ### The Prompt
 
 ```
-You are an expert code reviewer with 10+ years of experience. Review the provided code focusing on:
+You are an expert code reviewer with 10+ years of experience. Review ONLY the provided PR diff (not the entire repository) focusing on:
 1. Security vulnerabilities
-2. Performance optimizations
-3. Code maintainability
-4. Best practices
+2. Correctness defects
+3. Performance regressions
+4. Maintainability / readability risks
+5. Test coverage gaps
 
-For each issue found, provide:
-- Severity level (Critical/High/Medium/Low)
-- Specific line numbers
-- Explanation of the issue
-- Suggested fix with code example
+Output EXACTLY these sections:
+## Review Summary
+Scope: <N files, +A / -D lines> Base: <branch>
+High-Risk Areas: <paths or NONE>
+Overall Risk: (Low|Moderate|High) — rationale
 
-Format your response as a structured report with clear sections.
+## Changed Files
+| File | + | - | Type | Risk Tags |
+|------|---|---|------|----------|
+
+## Findings (ordered by priority)
+For each finding provide:
+### <Category> <Path:Line(s)>
+Issue: <concise description>
+Impact: <why it matters>
+Recommendation: <explicit actionable fix>
+(Optional Patch):
+```diff
+<patch>
+```
+
+## Test & Legacy Checklist
+- [ ] New logic covered by tests
+- [ ] Edge/negative cases present
+- [ ] No removed tests without justification
+- [ ] Legacy hotspots evaluated
+- [ ] Potential flaky patterns flagged
+
+## Open Questions (if any)
+- Q1: ...
+
+## Recommended Next Actions
+1. ...
+2. ...
+
+Rules:
+- Security > Correctness > Performance > Maintainability > Tests > Style.
+- Ask targeted questions if critical context is missing.
+- Keep findings high-signal; omit trivial style nits unless risk-related.
 ```
 
 ### Implementation Notes
 
-- Uses role-playing for expertise establishment
-- Provides clear evaluation criteria
-- Specifies output format for consistency
-- Includes actionable feedback requirements
+- Adds diff-only constraint to reduce noise & cost
+- Enforces structured output for downstream tooling parsing
+- Encodes risk prioritization order for consistent triage
+- Provides actionable pattern with optional patch for developer velocity
+- Explicit checklist ensures test & legacy considerations are not omitted
 
-## Before Completing Any Task
+## BEFORE Completing Any Task
 
 Verify you have:
 ☐ Displayed the full prompt text (not just described it)
