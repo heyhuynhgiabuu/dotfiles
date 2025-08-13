@@ -37,14 +37,25 @@ if [ -z "$BASE_BRANCH" ]; then
 fi
 [ -z "$BASE_BRANCH" ] && BASE_BRANCH="main" && log "[info] Falling back to base branch: main"
 
-# Ensure we have the latest base branch refs (best effort)
-if git rev-parse --verify "$BASE_BRANCH" >/dev/null 2>&1; then
-  git fetch --quiet origin "$BASE_BRANCH" || true
-fi
+# Resolve usable base ref (local branch or origin/<branch>)
+resolve_base_ref() {
+  local raw="$1"
+  # Attempt to fetch remote branch (best effort)
+  git fetch --quiet origin "$raw" || true
+  if git rev-parse --verify "$raw" >/dev/null 2>&1; then
+    echo "$raw"; return
+  fi
+  if git rev-parse --verify "origin/$raw" >/dev/null 2>&1; then
+    echo "origin/$raw"; return
+  fi
+  echo "$raw" # will likely fail later but surfaces intent
+}
+BASE_REF=$(resolve_base_ref "$BASE_BRANCH")
+log "[info] Using base ref: $BASE_REF (requested: $BASE_BRANCH)"
 
 # Collect diff stats (range three-dot to include merge base)
-numstat=$(git diff --numstat "$BASE_BRANCH"...HEAD || true)
-namestat=$(git diff --name-status "$BASE_BRANCH"...HEAD || true)
+numstat=$(git diff --numstat "$BASE_REF"...HEAD || true)
+namestat=$(git diff --name-status "$BASE_REF"...HEAD || true)
 
 if [ -z "$numstat" ]; then
   if $want_json; then echo '[]'; else echo "No changes detected against $BASE_BRANCH"; fi

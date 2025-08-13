@@ -31,13 +31,22 @@ if [ "$BASE" = "main" ] && command -v gh >/dev/null 2>&1; then
   [ -n "$detected" ] && BASE="$detected"
 fi
 
-if git rev-parse --verify "$BASE" >/dev/null 2>&1; then
-  git fetch --quiet origin "$BASE" || true
-else
-  echo "[info] Base branch $BASE not found locally; proceeding with local refs only" >&2
-fi
+# Resolve base ref (local or origin/<base>)
+resolve_base_ref() {
+  local raw="$1"
+  git fetch --quiet origin "$raw" || true
+  if git rev-parse --verify "$raw" >/dev/null 2>&1; then
+    echo "$raw"; return
+  fi
+  if git rev-parse --verify "origin/$raw" >/dev/null 2>&1; then
+    echo "origin/$raw"; return
+  fi
+  echo "$raw"
+}
+BASE_REF=$(resolve_base_ref "$BASE")
+echo "[info] Using base ref: $BASE_REF (requested: $BASE)" >&2
 
-diff_numstat=$(git diff --numstat "$BASE"...HEAD || true)
+diff_numstat=$(git diff --numstat "$BASE_REF"...HEAD || true)
 [ -z "$diff_numstat" ] && { echo '[]'; exit 0; }
 
 # We'll avoid bash arrays for risks accumulation by constructing JSON directly.
@@ -48,7 +57,7 @@ printf '['
 first_obj=true
 while IFS=$'\t' read -r adds dels path; do
   [ -z "$path" ] && continue
-  status=$(git diff --name-status "$BASE"...HEAD -- "$path" | awk '{print $1}' | head -1)
+  status=$(git diff --name-status "$BASE_REF"...HEAD -- "$path" | awk '{print $1}' | head -1)
   [ -z "$status" ] && status="M"
   case "$path" in
     *test*|tests/*|*_test.*) ftype="test" ;;

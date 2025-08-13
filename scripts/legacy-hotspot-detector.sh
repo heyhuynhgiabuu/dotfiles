@@ -30,11 +30,24 @@ if [ "$BASE" = "main" ] && command -v gh >/dev/null 2>&1; then
   [ -n "$detected" ] && BASE="$detected"
 fi
 
-git rev-parse --verify "$BASE" >/dev/null 2>&1 && git fetch --quiet origin "$BASE" || true
+# Resolve base ref (local or origin/<base>)
+resolve_base_ref() {
+  local raw="$1"
+  git fetch --quiet origin "$raw" || true
+  if git rev-parse --verify "$raw" >/dev/null 2>&1; then
+    echo "$raw"; return
+  fi
+  if git rev-parse --verify "origin/$raw" >/dev/null 2>&1; then
+    echo "origin/$raw"; return
+  fi
+  echo "$raw"
+}
+BASE_REF=$(resolve_base_ref "$BASE")
+echo "[info] Using base ref: $BASE_REF (requested: $BASE)" >&2
 
-diff_numstat=$(git diff --numstat "$BASE"...HEAD || true)
+diff_numstat=$(git diff --numstat "$BASE_REF"...HEAD || true)
 [ -z "$diff_numstat" ] && { echo '[]'; exit 0; }
-changed_files=$(git diff --name-status "$BASE"...HEAD || true)
+changed_files=$(git diff --name-status "$BASE_REF"...HEAD || true)
 changed_test_files=$(echo "$changed_files" | awk '$1 ~ /[ACMDTRU]/ {print $2}' | grep -iE 'test|_test\.|/tests?/|test_' || true)
 
 is_test_file() { local p="$1"; [[ "$p" =~ [Tt]est ]] || [[ "$p" == tests/* ]] || [[ "$p" == test/* ]] || [[ "$p" =~ _test\. ]] || [[ $(basename "$p") == test_* ]]; }
