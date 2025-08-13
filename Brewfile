@@ -1,7 +1,6 @@
 tap "brotherbui/homebrew"
 tap "daipeihust/tap"
 tap "homebrew/core"
-tap "killerkidbo/opencode-versions"
 tap "nextdns/tap"
 tap "nikitabobko/tap"
 tap "oven-sh/bun"
