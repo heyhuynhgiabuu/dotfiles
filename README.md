@@ -75,7 +75,7 @@ fi
 Supported managers (priority order): Homebrew (macOS), apt, yum, pacman.
 
 ### ffmpeg Helper & Transcript Extraction
-Use scripts/ffmpeg-helper.sh to detect (and optionally install) ffmpeg or extract plaintext from an SRT file.
+Use scripts/ffmpeg-helper.sh to detect (and optionally install) ffmpeg, diagnose Homebrew issues, suggest remediation steps, or extract plaintext from an SRT file.
 
 Examples:
 ```bash
@@ -85,9 +85,28 @@ Examples:
 # Auto-install (if supported manager present)
 ./scripts/ffmpeg-helper.sh --auto-install
 
+# Auto-install + aggressive conflict resolution
+./scripts/ffmpeg-helper.sh --auto-install --force-conflicts
+
+# Diagnostics (brew info / linkage / doctor summary)
+./scripts/ffmpeg-helper.sh --diagnose
+
+# Diagnostics + remediation suggestions (dry-run only)
+./scripts/ffmpeg-helper.sh --brew-fix --diagnose
+
 # Extract transcript text from SRT
 ./scripts/ffmpeg-helper.sh video.en.srt video.txt --extract
 ```
+Flags:
+- `--auto-install` Attempt installation using available package manager (brew/apt/yum/pacman)
+- `--force-conflicts` (brew) Force relink of curated + user-provided conflict formulas before reinstall
+- `--diagnose` Show truncated diagnostics (brew info/linkage/doctor) and conflict set considered
+- `--brew-fix` Print (dry-run) remediation command suggestions for dirty Homebrew repos and unlinked kegs
+- `--extract` Switch to SRT → plaintext transcript extraction mode (requires two positional args)
+
+Environment:
+- `FFMPEG_CONFLICTS` Space or comma separated extra formulas to include in conflict handling
+
 By default subtitle artifacts (*.srt, *.vtt) are ignored via .gitignore.
 
 ### Neovim Performance Guards
