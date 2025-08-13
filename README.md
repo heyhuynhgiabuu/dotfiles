@@ -156,6 +156,26 @@ Large or extreme long-line files can degrade performance. The custom module cust
 ## 🛡️ Homebrew Maintenance & Media Tooling
 
 ### Snapshot & Reproducibility
+
+#### Layered Brewfiles
+To enable lean setups, the monolithic Brewfile is split into layers:
+- Brewfile.min  — Minimal baseline (core shell + editor + terminal tooling)
+- Brewfile.dev  — Development stack (languages, build tools, services, language servers)
+- Brewfile.extra — Optional extras (fonts, large GUI/CLI set, VSCode extensions, niche tools)
+
+Usage examples (apply in order as needed):
+```bash
+# Minimal core
+brew bundle --file=Brewfile.min
+
+# Add development tooling
+brew bundle --file=Brewfile.dev
+
+# Add optional extras
+brew bundle --file=Brewfile.extra
+```
+Each file declares only the taps it needs. You can safely skip dev or extra on constrained machines.
+
 A locked snapshot of the current toolchain is stored in the Brewfile (generated via `brew bundle dump`). To reproduce the core environment on macOS:
 ```bash
 # Review before execution (never blindly run on prod machines)

@@ -1,0 +1,46 @@
+# Brewfile.dev
+# Development layer: language servers, build tools, services, extended CLI.
+# Apply after minimal: brew bundle --file=Brewfile.dev
+
+# Taps required for formulas here
+tap "homebrew/core"
+tap "daipeihust/tap"     # im-select
+
+# Language / build ecosystems
+brew "deno"
+brew "bun"
+brew "yarn"
+brew "php"
+brew "composer"
+brew "gradle"
+brew "maven"
+brew "mysql-client"
+
+# Language servers / formatters
+brew "jdtls"
+brew "lua-language-server"
+brew "google-java-format"
+brew "clang-format"
+
+# Additional dev utilities
+brew "autoenv"
+brew "entr"
+brew "iproute2mac"
+brew "pipx"
+brew "tree"
+brew "watchman"
+
+# Services / networking
+tap "nextdns/tap"
+brew "nextdns/tap/nextdns"
+brew "nginx"
+
+# Input method helper
+brew "daipeihust/tap/im-select"
+
+# Optional web tools
+brew "hugo"
+
+# Casks (developer tools)
+cask "devutils"
+cask "multipass"

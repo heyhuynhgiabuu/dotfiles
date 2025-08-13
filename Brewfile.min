@@ -1,0 +1,34 @@
+# Brewfile.min
+# Minimal baseline toolchain (core CLI + editor + terminal tooling).
+# Apply first: brew bundle --file=Brewfile.min
+
+# Required taps for minimal layer
+# (Keep taps lean; only those needed for listed formulas/casks)
+tap "homebrew/core"
+tap "nikitabobko/tap"   # aerospace cask
+
+# Core CLI & productivity
+brew "bat"
+brew "bottom"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "gh"
+brew "git-delta"
+brew "git-lfs"
+brew "go"
+brew "jq"
+brew "neovim"
+brew "ripgrep"
+brew "sd"
+brew "shfmt"
+brew "stow"
+brew "tmux"
+brew "wget"
+brew "yq"
+brew "zoxide"
+brew "zsh"
+
+# GUI / Terminal (macOS only casks; skipped on Linux automatically)
+cask "aerospace"
+cask "wezterm"
