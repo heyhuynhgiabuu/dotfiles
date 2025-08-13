@@ -138,7 +138,7 @@ This setup creates a powerful dual AI development environment:
 
 ```
 nvim/.config/nvim/lua/custom/plugins.lua  # Plugin configuration
-scripts/setup-augmentcode.sh              # Setup automation
+scripts/setup/setup-augmentcode.sh              # Setup automation
 docs/augmentcode-integration.md           # This documentation
 ```
 
@@ -260,7 +260,7 @@ This provides a sophisticated AI coding assistant that complements your existing
 ## Next Steps
 
 1. **Upgrade Node.js**: `brew install node` (if needed)
-2. **Run setup script**: `./scripts/setup-augmentcode.sh`
+2. **Run setup script**: `./scripts/setup/setup-augmentcode.sh`
 3. **Open Neovim**: `nvim` and run `:Lazy sync`
 4. **Sign in**: `:Augment signin`
 5. **Test features**: Try completions and `<leader>a` commands

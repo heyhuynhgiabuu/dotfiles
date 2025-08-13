@@ -4,9 +4,9 @@
 
 ### Installation & Setup
 ```bash
-./scripts/install.sh              # Initial setup
+./scripts/setup/install.sh        # Initial setup
 ./scripts/nvchad-health.sh        # Check integration health
-./scripts/update-nvchad.sh        # Update NvChad safely
+./scripts/setup/update-nvchad.sh  # Update NvChad safely
 ```
 
 ### NvChad Commands (in Neovim)
@@ -99,7 +99,7 @@ M.general = {
 ## 🐛 Troubleshooting
 
 ### Issue: Symlinks broken
-**Solution**: Run `./scripts/install.sh`
+**Solution**: Run `./scripts/setup/install.sh`
 
 ### Issue: Plugins not loading
 **Solution**: 
@@ -126,7 +126,7 @@ M.general = {
 - [ ] Check health: `:checkhealth`
 
 ### Monthly
-- [ ] Update NvChad: `./scripts/update-nvchad.sh`
+- [ ] Update NvChad: `./scripts/setup/update-nvchad.sh`
 - [ ] Review and commit custom config changes
 - [ ] Clean unused plugins: `:Lazy clean`
 

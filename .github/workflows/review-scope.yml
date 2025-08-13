@@ -79,7 +79,7 @@ jobs:
           BASE_REF="${{ steps.baseref.outputs.base_ref }}"
           STRICT="${{ steps.gating.outputs.strict }}"
           echo "Running review-scope against base ref $BASE_REF (strict=$STRICT, full_strict=$REVIEW_SCOPE_STRICT)"
-          CMD="./scripts/review-scope.sh --base \"$BASE_REF\""
+          CMD="./scripts/ci/review-scope.sh --base \"$BASE_REF\""
           if [ "$STRICT" = "true" ]; then CMD="$CMD --strict"; fi
           echo "[debug] Executing: $CMD"
           eval "$CMD" || RC=$?
