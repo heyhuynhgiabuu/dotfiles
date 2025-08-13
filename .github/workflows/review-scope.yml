@@ -36,6 +36,18 @@ jobs:
       - name: Fetch base branch
         run: git fetch origin "${{ steps.base.outputs.base }}:${{ steps.base.outputs.base }}" || git fetch origin "${{ steps.base.outputs.base }}"
 
+      - name: Debug base refs
+        run: |
+          echo "[debug] Base ref: ${{ steps.base.outputs.base }}"
+          echo "[debug] HEAD SHA: $(git rev-parse HEAD)"
+          echo "[debug] Verifying base ref presence (local then remote):"
+          git show-ref "refs/heads/${{ steps.base.outputs.base }}" || echo "[debug] Local branch not present"
+          git show-ref "refs/remotes/origin/${{ steps.base.outputs.base }}" || echo "[debug] Remote tracking ref missing (unexpected)"
+          echo "[debug] Attempting merge-base (local, fallback origin):"
+          git merge-base "${{ steps.base.outputs.base }}" HEAD || git merge-base "origin/${{ steps.base.outputs.base }}" HEAD || echo "[warn] merge-base failed"
+          echo "[debug] Preview of first 20 changed paths vs base (three-dot):"
+          git diff --name-only "${{ steps.base.outputs.base }}"...HEAD | head -20 || true
+
       - name: Run review-scope (strict gating)
         id: review
         run: |
