@@ -34,7 +34,7 @@ jobs:
           echo "base=$BASE" >> "$GITHUB_OUTPUT"
 
       - name: Fetch base branch
-        run: git fetch origin "${{ steps.base.outputs.base }}"
+        run: git fetch origin "${{ steps.base.outputs.base }}:${{ steps.base.outputs.base }}" || git fetch origin "${{ steps.base.outputs.base }}"
 
       - name: Run review-scope (strict gating)
         id: review
@@ -62,7 +62,7 @@ jobs:
         run: |
           if [ -f review_artifacts/all.json ]; then
             echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
-            echo "Base: ${ { steps.base.outputs.base } }" >> $GITHUB_STEP_SUMMARY  # NOTE: curly braces spaced to avoid template inside template; harmless if literal
+            echo "Base: ${{ steps.base.outputs.base }}" >> $GITHUB_STEP_SUMMARY
             jq '.summary | {file_count, risk_tag_counts, hotspot_count: (.hotspots|length), missing_test_delta_files: (.missing_test_delta_files|length)}' review_artifacts/all.json >> $GITHUB_STEP_SUMMARY || true
             echo "\nArtifacts uploaded as 'review_artifacts'." >> $GITHUB_STEP_SUMMARY
             if [ "${{ steps.review.outputs.exit_code }}" = "2" ]; then
