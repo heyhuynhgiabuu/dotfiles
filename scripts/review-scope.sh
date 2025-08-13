@@ -6,7 +6,7 @@
 #  - risk.json / risk.md
 #  - coverage.json / coverage.md
 #  - hotspots.json / hotspots.md
-# And an index.md summarizing key counts & high-risk candidates.
+# And an index.md summarizing key counts & high-risk candidates. (Upcoming: combined all.json unified schema)
 # Usage:
 #   ./scripts/review-scope.sh [--base <branch>] [--out <dir>] [--no-md]
 # Requirements: the sibling scripts (pre-review-manifest.sh, diff-risk-classifier.sh,

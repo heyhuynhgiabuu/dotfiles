@@ -82,7 +82,7 @@ risk_tags() {
   local p="$1" tags=()
   if grep -qiE '(auth|token|secret|crypto)' <<<"$p"; then tags+=(security); fi
   if grep -qiE '(legacy|deprecated|old)' <<<"$p"; then tags+=(legacy); fi
-  if grep -qiE '(perf|optimiz)' <<<"$p"; then tags+=(perf); fi
+  if grep -qiE '(perf|optimiz)' <<<"$p"; then tags+=(performance); fi
   if [[ $(type_for "$p") == test ]]; then tags+=(coverage); fi
   if [ ${#tags[@]} -eq 0 ]; then echo "-"; else printf '%s' "${tags[*]}"; fi
 }

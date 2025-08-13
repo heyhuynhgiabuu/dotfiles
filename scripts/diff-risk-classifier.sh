@@ -63,7 +63,7 @@ while IFS=$'\t' read -r adds dels path; do
   risks=()
   if echo "$path" | grep -qiE '(auth|token|secret|crypto|encrypt|jwt)'; then risks+=("security"); fi
   if echo "$path" | grep -qiE '(legacy|deprecated|old)'; then risks+=("legacy"); fi
-  if echo "$path" | grep -qiE '(perf|bench|optim)'; then risks+=("performance"); fi
+  if echo "$path" | grep -qiE '(perf|bench|optim)'; then risks+=("performance"); fi  # standardized naming (performance)
   if [ "$ftype" = test ]; then risks+=("coverage"); fi
   if echo "$path" | grep -qiE '(config|setting|env)'; then risks+=("config"); fi
   # Size-based heuristic
