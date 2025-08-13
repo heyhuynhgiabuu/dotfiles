@@ -87,7 +87,7 @@ for f in "${code_files[@]}"; do
     fi
   done <<<"$changed_test_files"
   risk_tags=()
-  if [ "$related_changed" = false ] && [ "$adds" -gt 30 ]; then risk_tags+=("missing-test-delta"); fi
+  if [ "$related_changed" = false ] && [ "$adds" -gt 30 ]; then risk_tags+=("missing_test_delta"); fi
   # Build JSON arrays
   guesses_json="[\"$guess1\",\"$guess2\",\"$guess3\"]"
   risks_json="[]"; if [ ${#risk_tags[@]} -gt 0 ]; then risks_json="[\"$(printf '%s" ,"' "${risk_tags[@]}" | sed 's/",$//')"]"; fi

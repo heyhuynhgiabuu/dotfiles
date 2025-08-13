@@ -3,7 +3,7 @@
 Use this template when automation reveals uncertainty that blocks a confident review decision. Select or adapt questions; remove those not relevant.
 
 ## When to Invoke
-- High-risk tag (security/large-change) without surrounding architectural context.
+- High-risk tag (security/large_change) without surrounding architectural context.
 - Legacy hotspot flagged with minimal existing tests.
 - Missing test delta on large addition.
 - Diff touches config/auth/crypto paths with unclear enforcement boundaries.

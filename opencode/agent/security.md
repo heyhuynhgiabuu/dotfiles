@@ -154,12 +154,12 @@ When performing security audits, use Serena's capabilities for precise code anal
 ## Automation Integration
 Use pre-review automation to enrich security triage while remaining diff-focused:
 - `scripts/pre-review-manifest.sh` – Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
-- `scripts/diff-risk-classifier.sh` – JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large-change`) with optional markdown via `--md`.
+- `scripts/diff-risk-classifier.sh` – JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
 
 Workflow:
 1. Run manifest first to visualize overall scope.
 2. Run classifier to feed tooling or sort by cumulative risk density.
-3. Prioritize inspection of files with `security` OR (`security` + `large-change`).
+3. Prioritize inspection of files with `security` OR (`security` + `large_change`).
 4. Escalate beyond diff-only if evidence of systemic vulnerability (repeat pattern across multiple files, secret sprawl, authentication bypass risk).
 
 Cross-Reference: See `reviewer` agent for diff-only protocol & global risk prioritization order (Security > Correctness > Performance > Maintainability > Tests > Style).

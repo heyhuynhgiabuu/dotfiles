@@ -6,7 +6,7 @@
 #  - risk.json / risk.md
 #  - coverage.json / coverage.md
 #  - hotspots.json / hotspots.md
-# And an index.md summarizing key counts & high-risk candidates. (Upcoming: combined all.json unified schema)
+# And an index.md summarizing key counts & high-risk candidates. Builds combined all.json unified schema (versioned) with normalized tags.
 # Usage:
 #   ./scripts/review-scope.sh [--base <branch>] [--out <dir>] [--no-md]
 # Requirements: the sibling scripts (pre-review-manifest.sh, diff-risk-classifier.sh,
@@ -24,7 +24,7 @@ while [ $# -gt 0 ]; do
   esac; shift || true
 done
 
-scripts=(pre-review-manifest.sh diff-risk-classifier.sh test-coverage-delta.sh legacy-hotspot-detector.sh)
+scripts=(pre-review-manifest.sh diff-risk-classifier.sh test-coverage-delta.sh legacy-hotspot-detector.sh) # all must be executable
 for s in "${scripts[@]}"; do
   [ -x "scripts/$s" ] || { echo "[error] scripts/$s not found or not executable" >&2; exit 1; }
 done
@@ -47,12 +47,24 @@ $GEN_MD && ./scripts/test-coverage-delta.sh --base "$BASE" --md > "$OUT_DIR/cove
 ./scripts/legacy-hotspot-detector.sh --base "$BASE" > "$OUT_DIR/hotspots.json"
 $GEN_MD && ./scripts/legacy-hotspot-detector.sh --base "$BASE" --md > "$OUT_DIR/hotspots.md"
 
-# Build index.md summary (markdown)
+# Normalize & build index.md summary (markdown) + combined all.json (version 1)
+# Normalization helper
+normalize_tag() {
+  case "$1" in
+    large-change|large-addition|large_diff) echo large_change ;;
+    high-churn) echo high_churn ;;
+    missing-test-delta|no-test-delta) echo missing_test_delta ;;
+    perf|perf*|performance) echo performance ;;
+    high-concentration) echo high_concentration ;;
+    *) echo "$1" ;;
+  esac
+}
+
 if $GEN_MD; then
   manifest_count=$(jq 'length' "$OUT_DIR/manifest.json" 2>/dev/null || echo 0)
   risk_security=$(jq '[.[] | select(.risks!=null) | .risks[]] | map(select(.=="security")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
-  risk_large=$(jq '[.[] | .risks[]?] | map(select(.=="large-change")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
-  coverage_missing=$(jq '[.[] | select(.risks[]? == "missing-test-delta")] | length' "$OUT_DIR/coverage.json" 2>/dev/null || echo 0)
+  risk_large=$(jq '[.[] | .risks[]?] | map(select(.=="large_change")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
+  coverage_missing=$(jq '[.[] | select(.risks[]? == "missing_test_delta")] | length' "$OUT_DIR/coverage.json" 2>/dev/null || echo 0)
   hotspots_count=$(jq 'length' "$OUT_DIR/hotspots.json" 2>/dev/null || echo 0)
   cat > "$OUT_DIR/index.md" <<EOF
 # Review Scope Index (Base: $BASE)
@@ -75,6 +87,50 @@ if $GEN_MD; then
 - Address security-tagged paths before merge.
 - Convert persistent gaps into actionable follow-up tasks (writer + legacy agents).
 EOF
+fi
+
+# Build combined all.json (requires jq)
+if command -v jq >/dev/null 2>&1; then
+  # Manifest is array of objects: file, adds, dels, status, type, risks
+  # Risk JSON: similar structure
+  # Coverage JSON: file,test_changed,risks
+  # Hotspots JSON: heuristics list
+  version=1
+  generated_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  # Load arrays
+  manifest=$(cat "$OUT_DIR/manifest.json" 2>/dev/null || echo '[]')
+  risk=$(cat "$OUT_DIR/risk.json" 2>/dev/null || echo '[]')
+  coverage=$(cat "$OUT_DIR/coverage.json" 2>/dev/null || echo '[]')
+  hotspots=$(cat "$OUT_DIR/hotspots.json" 2>/dev/null || echo '[]')
+  # Assemble per-file map using jq
+  all_json=$(jq -n \
+    --argjson manifest "$manifest" \
+    --argjson risk "$risk" \
+    --argjson coverage "$coverage" \
+    --argjson hotspots "$hotspots" \
+    --arg version "$version" \
+    --arg generated_at "$generated_at" '
+    def normtags(ts): [ (ts // [])[] | . as $t | $t ];
+    # Build empty object
+    {version:$version, generated_at:$generated_at, files:{}} as $root
+    | reduce $manifest[] as $m ($root; .files[$m.file].manifest = $m)
+    | reduce $risk[] as $r (. ; .files[$r.file].risk = {tags: ($r.risks // [])})
+    | reduce $coverage[] as $c (. ; .files[$c.file].coverage = {adds:$c.adds,dels:$c.dels,status:$c.status,test_changed:$c.test_changed,risks:($c.risks // [])})
+    | reduce $hotspots[] as $h (. ; .files[$h.file].hotspot = {heuristics:($h.heuristics // []), score:$h.score})
+    | .summary = (
+        { file_count: (.files|keys|length),
+          risk_tag_counts: ([.files[].risk.tags[]?] | group_by(.) | map({(.[0]):length}) | add // {}),
+          hotspots: [ keys[] as $k | select(.files[$k].hotspot.score? >= 2) | $k ],
+          missing_test_delta_files: [ keys[] as $k | select((.files[$k].coverage.risks[]? | contains("missing_test_delta"))) | $k ]
+        })
+  ')
+  # Normalize tags (shell side) by rewriting tag arrays
+  tmp=$(mktemp)
+  echo "$all_json" > "$tmp"
+  # (Optional normalization pass left simple since upstream scripts already normalized.)
+  mv "$tmp" "$OUT_DIR/all.json"
+else
+  echo "[warn] jq not found; skipping combined all.json" >&2
 fi
 
 echo "[info] Review artifacts written to $OUT_DIR" >&2

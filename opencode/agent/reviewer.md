@@ -104,11 +104,11 @@ If missing information prevents confident assessment:
 ## Automation Integration
 Use available scripts to accelerate structured diff triage:
 - `scripts/pre-review-manifest.sh` – Markdown Changed Files table (+/- lines, status, coarse risk tags). Add `--json` for machine output.
-- `scripts/diff-risk-classifier.sh` – JSON (and optional `--md`) richer heuristic risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large-change`).
+- `scripts/diff-risk-classifier.sh` – JSON (and optional `--md`) richer heuristic risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`).
 
 Suggested Flow:
 1. Run manifest → confirm scope & initial high-risk guess.
-2. Run classifier → sort files by (# risk tags, presence of `security`/`large-change`).
+2. Run classifier → sort files by (# risk tags, presence of `security`/`large_change`).
 3. Review high-risk subset first; downgrade/upgrade tags after inspecting actual diff.
 4. If systemic risk uncovered (repeated pattern), escalate to `security` or `legacy` agents.
 

@@ -67,7 +67,7 @@ while IFS=$'\t' read -r adds dels path; do
   if [ "$ftype" = test ]; then risks+=("coverage"); fi
   if echo "$path" | grep -qiE '(config|setting|env)'; then risks+=("config"); fi
   # Size-based heuristic
-  if [ "$adds" != "-" ] && [ "$adds" -gt 200 ]; then risks+=("large-change"); fi
+  if [ "$adds" != "-" ] && [ "$adds" -gt 200 ]; then risks+=("large_change"); fi
   # Deduplicate risks
   uniq_risks=()
   for r in "${risks[@]}"; do
