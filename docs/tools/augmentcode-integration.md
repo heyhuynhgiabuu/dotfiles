@@ -22,7 +22,7 @@ Run the setup script to check requirements:
 
 ```bash
 cd ~/dotfiles
-./scripts/setup-augmentcode.sh
+./scripts/setup/setup-augmentcode.sh
 ```
 
 This script will:

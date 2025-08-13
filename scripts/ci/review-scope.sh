@@ -8,7 +8,7 @@
 #  - hotspots.json / hotspots.md
 # And an index.md summarizing key counts & high-risk candidates. Builds combined all.json unified schema (versioned) with normalized tags.
 # Usage:
-#   ./scripts/review-scope.sh [--base <branch>] [--out <dir>] [--no-md] [--strict]
+#   ./scripts/ci/review-scope.sh [--base <branch>] [--out <dir>] [--no-md] [--strict]
 # Flags:
 #   --no-md   Suppress markdown (.md) generation
 #   --strict  Exit non-zero if gating risks detected (security, large_change, missing_test_delta, hotspot)
@@ -30,26 +30,26 @@ done
 
 scripts=(pre-review-manifest.sh diff-risk-classifier.sh test-coverage-delta.sh legacy-hotspot-detector.sh) # all must be executable
 for s in "${scripts[@]}"; do
-  [ -x "scripts/$s" ] || { echo "[error] scripts/$s not found or not executable" >&2; exit 1; }
+  [ -x "scripts/ci/$s" ] || { echo "[error] scripts/ci/$s not found or not executable" >&2; exit 1; }
 done
 
 mkdir -p "$OUT_DIR"
 
 # Manifest
-./scripts/pre-review-manifest.sh --json "$BASE" > "$OUT_DIR/manifest.json"
-$GEN_MD && ./scripts/pre-review-manifest.sh "$BASE" > "$OUT_DIR/manifest.md"
+./scripts/ci/pre-review-manifest.sh --json "$BASE" > "$OUT_DIR/manifest.json"
+$GEN_MD && ./scripts/ci/pre-review-manifest.sh "$BASE" > "$OUT_DIR/manifest.md"
 
 # Risk
-./scripts/diff-risk-classifier.sh --base "$BASE" > "$OUT_DIR/risk.json"
-$GEN_MD && ./scripts/diff-risk-classifier.sh --base "$BASE" --md > "$OUT_DIR/risk.md"
+./scripts/ci/diff-risk-classifier.sh --base "$BASE" > "$OUT_DIR/risk.json"
+$GEN_MD && ./scripts/ci/diff-risk-classifier.sh --base "$BASE" --md > "$OUT_DIR/risk.md"
 
 # Coverage delta
-./scripts/test-coverage-delta.sh --base "$BASE" > "$OUT_DIR/coverage.json"
-$GEN_MD && ./scripts/test-coverage-delta.sh --base "$BASE" --md > "$OUT_DIR/coverage.md"
+./scripts/ci/test-coverage-delta.sh --base "$BASE" > "$OUT_DIR/coverage.json"
+$GEN_MD && ./scripts/ci/test-coverage-delta.sh --base "$BASE" --md > "$OUT_DIR/coverage.md"
 
 # Hotspots
-./scripts/legacy-hotspot-detector.sh --base "$BASE" > "$OUT_DIR/hotspots.json"
-$GEN_MD && ./scripts/legacy-hotspot-detector.sh --base "$BASE" --md > "$OUT_DIR/hotspots.md"
+./scripts/ci/legacy-hotspot-detector.sh --base "$BASE" > "$OUT_DIR/hotspots.json"
+$GEN_MD && ./scripts/ci/legacy-hotspot-detector.sh --base "$BASE" --md > "$OUT_DIR/hotspots.md"
 
 # Normalize & build index.md summary (markdown) + combined all.json (version 1)
 # Normalization helper
