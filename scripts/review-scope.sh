@@ -8,17 +8,21 @@
 #  - hotspots.json / hotspots.md
 # And an index.md summarizing key counts & high-risk candidates. Builds combined all.json unified schema (versioned) with normalized tags.
 # Usage:
-#   ./scripts/review-scope.sh [--base <branch>] [--out <dir>] [--no-md]
+#   ./scripts/review-scope.sh [--base <branch>] [--out <dir>] [--no-md] [--strict]
+# Flags:
+#   --no-md   Suppress markdown (.md) generation
+#   --strict  Exit non-zero if gating risks detected (security, large_change, missing_test_delta, hotspot)
 # Requirements: the sibling scripts (pre-review-manifest.sh, diff-risk-classifier.sh,
 #               test-coverage-delta.sh, legacy-hotspot-detector.sh) present & executable.
 # Cross-platform (macOS/Linux).
 
 set -euo pipefail
-BASE="main"; OUT_DIR="review_artifacts"; GEN_MD=true
+BASE="main"; OUT_DIR="review_artifacts"; GEN_MD=true; STRICT=false
 while [ $# -gt 0 ]; do
   case "$1" in
     --base) shift; BASE="${1:-main}" ;;
     --out) shift; OUT_DIR="${1:-review_artifacts}" ;;
+    --strict) STRICT=true ;;
     --no-md) GEN_MD=false ;;
     *) echo "[warn] Unknown arg: $1" >&2 ;;
   esac; shift || true
@@ -134,3 +138,18 @@ else
 fi
 
 echo "[info] Review artifacts written to $OUT_DIR" >&2
+
+if $STRICT; then
+  # Evaluate gating risk presence: any security or large_change tags, missing_test_delta risks, or hotspot entries
+  security_count=$(jq '[.[] | .risks[]?] | map(select(.=="security")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
+  large_count=$(jq '[.[] | .risks[]?] | map(select(.=="large_change")) | length' "$OUT_DIR/risk.json" 2>/dev/null || echo 0)
+  missing_count=$(jq '[.[] | select(.risks[]? == "missing_test_delta")] | length' "$OUT_DIR/coverage.json" 2>/dev/null || echo 0)
+  hotspot_count=$(jq 'length' "$OUT_DIR/hotspots.json" 2>/dev/null || echo 0)
+  total=$(( security_count + large_count + missing_count + hotspot_count ))
+  if [ $total -gt 0 ]; then
+    echo "[strict] Failing due to gating risks: security=$security_count large_change=$large_count missing_test_delta=$missing_count hotspots=$hotspot_count" >&2
+    exit 2
+  else
+    echo "[strict] No gating risks detected; passing." >&2
+  fi
+fi
