@@ -108,4 +108,23 @@ Final Outcome:
 - Deprecation warnings and timelines
 - Rollback procedures for each phase
 
+## Automation & Cross-Link Integration
+Leverage lightweight diff automation to prioritize legacy hotspots early:
+- `scripts/pre-review-manifest.sh` – Surface large / legacy-named files touched.
+- `scripts/diff-risk-classifier.sh` – JSON risk signals (`legacy`, `large-change`, `coverage`, `security`) to rank refactor candidates.
+
+Heuristics for Hotspot Elevation:
+1. Large change (>200 added lines) in file with low/modular structure (few functions, giant methods).
+2. Presence of markers: TODO, FIXME, deprecated, legacy.
+3. Code touched lacks adjacent tests (no corresponding *test* path or classifier `coverage` tag absent for code file).
+
+When any two heuristics match:
+- Recommend phased extraction (define Phase 0 safety net tests, Phase 1 adapter, Phase 2 replacement).
+- Coordinate with `reviewer` agent output to ensure diff-only findings feed migration backlog instead of blocking merge (unless high risk).
+
+Cross-References:
+- Security-sensitive legacy areas → escalate to `security` agent.
+- Documentation of migration steps → invoke `writer` agent.
+- Session summary / backlog continuity → `summarizer` agent.
+
 Focus on risk mitigation. Never break existing functionality without migration path.

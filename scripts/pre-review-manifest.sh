@@ -4,16 +4,31 @@
 # Cross-platform (macOS/Linux) POSIX-friendly (bash used for arrays & string ops only).
 # No external deps beyond: git, awk, sed, grep (prefer rg if present).
 # Usage:
-#   ./scripts/pre-review-manifest.sh [BASE_BRANCH]
+#   ./scripts/pre-review-manifest.sh [--json] [BASE_BRANCH]
 # If BASE_BRANCH omitted, tries to detect via gh (if installed) else defaults to main.
+# --json emits machine readable JSON array (one object per file) to stdout instead of markdown table.
 
 set -euo pipefail
+
+want_json=false
+BASE_BRANCH=""
+for arg in "$@"; do
+  case "$arg" in
+    --json) want_json=true ;;
+    --help|-h)
+      cat <<'H'
+pre-review-manifest.sh [--json] [BASE_BRANCH]
+Generates Changed Files table (markdown) or JSON array of changed files with +/- line counts, status, type, risk tags.
+H
+      exit 0 ;;
+    *) BASE_BRANCH="$arg" ;;
+  esac
+done
 
 color_enabled() { [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && tput colors >/dev/null 2>&1; }
 
 log() { printf '%s\n' "$*" >&2; }
 
-BASE_BRANCH="${1:-}"
 if [ -z "$BASE_BRANCH" ]; then
   if command -v gh >/dev/null 2>&1; then
     set +e
@@ -32,12 +47,12 @@ if git rev-parse --verify "$BASE_BRANCH" >/dev/null 2>&1; then
 fi
 
 # Collect diff stats
-# name-status for type, numstat for line counts
 numstat=$(git diff --numstat "$BASE_BRANCH"...HEAD || true)
 namestat=$(git diff --name-status "$BASE_BRANCH"...HEAD || true)
 
 if [ -z "$numstat" ]; then
-  echo "No changes detected against $BASE_BRANCH" && exit 0
+  if $want_json; then echo '[]'; else echo "No changes detected against $BASE_BRANCH"; fi
+  exit 0
 fi
 
 # Build associative maps (requires bash)
@@ -72,7 +87,25 @@ risk_tags() {
   if [ ${#tags[@]} -eq 0 ]; then echo "-"; else printf '%s' "${tags[*]}"; fi
 }
 
-# Assemble table
+if $want_json; then
+  echo '['
+  first=true
+  for path in "${!add_map[@]}"; do
+    add=${add_map[$path]}; del=${del_map[$path]}; st=${status_map[$path]:-M}; t=$(type_for "$path"); r=$(risk_tags "$path")
+    # convert dash to 0 for adds/dels
+    add_json=${add//-/0}; del_json=${del//-/0}
+    # risk tags into JSON array
+    if [ "$r" = "-" ]; then r_json='[]'; else
+      IFS=' ' read -r -a arr <<<"$r"; tmp=""; for tag in "${arr[@]}"; do tmp+="\"$tag\","; done; r_json="[${tmp%,}]"; fi
+    if ! $first; then echo ','; fi
+    first=false
+    printf '{"file":"%s","adds":%s,"dels":%s,"status":"%s","type":"%s","risks":%s}' "$path" "$add_json" "$del_json" "$st" "$t" "$r_json"
+  done | sort
+  echo ']'
+  exit 0
+fi
+
+# Markdown output
 printf '## Changed Files (Base: %s)\n' "$BASE_BRANCH"
 printf '| File | + | - | Status | Type | Risk Tags |\n'
 printf '|------|---|---|--------|------|-----------|\n'

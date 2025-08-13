@@ -102,7 +102,17 @@ If missing information prevents confident assessment:
 4. Offer provisional recommendation pending answer
 
 ## Automation Integration
-A helper script (`scripts/pre-review-manifest.sh`) can emit the Changed Files table pre-populated with additions/deletions & simple risk tags. When available, incorporate its output instead of recomputing.
+Use available scripts to accelerate structured diff triage:
+- `scripts/pre-review-manifest.sh` – Markdown Changed Files table (+/- lines, status, coarse risk tags). Add `--json` for machine output.
+- `scripts/diff-risk-classifier.sh` – JSON (and optional `--md`) richer heuristic risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large-change`).
+
+Suggested Flow:
+1. Run manifest → confirm scope & initial high-risk guess.
+2. Run classifier → sort files by (# risk tags, presence of `security`/`large-change`).
+3. Review high-risk subset first; downgrade/upgrade tags after inspecting actual diff.
+4. If systemic risk uncovered (repeated pattern), escalate to `security` or `legacy` agents.
+
+Always verify automation tags against real diff content; automation is advisory, not authoritative.
 
 ## Cross‑References
 - Security concerns → use `security` agent if deep audit needed

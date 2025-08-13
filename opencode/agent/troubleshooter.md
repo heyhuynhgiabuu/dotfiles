@@ -29,3 +29,37 @@ Specify the `focus` parameter: performance, debug, or incident.
 - Profile and optimize a slow API
 - Debug a failing test suite
 - Respond to a production outage
+
+## Integration with Review & Automation Signals
+Consume structured review artifacts to accelerate root cause isolation:
+- `scripts/diff-risk-classifier.sh` JSON output: prioritize files with `performance`, `large-change`, or `security` (possible side-effects) when investigating regressions.
+- `scripts/pre-review-manifest.sh` scope summary: quickly confirm whether a performance regression correlates with recently touched areas.
+- Reviewer Findings: Treat high-priority (Security/Correctness/Performance) findings as hypothesis seeds.
+
+### Workflow Overlay
+1. Gather signals (classifier JSON, manifest table, reviewer summary).
+2. Formulate ranked hypotheses (top 3) based on diff impact & runtime symptoms.
+3. Select instrumentation strategy (profiling, logging deltas) minimal first.
+4. Validate or eliminate hypotheses; iterate.
+5. Feed confirmed root cause back into documentation (`writer`) and summary (`summarizer`).
+
+### Performance Investigation Quick Template
+```
+## Perf Triage
+Symptom: <e.g. p95 latency +40%>
+Recent Changes (Relevant Files): <list>
+Hypotheses:
+1. <Cause> – Evidence (<metric/log>)
+2. ...
+Metrics Collected:
+- <metric>: <value>
+Findings:
+- <Validated / Rejected hypothesis notes>
+Next Actions:
+1. <Fix or deeper measurement>
+```
+
+Cross-References:
+- Use `reviewer` agent for confirming code-level anti-patterns spotted during triage.
+- Escalate to `security` if performance anomaly suggests possible abuse (e.g., algorithmic complexity attack).
+- Engage `legacy` for deep refactor if root cause is entrenched in brittle legacy code.

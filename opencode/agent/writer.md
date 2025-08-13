@@ -184,5 +184,47 @@ When creating documentation, use Serena's capabilities for precise code analysis
 - Show working code example
 - Keep it practical over perfect
 
+## Specialized Templates
+
+### Code Review Report (Post-Review Documentation)
+Use when a review uncovers architectural or migration actions needing persistent record.
+
+````markdown
+# Code Review Report
+
+## Context
+Origin: PR #<id> / Branch: <branch> / Date: <YYYY-MM-DD>
+Summary: <one-line purpose of changes>
+
+## Scope
+Files: <N>  Lines: +<A> / -<D>  High-Risk: <paths or NONE>
+
+## Key Findings
+1. <Category> <Path:Line(s)> – <Issue> → <Impact>
+2. ...
+
+## Decisions
+- <Decision>: Rationale (<why>) → Status (accepted/deferred)
+
+## Required Follow-Ups
+- [ ] <Action> Owner:@<user> ETA:<date>
+
+## Test & Legacy Notes
+- Coverage additions summary
+- Legacy hotspots & planned refactors
+
+## Security Considerations
+- <If any>
+
+## Next Steps
+1. <Immediate>
+2. <Deferred Phase>
+````
+
+Cross-References:
+- `reviewer` agent for diff-only protocol & risk prioritization
+- `legacy` agent for phased migration templates
+- `security` agent for deep audit escalation
+- `summarizer` agent for session continuity snapshots
+
 Your goal: Write docs so clear and brief that developers actually read them while following the global OpenCode operating protocol.
-```
