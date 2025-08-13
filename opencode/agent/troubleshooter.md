@@ -32,7 +32,7 @@ Specify the `focus` parameter: performance, debug, or incident.
 
 ## Integration with Review & Automation Signals
 Consume structured review artifacts to accelerate root cause isolation:
-- `scripts/diff-risk-classifier.sh` JSON output: prioritize files with `performance`, `large-change`, or `security` (possible side-effects) when investigating regressions.
+- `scripts/diff-risk-classifier.sh` JSON output: prioritize files with `performance`, `large_change`, or `security` (possible side-effects) when investigating regressions.
 - `scripts/pre-review-manifest.sh` scope summary: quickly confirm whether a performance regression correlates with recently touched areas.
 - Reviewer Findings: Treat high-priority (Security/Correctness/Performance) findings as hypothesis seeds.
 

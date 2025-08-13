@@ -2,7 +2,7 @@
 # diff-risk-classifier.sh
 # Heuristically classify changed files in the current branch vs a base branch
 # and emit a machine-consumable JSON manifest (and optional markdown table).
-# Cross-platform (macOS/Linux) – requires: git, bash. Falls back gracefully.
+# Cross-platform (macOS/Linux) – bash 3.2 compatible (no arrays requiring bash 4 features).
 # Usage:
 #   ./scripts/diff-risk-classifier.sh [--base <branch>] [--md]
 # Defaults: base=main, output JSON to stdout. If --md supplied, prints a
@@ -17,14 +17,10 @@ OUTPUT_MD=false
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --base)
-      shift; BASE="${1:-main}" ;;
-    --md)
-      OUTPUT_MD=true ;;
-    *)
-      echo "[warn] Unknown argument: $1" >&2 ;;
-  esac
-  shift || true
+    --base) shift; BASE="${1:-main}" ;;
+    --md) OUTPUT_MD=true ;;
+    *) echo "[warn] Unknown argument: $1" >&2 ;;
+  esac; shift || true
 done
 
 # Attempt auto-detect via gh if base not explicitly set and gh available.
@@ -35,23 +31,34 @@ if [ "$BASE" = "main" ] && command -v gh >/dev/null 2>&1; then
   [ -n "$detected" ] && BASE="$detected"
 fi
 
-if git rev-parse --verify "$BASE" >/dev/null 2>&1; then
-  git fetch --quiet origin "$BASE" || true
-else
-  echo "[info] Base branch $BASE not found locally; proceeding with local refs only" >&2
-fi
+# Resolve base ref (local or origin/<base>)
+resolve_base_ref() {
+  local raw="$1"
+  git fetch --quiet origin "$raw" || true
+  if git rev-parse --verify "$raw" >/dev/null 2>&1; then
+    echo "$raw"; return
+  fi
+  if git rev-parse --verify "origin/$raw" >/dev/null 2>&1; then
+    echo "origin/$raw"; return
+  fi
+  echo "$raw"
+}
+BASE_REF=$(resolve_base_ref "$BASE")
+echo "[info] Using base ref: $BASE_REF (requested: $BASE)" >&2
 
-diff_numstat=$(git diff --numstat "$BASE"...HEAD || true)
+diff_numstat=$(git diff --numstat "$BASE_REF"...HEAD || true)
 [ -z "$diff_numstat" ] && { echo '[]'; exit 0; }
 
-echo '['
-first=true
+# We'll avoid bash arrays for risks accumulation by constructing JSON directly.
+# Temp storage for MD rows
 md_rows=""
+
+printf '['
+first_obj=true
 while IFS=$'\t' read -r adds dels path; do
   [ -z "$path" ] && continue
-  status=$(git diff --name-status "$BASE"...HEAD -- "$path" | awk '{print $1}' | head -1)
+  status=$(git diff --name-status "$BASE_REF"...HEAD -- "$path" | awk '{print $1}' | head -1)
   [ -z "$status" ] && status="M"
-  # Determine coarse type
   case "$path" in
     *test*|tests/*|*_test.*) ftype="test" ;;
     *.md|docs/*) ftype="docs" ;;
@@ -59,43 +66,45 @@ while IFS=$'\t' read -r adds dels path; do
     Dockerfile*|ops/*|infra/*) ftype="infra" ;;
     *) ftype="code" ;;
   esac
-  # Risk heuristics (path + simple keyword based; can be expanded later)
-  risks=()
-  if echo "$path" | grep -qiE '(auth|token|secret|crypto|encrypt|jwt)'; then risks+=("security"); fi
-  if echo "$path" | grep -qiE '(legacy|deprecated|old)'; then risks+=("legacy"); fi
-  if echo "$path" | grep -qiE '(perf|bench|optim)'; then risks+=("performance"); fi
-  if [ "$ftype" = test ]; then risks+=("coverage"); fi
-  if echo "$path" | grep -qiE '(config|setting|env)'; then risks+=("config"); fi
-  # Size-based heuristic
-  if [ "$adds" != "-" ] && [ "$adds" -gt 200 ]; then risks+=("large-change"); fi
-  # Deduplicate risks
-  uniq_risks=()
-  for r in "${risks[@]}"; do
-    skip=false
-    for ur in "${uniq_risks[@]}"; do [ "$ur" = "$r" ] && skip=true && break; done
-    ! $skip && uniq_risks+=("$r") || true
+  # Risks accumulation using space-delimited string (dedupe manually)
+  risks_str=""
+  echo "$path" | grep -qiE '(auth|token|secret|crypto|encrypt|jwt)' && risks_str+="security "
+  echo "$path" | grep -qiE '(legacy|deprecated|old)' && risks_str+="legacy "
+  echo "$path" | grep -qiE '(perf|bench|optim)' && risks_str+="performance "
+  [ "$ftype" = test ] && risks_str+="coverage "
+  echo "$path" | grep -qiE '(config|setting|env)' && risks_str+="config "
+  if [ "$adds" != "-" ] && [ "$adds" -gt 200 ]; then risks_str+="large_change "; fi
+  # Deduplicate
+  dedup_risks=""
+  for r in $risks_str; do
+    found=false
+    for ur in $dedup_risks; do [ "$ur" = "$r" ] && found=true && break; done
+    $found || dedup_risks+="$r "
   done
-  risks_json="[]"
-  if [ ${#uniq_risks[@]} -gt 0 ]; then
-    risks_json="[\"$(printf '%s" ,"' "${uniq_risks[@]}" | sed 's/",$//')"]"
+  dedup_risks=${dedup_risks% }
+  # Build JSON array
+  if [ -z "$dedup_risks" ]; then risks_json='[]'; else
+    risks_json='['
+    first_tag=true
+    for tag in $dedup_risks; do
+      $first_tag || risks_json+=','
+      first_tag=false
+      risks_json+="\"$tag\""
+    done
+    risks_json+=']'
   fi
-  # Emit JSON object
-  if ! $first; then echo ','; fi
-  first=false
+  $first_obj || printf ',\n'
+  first_obj=false
   printf '{"file":"%s","adds":%s,"dels":%s,"status":"%s","type":"%s","risks":%s}' \
     "$path" "${adds//-/0}" "${dels//-/0}" "$status" "$ftype" "$risks_json"
-  # Collect MD row
-  md_risks=$(printf '%s ' "${uniq_risks[@]}" | sed 's/ *$//')
-  [ -z "$md_risks" ] && md_risks='-'
+  md_risks=${dedup_risks:-'-'}
   md_rows+="| $path | ${adds//-/0} | ${dels//-/0} | $status | $ftype | $md_risks |\n"
-
 done <<<"$diff_numstat"
-echo
-printf ']'  # close JSON array
+printf ']'
 
 if $OUTPUT_MD; then
-  echo -e "\n\n## Diff Risk Classification (Base: $BASE)" \
-  "\n| File | + | - | Status | Type | Risks |" \
-  "\n|------|---|---|--------|------|-------|" \
-  "\n$md_rows"
+  printf '\n\n## Diff Risk Classification (Base: %s)\n' "$BASE"
+  printf '| File | + | - | Status | Type | Risks |\n'
+  printf '|------|---|---|--------|------|-------|\n'
+  printf '%b' "$md_rows"
 fi

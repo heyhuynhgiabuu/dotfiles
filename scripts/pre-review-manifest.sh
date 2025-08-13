@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # pre-review-manifest.sh
 # Generate a pre-review manifest for a PR: changed files table + simple risk tags.
-# Cross-platform (macOS/Linux) POSIX-friendly (bash used for arrays & string ops only).
-# No external deps beyond: git, awk, sed, grep (prefer rg if present).
+# Cross-platform (macOS/Linux) and compatible with macOS system bash 3.2 (no associative arrays, no mapfile).
+# No external deps beyond: git, awk, sed, grep (prefer rg if present). jq optional (only used downstream by other scripts, not here).
 # Usage:
 #   ./scripts/pre-review-manifest.sh [--json] [BASE_BRANCH]
 # If BASE_BRANCH omitted, tries to detect via gh (if installed) else defaults to main.
@@ -25,8 +25,6 @@ H
   esac
 done
 
-color_enabled() { [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && tput colors >/dev/null 2>&1; }
-
 log() { printf '%s\n' "$*" >&2; }
 
 if [ -z "$BASE_BRANCH" ]; then
@@ -34,38 +32,60 @@ if [ -z "$BASE_BRANCH" ]; then
     set +e
     detected=$(gh pr view --json baseRefName 2>/dev/null | sed -n 's/.*"baseRefName": *"\(.*\)".*/\1/p')
     set -e
-    if [ -n "$detected" ]; then
-      BASE_BRANCH="$detected"
-    fi
+    [ -n "$detected" ] && BASE_BRANCH="$detected"
   fi
 fi
 [ -z "$BASE_BRANCH" ] && BASE_BRANCH="main" && log "[info] Falling back to base branch: main"
 
-# Ensure we have the latest base branch refs (best effort)
-if git rev-parse --verify "$BASE_BRANCH" >/dev/null 2>&1; then
-  git fetch --quiet origin "$BASE_BRANCH" || true
-fi
+# Resolve usable base ref (local branch or origin/<branch>)
+resolve_base_ref() {
+  local raw="$1"
+  # Attempt to fetch remote branch (best effort)
+  git fetch --quiet origin "$raw" || true
+  if git rev-parse --verify "$raw" >/dev/null 2>&1; then
+    echo "$raw"; return
+  fi
+  if git rev-parse --verify "origin/$raw" >/dev/null 2>&1; then
+    echo "origin/$raw"; return
+  fi
+  echo "$raw" # will likely fail later but surfaces intent
+}
+BASE_REF=$(resolve_base_ref "$BASE_BRANCH")
+log "[info] Using base ref: $BASE_REF (requested: $BASE_BRANCH)"
 
-# Collect diff stats
-numstat=$(git diff --numstat "$BASE_BRANCH"...HEAD || true)
-namestat=$(git diff --name-status "$BASE_BRANCH"...HEAD || true)
+# Collect diff stats (range three-dot to include merge base)
+numstat=$(git diff --numstat "$BASE_REF"...HEAD || true)
+namestat=$(git diff --name-status "$BASE_REF"...HEAD || true)
 
 if [ -z "$numstat" ]; then
   if $want_json; then echo '[]'; else echo "No changes detected against $BASE_BRANCH"; fi
   exit 0
 fi
 
-# Build associative maps (requires bash)
-declare -A add_map del_map status_map
+# Parallel arrays (bash 3 compatible)
+paths=(); adds=(); dels=(); status=()
 while IFS=$'\t' read -r add del path; do
   [ -z "$path" ] && continue
-  add_map["$path"]="$add"
-  del_map["$path"]="$del"
+  paths+=("$path")
+  adds+=("$add")
+  dels+=("$del")
+  status+=("M")
 done <<<"$numstat"
 
-while IFS=$'\t' read -r st path; do
-  [ -z "$path" ] && continue
-  status_map["$path"]="$st"
+# Apply name-status mapping (handle rename lines: Rxx<tab>old<tab>new)
+while IFS=$'\t' read -r st p1 p2; do
+  [ -z "$st" ] && continue
+  case "$st" in R*) target=${p2:-$p1} ;; *) target="$p1" ;; esac
+  [ -z "$target" ] && continue
+  # Update status for matching path
+  i=0
+  while [ $i -lt ${#paths[@]} ]; do
+    if [ "${paths[$i]}" = "$target" ]; then
+      status[$i]="$st"
+      break
+    fi
+    i=$(( i + 1 ))
+  done
 done <<<"$namestat"
 
 type_for() {
@@ -79,55 +99,83 @@ type_for() {
 }
 
 risk_tags() {
-  local p="$1" tags=()
-  if grep -qiE '(auth|token|secret|crypto)' <<<"$p"; then tags+=(security); fi
-  if grep -qiE '(legacy|deprecated|old)' <<<"$p"; then tags+=(legacy); fi
-  if grep -qiE '(perf|optimiz)' <<<"$p"; then tags+=(perf); fi
-  if [[ $(type_for "$p") == test ]]; then tags+=(coverage); fi
-  if [ ${#tags[@]} -eq 0 ]; then echo "-"; else printf '%s' "${tags[*]}"; fi
+  local p="$1" out=""
+  echo "$p" | grep -qiE '(auth|token|secret|crypto)' && out="${out}security "
+  echo "$p" | grep -qiE '(legacy|deprecated|old)' && out="${out}legacy "
+  echo "$p" | grep -qiE '(perf|optimiz)' && out="${out}performance "
+  [ "$(type_for "$p")" = test ] && out="${out}coverage "
+  out=${out% } # trim
+  [ -z "$out" ] && echo '-' || echo "$out"
 }
 
 if $want_json; then
-  echo '['
-  first=true
-  for path in "${!add_map[@]}"; do
-    add=${add_map[$path]}; del=${del_map[$path]}; st=${status_map[$path]:-M}; t=$(type_for "$path"); r=$(risk_tags "$path")
-    # convert dash to 0 for adds/dels
+  # Build unsorted lines
+  json_tmp=""
+  i=0
+  while [ $i -lt ${#paths[@]} ]; do
+    path="${paths[$i]}"; add="${adds[$i]}"; del="${dels[$i]}"; st="${status[$i]}"; t=$(type_for "$path"); r=$(risk_tags "$path")
     add_json=${add//-/0}; del_json=${del//-/0}
-    # risk tags into JSON array
-    if [ "$r" = "-" ]; then r_json='[]'; else
-      IFS=' ' read -r -a arr <<<"$r"; tmp=""; for tag in "${arr[@]}"; do tmp+="\"$tag\","; done; r_json="[${tmp%,}]"; fi
-    if ! $first; then echo ','; fi
-    first=false
-    printf '{"file":"%s","adds":%s,"dels":%s,"status":"%s","type":"%s","risks":%s}' "$path" "$add_json" "$del_json" "$st" "$t" "$r_json"
-  done | sort
+    if [ "$r" = '-' ]; then r_json='[]'; else
+      # space separated tags -> JSON array
+      r_json='['
+      first_tag=true
+      for tag in $r; do
+        $first_tag || r_json+="$IFS"
+        r_json+="\"$tag\","; first_tag=false
+      done
+      r_json=${r_json%,}
+      r_json+=']'
+    fi
+    json_tmp+="{\"file\":\"$path\",\"adds\":$add_json,\"dels\":$del_json,\"status\":\"$st\",\"type\":\"$t\",\"risks\":$r_json}"$'\n'
+    i=$(( i + 1 ))
+  done
+  # Sort and emit with commas
+  if command -v sort >/dev/null 2>&1; then
+    json_sorted=$(printf '%s' "$json_tmp" | sed '/^$/d' | sort)
+  else
+    json_sorted=$(printf '%s' "$json_tmp" | sed '/^$/d')
+  fi
+  echo '['
+  first_line=true
+  while IFS= read -r line; do
+    [ -z "$line" ] && continue
+    if ! $first_line; then printf ',\n'; fi
+    first_line=false
+    printf '%s' "$line"
+  done <<<"$json_sorted"
   echo ']'
   exit 0
 fi
 
-# Markdown output
+# Markdown table header
 printf '## Changed Files (Base: %s)\n' "$BASE_BRANCH"
 printf '| File | + | - | Status | Type | Risk Tags |\n'
 printf '|------|---|---|--------|------|-----------|\n'
 
-total_add=0
-TOTAL_DEL=0
-for path in "${!add_map[@]}"; do
-  add=${add_map[$path]}
-  del=${del_map[$path]}
-  st=${status_map[$path]:-M}
-  t=$(type_for "$path")
-  r=$(risk_tags "$path")
-  printf '| %s | %s | %s | %s | %s | %s |\n' "$path" "$add" "$del" "$st" "$t" "$r"
-  total_add=$(( total_add + (add == '-' ? 0 : add) ))
-  TOTAL_DEL=$(( TOTAL_DEL + (del == '-' ? 0 : del) ))
-done | sort
+# Build lines
+md_tmp=""
+i=0
+while [ $i -lt ${#paths[@]} ]; do
+  path="${paths[$i]}"; add="${adds[$i]}"; del="${dels[$i]}"; st="${status[$i]}"; t=$(type_for "$path"); r=$(risk_tags "$path")
+  md_tmp+="| $path | $add | $del | $st | $t | $r |"$'\n'
+  i=$(( i + 1 ))
+done
+if command -v sort >/dev/null 2>&1; then
+  md_sorted=$(printf '%s' "$md_tmp" | sed '/^$/d' | sort)
+else
+  md_sorted=$(printf '%s' "$md_tmp" | sed '/^$/d')
+fi
+printf '%s\n' "$md_sorted"
 
-# Summary block
-files_changed=${#add_map[@]}
-printf '\n**Scope:** %s files changed (+%s / -%s lines) against %s\n' "$files_changed" "$total_add" "$TOTAL_DEL" "$BASE_BRANCH"
+# Totals
+files_changed=${#paths[@]}
+# Sum additions/deletions (treat '-' as 0)
+total_add=0; total_del=0
+for val in "${adds[@]}"; do [ "$val" != '-' ] && total_add=$(( total_add + val )) || true; done
+for val in "${dels[@]}"; do [ "$val" != '-' ] && total_del=$(( total_del + val )) || true; done
+
+printf '\n**Scope:** %s files changed (+%s / -%s lines) against %s\n' "$files_changed" "$total_add" "$total_del" "$BASE_BRANCH"
 printf '**High-Risk Guess:** Files tagged with security or legacy above (manual confirmation needed).\n'
-
 cat <<'NOTE'
 > Use this manifest as the basis for the Review Summary & Changed Files table.
 > Replace or augment risk tags after inspecting actual diff content.

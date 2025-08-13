@@ -1,0 +1,150 @@
+name: review-scope
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/review-scope.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+  # (No write permissions required; gating occurs via exit code.)
+
+jobs:
+  review-scope:
+    name: Generate Review Artifacts & Gate Risks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for diff base)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine base branch
+        id: base
+        run: |
+          # Use PR base if available, else default branch
+            BASE="${{ github.base_ref }}"
+            if [ -z "$BASE" ]; then BASE="${{ github.event.repository.default_branch }}"; fi
+            echo "Base branch: $BASE"
+            echo "base=$BASE" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve base ref
+        id: baseref
+        run: |
+          RAW="${{ steps.base.outputs.base }}"
+          git fetch --quiet origin "$RAW" || true
+          if git rev-parse --verify "$RAW" >/dev/null 2>&1; then REF="$RAW";
+          elif git rev-parse --verify "origin/$RAW" >/dev/null 2>&1; then REF="origin/$RAW";
+          else REF="$RAW"; fi
+          echo "Resolved base ref: $REF";
+          echo "base_ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Determine strict gating
+        id: gating
+        run: |
+          STRICT=true
+          # Allow an opt-out label on the PR (e.g., allow-risk)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo '${{ toJson(github.event.pull_request.labels) }}' | grep -qi 'allow-risk' && STRICT=false || true
+          fi
+          echo "Strict gating: $STRICT"
+          echo "strict=$STRICT" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch base branch
+        run: git fetch origin "${{ steps.base.outputs.base }}:${{ steps.base.outputs.base }}" || git fetch origin "${{ steps.base.outputs.base }}"
+
+      - name: Debug base refs
+        run: |
+          echo "[debug] Base (raw): ${{ steps.base.outputs.base }}"
+          echo "[debug] Base (resolved): ${{ steps.baseref.outputs.base_ref }}"
+          echo "[debug] HEAD SHA: $(git rev-parse HEAD)"
+          echo "[debug] Verifying resolved base ref presence:"
+          git rev-parse "${{ steps.baseref.outputs.base_ref }}" >/dev/null 2>&1 && echo "[debug] Resolved base ref reachable" || echo "[warn] Resolved base ref not directly reachable"
+          echo "[debug] Attempting merge-base with resolved ref:"
+          git merge-base "${{ steps.baseref.outputs.base_ref }}" HEAD || echo "[warn] merge-base failed"
+          echo "[debug] Preview of first 20 changed paths vs resolved base (three-dot):"
+          git diff --name-only "${{ steps.baseref.outputs.base_ref }}"...HEAD | head -20 || true
+
+      - name: Run review-scope (conditional strict)
+        id: review
+        env:
+          REVIEW_SCOPE_STRICT: ${{ vars.REVIEW_SCOPE_STRICT || 'false' }}
+        run: |
+          set +e
+          BASE_REF="${{ steps.baseref.outputs.base_ref }}"
+          STRICT="${{ steps.gating.outputs.strict }}"
+          echo "Running review-scope against base ref $BASE_REF (strict=$STRICT, full_strict=$REVIEW_SCOPE_STRICT)"
+          CMD="./scripts/review-scope.sh --base \"$BASE_REF\""
+          if [ "$STRICT" = "true" ]; then CMD="$CMD --strict"; fi
+          echo "[debug] Executing: $CMD"
+          eval "$CMD" || RC=$?
+          RC=${RC:-0}
+          echo "Script exit code: $RC"
+          echo "exit_code=$RC" >> "$GITHUB_OUTPUT"
+          echo "strict_mode=$STRICT" >> "$GITHUB_OUTPUT"
+          echo "full_strict_env=$REVIEW_SCOPE_STRICT" >> "$GITHUB_OUTPUT"
+          # Always continue to allow artifact upload & summary
+          exit 0
+
+      - name: Upload review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review_artifacts
+          path: review_artifacts
+          if-no-files-found: warn
+
+      - name: Job summary
+        if: always()
+        run: |
+          if [ -f review_artifacts/all.json ]; then
+            echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
+            echo "Base: ${{ steps.base.outputs.base }}" >> $GITHUB_STEP_SUMMARY
+            echo "Strict Mode (security-only): ${{ steps.review.outputs.strict_mode }}" >> $GITHUB_STEP_SUMMARY
+            echo "Full Strict Env (REVIEW_SCOPE_STRICT): ${{ steps.review.outputs.full_strict_env }}" >> $GITHUB_STEP_SUMMARY
+            jq '.summary | {file_count, risk_tag_counts, hotspot_count: (.hotspots|length), missing_test_delta_files: (.missing_test_delta_files|length)}' review_artifacts/all.json >> $GITHUB_STEP_SUMMARY || true
+            # Provide explicit gating evaluation breakdown
+            SEC=$(jq '.summary.risk_tag_counts.security // 0' review_artifacts/all.json 2>/dev/null || echo 0)
+            LCH=$(jq '.summary.risk_tag_counts.large_change // 0' review_artifacts/all.json 2>/dev/null || echo 0)
+            MTD=$(jq '.summary.missing_test_delta_files | length' review_artifacts/all.json 2>/dev/null || echo 0)
+            HSP=$(jq '.summary.hotspots | length' review_artifacts/all.json 2>/dev/null || echo 0)
+            echo "\n### Gating Breakdown" >> $GITHUB_STEP_SUMMARY
+            echo "- Security tags: $SEC" >> $GITHUB_STEP_SUMMARY
+            echo "- Large change tags: $LCH" >> $GITHUB_STEP_SUMMARY
+            echo "- Missing test delta files: $MTD" >> $GITHUB_STEP_SUMMARY
+            echo "- Hotspots (score>=2): $HSP" >> $GITHUB_STEP_SUMMARY
+            if [ "${{ steps.review.outputs.exit_code }}" = "2" ]; then
+              echo "\n**GATING FAILURE** (exit code 2)." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "\nGating passed (security-only criteria)." >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "\nArtifacts uploaded as 'review_artifacts'." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## Review Scope Summary" >> $GITHUB_STEP_SUMMARY
+            echo "No all.json produced (jq missing or script error)." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Evaluate gating result
+        if: always()
+        run: |
+          EC='${{ steps.review.outputs.exit_code }}'
+          FULL='${{ steps.review.outputs.full_strict_env }}'
+          if [ "$EC" != "0" ]; then
+            if [ "$EC" = "2" ]; then
+              if [ "$FULL" = "true" ]; then
+                echo "Failing job (full strict mode active)." >&2
+                exit 2
+              else
+                echo "Security-only strict mode: non-security gating categories ignored unless security present. Treating exit 2 as pass (soft fail)." >&2
+                exit 0
+              fi
+            else
+              echo "Script error (exit $EC)." >&2
+              exit 1
+            fi
+          fi

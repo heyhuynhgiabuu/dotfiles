@@ -53,6 +53,51 @@ The repository is organized by tool, making it easy to navigate and manage confi
 └── docs/          # Documentation and guides
 ```
 
+## 🛠️ Review Automation
+
+The repository includes a lightweight, cross-platform review automation suite (Bash 3.2+ compatible) to surface risk, coverage deltas, and legacy hotspots for any branch vs a base (default main).
+
+Scripts:
+- scripts/pre-review-manifest.sh — Diff manifest (JSON/Markdown)
+- scripts/diff-risk-classifier.sh — Classifies diff risk tags
+- scripts/test-coverage-delta.sh — Heuristic test adjacency & missing test delta detection
+- scripts/legacy-hotspot-detector.sh — Composite heuristic legacy/refactor hotspot scoring
+- scripts/review-scope.sh — Orchestrator producing consolidated artifacts (review_artifacts/)
+
+Artifacts (generated, ignored by git): review_artifacts/
+- manifest.json/md, risk.json/md, coverage.json/md, hotspots.json/md, index.md, all.json (combined schema)
+
+Quick Usage:
+```bash
+./scripts/review-scope.sh --base main        # Generate JSON + Markdown
+./scripts/review-scope.sh --base main --no-md # JSON only
+```
+
+Manual Verification (macOS default /bin/bash 3.2):
+```bash
+/bin/bash --version | head -1
+./scripts/review-scope.sh --base main --no-md
+jq -e '.version >= 1' review_artifacts/all.json  # if jq installed
+rg -n 'declare -A|mapfile|readarray' scripts/ || true  # should output nothing
+```
+If jq is missing, all.json build is skipped with a warning (non-fatal).
+
+Risk Tag Principles:
+- large_change: Added lines or churn thresholds exceeded
+- missing_test_delta: Significant additions without related test change
+- performance / security / high_churn / high_concentration: Contextual heuristics
+
+CI Gating (GitHub Actions):
+A workflow (.github/workflows/review-scope.yml) runs the suite on pull requests. It always uploads artifacts and fails the job (exit 2) when gating risks are detected (security / large_change / missing_test_delta / hotspot). This provides early signal without blocking artifact visibility.
+
+Extensibility Ideas (future):
+- --strict flag in review-scope.sh to exit non-zero on security or missing_test_delta findings
+- Optional CI job invoking the suite for PR gating
+
+Portability Notes:
+- No associative arrays or mapfile used (Bash 3.2 safe)
+- Avoids external deps; jq only for combined all.json if present
+
 ## 🛠️ Utilities
 
 ### Package Manager Detection
