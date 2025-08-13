@@ -284,7 +284,7 @@ Use the provided verification script:
 
 ```bash
 # From dotfiles root
-./scripts/verify-opencode-plugin.sh
+./scripts/verify/verify-opencode-plugin.sh
 ```
 
 ## 🎯 Advanced Plugin Development
@@ -444,7 +444,7 @@ opencode  # Start OpenCode and test plugin
 ```bash
 # Build and verify
 npm run build
-./scripts/verify-opencode-plugin.sh
+./scripts/verify/verify-opencode-plugin.sh
 
 # Manual testing in OpenCode
 # Follow TESTING_CHECKLIST.md
@@ -457,7 +457,7 @@ npm run clean
 npm run build
 
 # Final verification
-./scripts/verify-opencode-plugin.sh
+./scripts/verify/verify-opencode-plugin.sh
 
 # Test on both platforms (if available)
 # Update documentation

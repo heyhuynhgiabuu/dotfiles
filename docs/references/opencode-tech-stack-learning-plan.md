@@ -28,9 +28,9 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
   - CI: GitHub Actions workflows present in repo
 
 - Structure Patterns (typical)
-  - Monorepo/workspaces: packages/*, cloud/*, sdk/*
+  - Monorepo/workspaces: packages/_, cloud/_, sdk/\*
   - CLI entry: packages/opencode/src/index.ts
-  - Commands in src/cli/cmd/*
+  - Commands in src/cli/cmd/\*
   - Docs and scripts directories for developer workflows
 
 - Integration Points
@@ -71,6 +71,7 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
 ## 3) Actionable Learning Plan (2–3 Weeks)
 
 ### A. TypeScript Essentials (2–3 days)
+
 - Topics
   - ESM imports/exports, strict typing, generics, union/intersection types
   - Runtime validation with zod; inferring TS types from zod schemas
@@ -80,6 +81,7 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
   - Add a new subcommand to a sample CLI (e.g., `hello`, `version`)
 
 ### B. Bun Runtime (2–3 days)
+
 - Topics
   - Install Bun; use `bun install`, `bun run`, `bunx`
   - Running TS directly; differences vs Node (ESM-first, speed, test runner)
@@ -89,8 +91,9 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
   - Write minimal HTTP server with hono; hit a JSON endpoint
 
 ### C. Repo Patterns: Monorepo, CLI, Agents (3–5 days)
+
 - Topics
-  - Workspaces layout; packages/opencode structure; src/cli/cmd/* patterns
+  - Workspaces layout; packages/opencode structure; src/cli/cmd/\* patterns
   - Command composition (yargs), prompts with @clack/prompts
   - Validation with zod; organizing utilities; isomorphic-git usage
   - Intro to MCP via @modelcontextprotocol/sdk
@@ -99,6 +102,7 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
   - Implement a CLI command that calls a simple MCP client or local HTTP API
 
 ### D. Go (Complementary, parallel 1–2 weeks)
+
 - Rationale
   - While not in the repo, Go pairs well for CLIs/services that integrate via HTTP/MCP
 - Topics
@@ -110,6 +114,7 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
   - Call it from a TS CLI (hono fetch or native fetch) and validate with zod
 
 ### Weekly Plan Snapshot
+
 - Week 1: TS + Bun fundamentals; small CLI and HTTP server
 - Week 2: Monorepo plugin/agent patterns; MCP client usage; finish a mini-agent
 - Week 3: Go service + TS CLI integration; optional deploy
@@ -142,4 +147,5 @@ This document summarizes the public tech stack of the `sst/opencode` repo (dev b
 - isomorphic-git: https://isomorphic-git.org/
 
 Notes
+
 - Some repo details (e.g., full workflows, subpackage READMEs) may change; confirm against the dev branch when following this plan.

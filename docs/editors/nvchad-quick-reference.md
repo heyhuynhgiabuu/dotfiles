@@ -5,7 +5,7 @@
 ### Installation & Setup
 ```bash
 ./scripts/setup/install.sh        # Initial setup
-./scripts/nvchad-health.sh        # Check integration health
+./scripts/verify/nvchad-health.sh        # Check integration health
 ./scripts/setup/update-nvchad.sh  # Update NvChad safely
 ```
 
@@ -115,7 +115,7 @@ M.general = {
 
 ### Issue: Custom configs not loading
 **Solution**:
-1. `./scripts/nvchad-health.sh`
+1. `./scripts/verify/nvchad-health.sh`
 2. Check `~/dotfiles/nvim/.config/nvim/lua/custom/chadrc.lua`
 3. Restart Neovim
 
@@ -131,6 +131,6 @@ M.general = {
 - [ ] Clean unused plugins: `:Lazy clean`
 
 ### Before Major Changes
-- [ ] Run health check: `./scripts/nvchad-health.sh`
+- [ ] Run health check: `./scripts/verify/nvchad-health.sh`
 - [ ] Backup current setup (automatic with scripts)
 - [ ] Test changes in a separate branch

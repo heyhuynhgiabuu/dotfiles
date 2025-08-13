@@ -27,7 +27,7 @@ To make maintenance painless, this repository includes several helper scripts:
 
 -   `./scripts/setup/install.sh`: The main setup script that installs NvChad and creates the necessary symlinks.
 -   `./scripts/setup/update-nvchad.sh`: Safely updates the NvChad base to the latest version while preserving your custom configurations.
--   `./scripts/nvchad-health.sh`: A diagnostic tool to verify that NvChad is installed correctly and that all symlinks are intact.
+-   `./scripts/verify/nvchad-health.sh`: A diagnostic tool to verify that NvChad is installed correctly and that all symlinks are intact.
 
 ## 🔧 Customization Guide
 
