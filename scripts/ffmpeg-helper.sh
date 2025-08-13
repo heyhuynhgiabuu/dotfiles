@@ -34,32 +34,63 @@ ensure_ffmpeg() {
     return 0
   fi
 
-  # Special handling for Homebrew OpenEXR link conflicts
+  # Special handling for common Homebrew link conflicts (openexr, aom, others)
   if [[ "$manager" == "brew" ]]; then
-    if brew list --versions openexr >/dev/null 2>&1; then
-      log_warning "ffmpeg not found after install. Attempting OpenEXR relink (common brew conflict)."
-      log_info "Unlinking openexr..."
-      brew unlink openexr || true
-      log_info "Relinking openexr with overwrite..."
-      brew link --overwrite openexr || true
+    local conflict_formulas=(openexr aom)
+    local attempted_fix=false
 
-      log_info "Reinstalling ffmpeg after OpenEXR relink..."
+    for formula in "${conflict_formulas[@]}"; do
+      if brew list --versions "$formula" >/dev/null 2>&1; then
+        # Check if any of its expected binaries already exist & point elsewhere (heuristic)
+        case "$formula" in
+          openexr)
+            local bins=(exrinfo exrheader exr2aces)
+            ;;
+          aom)
+            local bins=(aomenc aomdec)
+            ;;
+          *) bins=() ;;
+        esac
+        local conflict_detected=false
+        for b in "${bins[@]}"; do
+          if [[ -L "/opt/homebrew/bin/$b" ]]; then
+            conflict_detected=true; break
+          fi
+        done
+        if [[ "$conflict_detected" == true ]]; then
+          log_warning "Potential brew link conflict involving $formula detected (blocking ffmpeg). Attempting relink." 
+          attempted_fix=true
+          log_info "Unlinking $formula..."
+          brew unlink "$formula" || true
+          log_info "Relinking $formula with overwrite..."
+          brew link --overwrite "$formula" || true
+        fi
+      fi
+    done
+
+    if [[ "$attempted_fix" == true ]]; then
+      log_info "Reinstalling ffmpeg after resolving detected link conflicts..."
       brew reinstall ffmpeg || true
+    fi
 
-      if ! cmd_exists ffmpeg; then
-        log_warning "Still no ffmpeg. Running dry-run to show conflicting files..."
-        brew link --overwrite openexr --dry-run || true
-        cat <<'EOF'
+    if ! cmd_exists ffmpeg; then
+      log_warning "ffmpeg still not found after conflict resolution attempts. Showing dry-run info for each candidate formula..."
+      for formula in "${conflict_formulas[@]}"; do
+        if brew list --versions "$formula" >/dev/null 2>&1; then
+          brew link --overwrite "$formula" --dry-run || true
+        fi
+      done
+      cat <<'EOF'
 Manual resolution steps (execute manually if desired):
-  1. Inspect conflicting files above.
-  2. Force relink: brew link --overwrite openexr
+  1. Review above dry-run outputs for conflicting files.
+  2. Force relink any culprit: brew link --overwrite <formula>
   3. Reinstall ffmpeg: brew reinstall ffmpeg
   4. Verify: which ffmpeg && ffmpeg -version
+  5. If still failing, run: brew doctor  (inspect guidance) and re-attempt.
 EOF
-      else
-        log_success "ffmpeg installed after resolving OpenEXR link conflict: $(ffmpeg -version | head -n1)"
-        return 0
-      fi
+    else
+      log_success "ffmpeg installed after resolving brew link conflicts: $(ffmpeg -version | head -n1)"
+      return 0
     fi
   fi
 
