@@ -162,7 +162,8 @@ Large or extreme long-line files can degrade performance. The custom module cust
 To enable lean setups, the monolithic Brewfile is split into layers under `homebrew/` (moved from the repository root for clearer organization, reduced root clutter, and to reserve the top level for primary tooling directories):
 - homebrew/Brewfile.min   — Minimal baseline (core shell + editor + terminal tooling)
 - homebrew/Brewfile.dev   — Development stack (languages, build tools, services, language servers)
-- homebrew/Brewfile.extra — Optional extras (fonts, large GUI/CLI set, VSCode extensions, niche tools)
+- homebrew/Brewfile.extra — Optional extras (fonts, large GUI/CLI set, niche tools)
+- homebrew/Brewfile.vscode — VSCode extensions layer (apply only if using VSCode)
 
 Usage examples (apply in order as needed):
 ```bash
@@ -174,6 +175,9 @@ brew bundle --file=homebrew/Brewfile.dev
 
 # Add optional extras
 brew bundle --file=homebrew/Brewfile.extra
+
+# (Optional) Install VSCode extensions
+brew bundle --file=homebrew/Brewfile.vscode
 ```
 Each file declares only the taps it needs. You can safely skip dev or extra on constrained machines.
 
