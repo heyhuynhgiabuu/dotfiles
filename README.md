@@ -49,6 +49,7 @@ The repository is organized by tool, making it easy to navigate and manage confi
 ├── opencode/      # OpenCode AI agent configuration and prompts
 ├── augment/       # AugmentCode AI tool configuration
 ├── scripts/       # Installation, setup, and utility scripts
+├── homebrew/      # Layered Brewfiles (min, dev, extra, snapshot)
 └── docs/          # Documentation and guides
 ```
 
@@ -158,7 +159,7 @@ Large or extreme long-line files can degrade performance. The custom module cust
 ### Snapshot & Reproducibility
 
 #### Layered Brewfiles
-To enable lean setups, the monolithic Brewfile is split into layers under `homebrew/`:
+To enable lean setups, the monolithic Brewfile is split into layers under `homebrew/` (moved from the repository root for clearer organization, reduced root clutter, and to reserve the top level for primary tooling directories):
 - homebrew/Brewfile.min   — Minimal baseline (core shell + editor + terminal tooling)
 - homebrew/Brewfile.dev   — Development stack (languages, build tools, services, language servers)
 - homebrew/Brewfile.extra — Optional extras (fonts, large GUI/CLI set, VSCode extensions, niche tools)
@@ -176,7 +177,11 @@ brew bundle --file=homebrew/Brewfile.extra
 ```
 Each file declares only the taps it needs. You can safely skip dev or extra on constrained machines.
 
-A locked snapshot of the current toolchain is stored in `homebrew/Brewfile` (generated via `brew bundle dump`). To reproduce the core environment on macOS:
+A locked snapshot of the current toolchain is stored in `homebrew/Brewfile` (generated via `brew bundle dump`). If tooling expects a root-level Brewfile you can optionally create a symlink:
+```bash
+ln -s homebrew/Brewfile Brewfile
+```
+To reproduce the core environment on macOS:
 ```bash
 # Review before execution (never blindly run on prod machines)
 brew bundle --file=homebrew/Brewfile
