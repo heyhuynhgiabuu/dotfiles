@@ -41,6 +41,4 @@ brew "daipeihust/tap/im-select"
 # Optional web tools
 brew "hugo"
 
-# Casks (developer tools)
-cask "devutils"
-cask "multipass"
+# Casks moved to GUI layer (homebrew/Brewfile.gui) to keep dev layer CLI-focused.

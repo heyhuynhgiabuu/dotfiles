@@ -162,9 +162,10 @@ Large or extreme long-line files can degrade performance. The custom module cust
 To enable lean setups, the monolithic Brewfile is split into layers under `homebrew/` (moved from the repository root for clearer organization, reduced root clutter, and to reserve the top level for primary tooling directories):
 - homebrew/Brewfile.min   — Minimal baseline (core shell + editor + terminal tooling)
 - homebrew/Brewfile.dev   — Development stack (languages, build tools, services, language servers)
-- homebrew/Brewfile.extra — Optional extras (fonts, large GUI/CLI set, niche tools)
--   homebrew/Brewfile.vscode — VSCode extensions layer (apply only if using VSCode)
--   homebrew/Brewfile.fonts  — Large Nerd Fonts layer (optional)
+- homebrew/Brewfile.extra  — Optional extras (niche CLI, specialty tools)
+- homebrew/Brewfile.gui    — GUI / window manager / terminal / subscription casks
+- homebrew/Brewfile.vscode — VSCode extensions layer (apply only if using VSCode)
+- homebrew/Brewfile.fonts  — Nerd Fonts layer (optional, curated subset enabled)
 
 
 Usage examples (apply in order as needed):
@@ -181,7 +182,10 @@ brew bundle --file=homebrew/Brewfile.extra
 # (Optional) Install VSCode extensions
 brew bundle --file=homebrew/Brewfile.vscode
 
-# (Optional) Install fonts
+# (Optional) Install GUI apps
+brew bundle --file=homebrew/Brewfile.gui
+
+# (Optional) Install fonts (curated subset enabled; uncomment more if needed)
 brew bundle --file=homebrew/Brewfile.fonts
 ```
 Each file declares only the taps it needs. You can safely skip dev or extra on constrained machines.
@@ -195,7 +199,23 @@ To reproduce the core environment on macOS:
 # Review before execution (never blindly run on prod machines)
 brew bundle --file=homebrew/Brewfile
 ```
-Only install what you actually need; fonts / GUI casks are optional. For scripted automation use scripts/brew-apply-layer.sh which supports --dry-run and skips macOS-only casks on Linux.
+Only install what you actually need; fonts / GUI casks are optional. For scripted automation use scripts/brew-apply-layer.sh which supports --dry-run and skips macOS-only casks on Linux. Use --layers to specify order, e.g.:
+
+```bash
+./scripts/brew-apply-layer.sh --dry-run min dev gui extra
+./scripts/brew-apply-layer.sh min dev gui
+```
+
+Validate installations and detect overlaps:
+```bash
+./scripts/verify-brew-layers.sh --layers "min dev gui" --show-overlaps
+```
+
+Regenerate snapshot safely:
+```bash
+./scripts/brew-dump-snapshot.sh      # aborts if uncommitted changes
+./scripts/brew-dump-snapshot.sh --force  # override check
+```
 
 ### Routine Maintenance (Quarterly or After Issues)
 ```bash

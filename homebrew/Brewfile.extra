@@ -34,7 +34,6 @@ brew "sst/tap/opencode"
 # Fonts moved to separate layer: homebrew/Brewfile.fonts
 # Apply optionally via: brew bundle --file=homebrew/Brewfile.fonts
 
-# GUI / subscription
-cask "setapp"
+# GUI / subscription moved to GUI layer (homebrew/Brewfile.gui)
 
 # VSCode extensions moved to Brewfile.vscode (apply separately)

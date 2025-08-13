@@ -1,0 +1,22 @@
+# Brewfile.gui
+# GUI / Desktop / Subscription / Window Manager & Terminal layer.
+# Apply optionally after minimal/dev: brew bundle --file=homebrew/Brewfile.gui
+# macOS only casks auto-skipped on Linux by brew-apply-layer.sh wrapper.
+
+# Taps (only those required for listed casks)
+tap "homebrew/core"
+tap "nikitabobko/tap"   # aerospace window manager
+
+# Core GUI tools
+cask "aerospace"        # window manager (macOS)
+cask "wezterm"          # terminal emulator
+
+# Development helper / utilities
+cask "devutils"
+cask "multipass"
+
+# Input / UX enhancements
+cask "jordanbaird-ice"
+
+# Subscription bundle (optional, large)
+cask "setapp"

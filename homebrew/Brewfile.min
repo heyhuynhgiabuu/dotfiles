@@ -29,6 +29,4 @@ brew "yq"
 brew "zoxide"
 brew "zsh"
 
-# GUI / Terminal (macOS only casks; skipped on Linux automatically)
-cask "aerospace"
-cask "wezterm"
+# GUI / Terminal moved to GUI layer (homebrew/Brewfile.gui) to keep minimal strictly CLI + essential editor.

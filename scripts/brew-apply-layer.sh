@@ -9,7 +9,7 @@ ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 BREW_DIR="$ROOT_DIR/homebrew"
 DRY_RUN=false
 if [[ ${1:-} == "--dry-run" ]]; then DRY_RUN=true; shift; fi
-AVAILABLE=(min dev extra fonts vscode)
+AVAILABLE=(min dev gui extra fonts vscode)
 # snapshot refers to Brewfile (full snapshot)
 log() { printf '%s\n' "$*"; }
 err() { printf 'ERROR: %s\n' "$*" >&2; }

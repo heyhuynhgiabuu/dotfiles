@@ -7,21 +7,26 @@
 # Taps required
  tap "homebrew/core"
 
-# Nerd Fonts (curated subset; prune as needed)
-cask "font-0xproto-nerd-font"
-cask "font-3270-nerd-font"
-cask "font-agave-nerd-font"
-cask "font-anonymice-nerd-font"
-cask "font-arimo-nerd-font"
-cask "font-aurulent-sans-mono-nerd-font"
-cask "font-bigblue-terminal-nerd-font"
-cask "font-bitstream-vera-sans-mono-nerd-font"
+# Nerd Fonts (lean recommended subset enabled; others commented for optional use)
+# Enabled set chosen for variety: programming ligatures, readability, stylistic breadth.
+# To enable more, uncomment lines.
+
+cask "font-hack-nerd-font"
 cask "font-blex-mono-nerd-font"
+cask "font-commit-mono-nerd-font"
 cask "font-caskaydia-cove-nerd-font"
-cask "font-caskaydia-mono-nerd-font"
 cask "font-code-new-roman-nerd-font"
 cask "font-comic-shanns-mono-nerd-font"
-cask "font-commit-mono-nerd-font"
-cask "font-cousine-nerd-font"
-cask "font-d2coding-nerd-font"
-cask "font-hack-nerd-font"
+
+# Optional (commented)
+# cask "font-0xproto-nerd-font"
+# cask "font-3270-nerd-font"
+# cask "font-agave-nerd-font"
+# cask "font-anonymice-nerd-font"
+# cask "font-arimo-nerd-font"
+# cask "font-aurulent-sans-mono-nerd-font"
+# cask "font-bigblue-terminal-nerd-font"
+# cask "font-bitstream-vera-sans-mono-nerd-font"
+# cask "font-caskaydia-mono-nerd-font"
+# cask "font-cousine-nerd-font"
+# cask "font-d2coding-nerd-font"
