@@ -24,7 +24,7 @@ cd ~/dotfiles
 
 # 2. Run the installation script
 # This will set up symlinks and install necessary dependencies.
-./scripts/install.sh
+./scripts/setup/install.sh
 ```
 
 ## 🛠️ Key Features
@@ -69,14 +69,14 @@ Artifacts (generated, ignored by git): review_artifacts/
 
 Quick Usage:
 ```bash
-./scripts/review-scope.sh --base main        # Generate JSON + Markdown
-./scripts/review-scope.sh --base main --no-md # JSON only
+./scripts/ci/review-scope.sh --base main        # Generate JSON + Markdown
+./scripts/ci/review-scope.sh --base main --no-md # JSON only
 ```
 
 Manual Verification (macOS default /bin/bash 3.2):
 ```bash
 /bin/bash --version | head -1
-./scripts/review-scope.sh --base main --no-md
+./scripts/ci/review-scope.sh --base main --no-md
 jq -e '.version >= 1' review_artifacts/all.json  # if jq installed
 rg -n 'declare -A|mapfile|readarray' scripts/ || true  # should output nothing
 ```
@@ -121,27 +121,27 @@ fi
 Supported managers (priority order): Homebrew (macOS), apt, yum, pacman.
 
 ### ffmpeg Helper & Transcript Extraction
-Use scripts/ffmpeg-helper.sh to detect (and optionally install) ffmpeg, diagnose Homebrew issues, suggest remediation steps, or extract plaintext from an SRT file.
+Use scripts/dev/ffmpeg-helper.sh to detect (and optionally install) ffmpeg, diagnose Homebrew issues, suggest remediation steps, or extract plaintext from an SRT file.
 
 Examples:
 ```bash
 # Detect only
-./scripts/ffmpeg-helper.sh
+./scripts/dev/ffmpeg-helper.sh
 
 # Auto-install (if supported manager present)
-./scripts/ffmpeg-helper.sh --auto-install
+./scripts/dev/ffmpeg-helper.sh --auto-install
 
 # Auto-install + aggressive conflict resolution
-./scripts/ffmpeg-helper.sh --auto-install --force-conflicts
+./scripts/dev/ffmpeg-helper.sh --auto-install --force-conflicts
 
 # Diagnostics (brew info / linkage / doctor summary)
-./scripts/ffmpeg-helper.sh --diagnose
+./scripts/dev/ffmpeg-helper.sh --diagnose
 
 # Diagnostics + remediation suggestions (dry-run only)
-./scripts/ffmpeg-helper.sh --brew-fix --diagnose
+./scripts/dev/ffmpeg-helper.sh --brew-fix --diagnose
 
 # Extract transcript text from SRT
-./scripts/ffmpeg-helper.sh video.en.srt video.txt --extract
+./scripts/dev/ffmpeg-helper.sh video.en.srt video.txt --extract
 ```
 Flags:
 - `--auto-install` Attempt installation using available package manager (brew/apt/yum/pacman)
@@ -163,7 +163,7 @@ Large or extreme long-line files can degrade performance. The custom module cust
 ### Java Development
 ```bash
 # Start a pre-configured Tmux session for Java development
-./scripts/tmux-java-layout.sh
+./scripts/tmux/tmux-java-layout.sh
 
 # Use F9 to toggle breakpoints and F12 to start debugging.
 ```
@@ -171,7 +171,7 @@ Large or extreme long-line files can degrade performance. The custom module cust
 ### Go Development
 ```bash
 # Start a pre--configured Tmux session for Go development
-./scripts/tmux-go-layout.sh
+./scripts/tmux/tmux-go-layout.sh
 
 # Use F9 to toggle breakpoints and F12 to start debugging.
 ```
@@ -247,19 +247,19 @@ brew bundle --file=homebrew/Brewfile
 Only install what you actually need; fonts / GUI casks are optional. For scripted automation use scripts/brew-apply-layer.sh which supports --dry-run and skips macOS-only casks on Linux. Use --layers to specify order, e.g.:
 
 ```bash
-./scripts/brew-apply-layer.sh --dry-run min dev gui extra
-./scripts/brew-apply-layer.sh min dev gui
+./scripts/setup/brew-apply-layer.sh --dry-run min dev gui extra
+./scripts/setup/brew-apply-layer.sh min dev gui
 ```
 
 Validate installations and detect overlaps:
 ```bash
-./scripts/verify-brew-layers.sh --layers "min dev gui" --show-overlaps
+./scripts/verify/verify-brew-layers.sh --layers "min dev gui" --show-overlaps
 ```
 
 Regenerate snapshot safely:
 ```bash
-./scripts/brew-dump-snapshot.sh      # aborts if uncommitted changes
-./scripts/brew-dump-snapshot.sh --force  # override check
+./scripts/setup/brew-dump-snapshot.sh      # aborts if uncommitted changes
+./scripts/setup/brew-dump-snapshot.sh --force  # override check
 ```
 
 ### Routine Maintenance (Quarterly or After Issues)
@@ -282,24 +282,24 @@ brew bundle dump --file=homebrew/Brewfile --force
 ```
 
 ### ffmpeg Helper Usage
-The script `scripts/ffmpeg-helper.sh` provides detection, optional install, diagnostics, conflict handling suggestions, and SRT → plaintext extraction.
+The script `scripts/dev/ffmpeg-helper.sh` provides detection, optional install, diagnostics, conflict handling suggestions, and SRT → plaintext extraction.
 
 Common examples:
 ```bash
 # Detect only
-./scripts/ffmpeg-helper.sh
+./scripts/dev/ffmpeg-helper.sh
 
 # Install if missing (brew/apt/yum/pacman detected automatically)
-./scripts/ffmpeg-helper.sh --auto-install
+./scripts/dev/ffmpeg-helper.sh --auto-install
 
 # Diagnose + remediation suggestions (no execution of fixes)
-./scripts/ffmpeg-helper.sh --diagnose --brew-fix
+./scripts/dev/ffmpeg-helper.sh --diagnose --brew-fix
 
 # Force conflict relinks then reinstall (brew only)
-./scripts/ffmpeg-helper.sh --auto-install --force-conflicts
+./scripts/dev/ffmpeg-helper.sh --auto-install --force-conflicts
 
 # Extract transcript
-./scripts/ffmpeg-helper.sh input.srt output.txt --extract
+./scripts/dev/ffmpeg-helper.sh input.srt output.txt --extract
 ```
 Flags:
 - --auto-install  Attempt installation via available manager.
@@ -331,7 +331,7 @@ If you encounter Treesitter errors like "Impossible pattern: '~' @conceal" or pa
 **Quick Fix:**
 ```bash
 # Run the automated fix script
-./scripts/fix-treesitter.sh
+./scripts/verify/fix-treesitter.sh
 ```
 
 **Manual Steps:**

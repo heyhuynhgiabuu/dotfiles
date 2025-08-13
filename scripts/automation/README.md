@@ -12,12 +12,12 @@
 
 ### Manual Run:
 ```bash
-./scripts/serena-auto-update.sh
+./scripts/serena/serena-auto-update.sh
 ```
 
 ### Install Weekly Automation:
 ```bash
-./scripts/install-automation.sh
+./scripts/automation/install-automation.sh
 ```
 
 ### Check Status:

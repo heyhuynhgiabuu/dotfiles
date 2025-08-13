@@ -16,7 +16,7 @@ failf() { printf "[FAIL] %s\n" "$1"; fail=$((fail+1)); }
 
 # Discover repo root from script location
 SCRIPT_DIR=$(cd "$(dirname "$0")" 2>/dev/null && pwd)
-REPO_ROOT=$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd)
+REPO_ROOT=$(cd "$SCRIPT_DIR/../.." 2>/dev/null && pwd)
 CUSTOM_DIR_REPO="$REPO_ROOT/nvim/.config/nvim/lua/custom"
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
 CUSTOM_LINK="$NVIM_CONFIG_DIR/lua/custom"

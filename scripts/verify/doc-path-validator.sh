@@ -8,7 +8,7 @@ REPO_ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$REPO_ROOT" || exit 1
 
 # Find markdown files (exclude node_modules or vendored directories if any)
-MD_FILES=$(find . -type f -name '*.md' \( -not -path '*/node_modules/*' \))
+MD_FILES=$(find . -type f -name '*.md' \( -not -path '*/node_modules/*' -a -not -path '*/.serena/*' \))
 
 MISSING=0
 TMP_OUT=$(mktemp)

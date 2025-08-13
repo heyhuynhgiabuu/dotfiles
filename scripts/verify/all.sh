@@ -17,12 +17,21 @@ FAIL=0
 WARN=0
 
 run_script() {
-  local script="$1"
+  script="$1"
   printf '\n==> %s\n' "$script"
-  if sh "$SCRIPT_DIR/$script"; then
-    PASS=$((PASS+1))
+  if [ -x "$SCRIPT_DIR/$script" ]; then
+    if "$SCRIPT_DIR/$script"; then
+      PASS=$((PASS+1))
+    else
+      FAIL=$((FAIL+1))
+    fi
   else
-    FAIL=$((FAIL+1))
+    # Fallback to sh if not executable
+    if sh "$SCRIPT_DIR/$script"; then
+      PASS=$((PASS+1))
+    else
+      FAIL=$((FAIL+1))
+    fi
   fi
   TOTAL=$((TOTAL+1))
 }

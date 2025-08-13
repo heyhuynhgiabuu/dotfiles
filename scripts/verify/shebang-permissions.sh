@@ -27,7 +27,10 @@ fi
 # Simple bashism patterns to flag in POSIX sh scripts
 BASHISM_REGEX='(\[\[|\]\]|\<\(|function\s+|==\s|\$RANDOM|select\s)'
 
+SELF="scripts/verify/shebang-permissions.sh"
 for f in $FILES; do
+  # Skip self to avoid self-bashism false positive when invoked via sh
+  if [ "$f" = "$SELF" ]; then passf "$f: self-skip"; continue; fi
   # Check shebang
   first="$(head -n1 "$f" 2>/dev/null || true)"
   case "$first" in
@@ -48,7 +51,9 @@ for f in $FILES; do
   esac
 
   # Check executable bit
-  if [ -x "$f" ]; then
+  if [ "$f" = "$SELF" ]; then
+    : # skip self-exec check to avoid false warning when run via sh
+  elif [ -x "$f" ]; then
     :
   else
     warnf "$f: not executable (+x)"

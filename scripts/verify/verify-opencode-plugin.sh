@@ -20,7 +20,7 @@ failf() { printf "[FAIL] %s\n" "$1"; fail=$((fail+1)); }
 
 # Locate repo root based on this script's location
 SCRIPT_DIR=$(cd "$(dirname "$0")" 2>/dev/null && pwd)
-REPO_ROOT=$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd)
+REPO_ROOT=$(cd "$SCRIPT_DIR/../.." 2>/dev/null && pwd)
 PLUGINS_DIR="$REPO_ROOT/opencode/plugin/plugins"
 
 info "Repo root: $REPO_ROOT"

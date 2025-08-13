@@ -5,7 +5,7 @@
 # Usage: bash scripts/verify-dev-environment.sh
 
 # Source common utilities
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Configuration
 readonly MASON_PACKAGES_DIR="${HOME}/.local/share/nvim/mason/packages"
@@ -166,7 +166,7 @@ main "$@"#!/bin/bash
 # Usage: bash scripts/verify-dev-environment.sh
 
 # Source common utilities
-source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 
 # Configuration
 readonly MASON_PACKAGES_DIR="${HOME}/.local/share/nvim/mason/packages"
