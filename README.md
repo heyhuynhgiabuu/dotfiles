@@ -158,28 +158,28 @@ Large or extreme long-line files can degrade performance. The custom module cust
 ### Snapshot & Reproducibility
 
 #### Layered Brewfiles
-To enable lean setups, the monolithic Brewfile is split into layers:
-- Brewfile.min  — Minimal baseline (core shell + editor + terminal tooling)
-- Brewfile.dev  — Development stack (languages, build tools, services, language servers)
-- Brewfile.extra — Optional extras (fonts, large GUI/CLI set, VSCode extensions, niche tools)
+To enable lean setups, the monolithic Brewfile is split into layers under `homebrew/`:
+- homebrew/Brewfile.min   — Minimal baseline (core shell + editor + terminal tooling)
+- homebrew/Brewfile.dev   — Development stack (languages, build tools, services, language servers)
+- homebrew/Brewfile.extra — Optional extras (fonts, large GUI/CLI set, VSCode extensions, niche tools)
 
 Usage examples (apply in order as needed):
 ```bash
 # Minimal core
-brew bundle --file=Brewfile.min
+brew bundle --file=homebrew/Brewfile.min
 
 # Add development tooling
-brew bundle --file=Brewfile.dev
+brew bundle --file=homebrew/Brewfile.dev
 
 # Add optional extras
-brew bundle --file=Brewfile.extra
+brew bundle --file=homebrew/Brewfile.extra
 ```
 Each file declares only the taps it needs. You can safely skip dev or extra on constrained machines.
 
-A locked snapshot of the current toolchain is stored in the Brewfile (generated via `brew bundle dump`). To reproduce the core environment on macOS:
+A locked snapshot of the current toolchain is stored in `homebrew/Brewfile` (generated via `brew bundle dump`). To reproduce the core environment on macOS:
 ```bash
 # Review before execution (never blindly run on prod machines)
-brew bundle --file=Brewfile
+brew bundle --file=homebrew/Brewfile
 ```
 Only install what you actually need; fonts / GUI casks are optional.
 
@@ -199,7 +199,7 @@ for tap in $(brew tap); do (cd "$(brew --repo "$tap")" && git fetch origin && gi
 ```
 Re‑dump snapshot after meaningful changes:
 ```bash
-brew bundle dump --file=Brewfile --force
+brew bundle dump --file=homebrew/Brewfile --force
 ```
 
 ### ffmpeg Helper Usage
