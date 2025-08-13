@@ -153,6 +153,76 @@ Large or extreme long-line files can degrade performance. The custom module cust
 - [Serena MCP Best Practices](docs/serena-mcp-best-practices.md) - Guidelines for leveraging Serena MCP with OpenCode agents
 - [Serena MCP Example Workflows](docs/serena-mcp-example-workflows.md) - Practical examples of Serena-enhanced agent operations
 
+## 🛡️ Homebrew Maintenance & Media Tooling
+
+### Snapshot & Reproducibility
+A locked snapshot of the current toolchain is stored in the Brewfile (generated via `brew bundle dump`). To reproduce the core environment on macOS:
+```bash
+# Review before execution (never blindly run on prod machines)
+brew bundle --file=Brewfile
+```
+Only install what you actually need; fonts / GUI casks are optional.
+
+### Routine Maintenance (Quarterly or After Issues)
+```bash
+brew update --force --quiet
+brew upgrade            # (optional) keep formulae current
+brew cleanup -s         # prune old versions
+brew autoremove         # remove orphaned dependencies
+brew doctor             # review warnings
+brew list --unlinked    # inspect stray kegs
+```
+If repos become dirty (modified taps):
+```bash
+(cd "$(brew --repo)" && git fetch origin && git reset --hard origin/HEAD)
+for tap in $(brew tap); do (cd "$(brew --repo "$tap")" && git fetch origin && git reset --hard origin/HEAD); done
+```
+Re‑dump snapshot after meaningful changes:
+```bash
+brew bundle dump --file=Brewfile --force
+```
+
+### ffmpeg Helper Usage
+The script `scripts/ffmpeg-helper.sh` provides detection, optional install, diagnostics, conflict handling suggestions, and SRT → plaintext extraction.
+
+Common examples:
+```bash
+# Detect only
+./scripts/ffmpeg-helper.sh
+
+# Install if missing (brew/apt/yum/pacman detected automatically)
+./scripts/ffmpeg-helper.sh --auto-install
+
+# Diagnose + remediation suggestions (no execution of fixes)
+./scripts/ffmpeg-helper.sh --diagnose --brew-fix
+
+# Force conflict relinks then reinstall (brew only)
+./scripts/ffmpeg-helper.sh --auto-install --force-conflicts
+
+# Extract transcript
+./scripts/ffmpeg-helper.sh input.srt output.txt --extract
+```
+Flags:
+- --auto-install  Attempt installation via available manager.
+- --force-conflicts  Force unlink/relink curated + user-provided formulas (brew) before reinstall.
+- --diagnose  Show truncated brew info/linkage/doctor & conflict set.
+- --brew-fix  Print (dry-run) remediation commands (never auto-executes).
+- --extract  Switch to SRT → plaintext mode (requires input & output paths).
+
+Environment:
+- FFMPEG_CONFLICTS  Space or comma separated additional formula names to examine for relink.
+
+### PATH Ordering Notes
+Ensure Homebrew paths (`/opt/homebrew/bin`, `/opt/homebrew/sbin`) appear early (they do in `.zshrc`) so that modern tool versions (ripgrep, fd, jq, etc.) shadow any system-provided variants.
+
+### Tap Review
+Current taps snapshot (see Brewfile). Prune taps you do not actively use to reduce update noise (e.g., specialty or experimental taps). Remove with:
+```bash
+brew untap <tap/name>
+```
+
+---
+
 ## 🐛 Troubleshooting
 
 ### Neovim Treesitter Issues
