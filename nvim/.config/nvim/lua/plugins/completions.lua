@@ -1,17 +1,31 @@
 return {
     {
         "L3MON4D3/LuaSnip",
-        dependencies = { 
-            "saadparwaiz1/cmp_luasnip", 
+        dependencies = {
+            "saadparwaiz1/cmp_luasnip",
             "rafamadriz/friendly-snippets",
-            -- Add Go and Java specific snippets
-            "golang/vscode-go",
-            "redhat-developer/vscode-java",
+            -- NOTE: Removed large VSCode extension repos to avoid heavy clone.
+            -- We dynamically load local VSCode snippet paths below if they exist.
         },
         config = function()
-            require("luasnip.loaders.from_vscode").lazy_load()
-            -- Load language-specific snippets
-            require("luasnip.loaders.from_vscode").lazy_load({paths = {"~/.vscode/extensions/golang.go/snippets"}})
+            local ls_loader = require("luasnip.loaders.from_vscode")
+            -- Base community snippets
+            ls_loader.lazy_load()
+
+            -- Optional language-specific snippet directories (only if present locally)
+            local paths = {
+                vim.fn.expand("~/.vscode/extensions/golang.go/snippets"),
+                vim.fn.expand("~/.vscode/extensions/redhat.java/snippets"),
+            }
+            local existing = {}
+            for _, p in ipairs(paths) do
+                if vim.fn.isdirectory(p) == 1 then
+                    table.insert(existing, p)
+                end
+            end
+            if #existing > 0 then
+                ls_loader.lazy_load({ paths = existing })
+            end
         end,
     },
     {
@@ -28,15 +42,19 @@ return {
         config = function()
             local cmp = require("cmp")
             local luasnip = require("luasnip")
-            
-            -- Load snippets from VSCode extensions
-            require("luasnip.loaders.from_vscode").lazy_load()
+
+            -- Snippets already loaded in LuaSnip config; avoid duplicate lazy_load calls.
 
             cmp.setup({
                 snippet = {
                     expand = function(args)
                         luasnip.lsp_expand(args.body)
                     end,
+                },
+                performance = {
+                    debounce = 60,
+                    throttle = 30,
+                    fetching_timeout = 200,
                 },
                 window = {
                     completion = cmp.config.window.bordered({
@@ -66,9 +84,9 @@ return {
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<C-Space>"] = cmp.mapping.complete(),
                     ["<C-e>"] = cmp.mapping.abort(),
-                    ["<CR>"] = cmp.mapping.confirm({ 
+                    ["<CR>"] = cmp.mapping.confirm({
                         behavior = cmp.ConfirmBehavior.Replace,
-                        select = true 
+                        select = true
                     }),
                     ["<C-k>"] = cmp.mapping.select_prev_item(),
                     ["<C-j>"] = cmp.mapping.select_next_item(),
@@ -109,7 +127,7 @@ return {
                     ghost_text = true, -- Show ghost text for suggestions
                 },
             })
-            
+
             -- Enhanced completion for Go files
             cmp.setup.filetype('go', {
                 sources = cmp.config.sources({
@@ -121,7 +139,7 @@ return {
                     { name = "path" },
                 })
             })
-            
+
             -- Enhanced completion for Java files
             cmp.setup.filetype('java', {
                 sources = cmp.config.sources({
@@ -133,12 +151,12 @@ return {
                     { name = "path" },
                 })
             })
-            
+
             -- Setup command line completion using autocommand to ensure it runs after everything is loaded
             vim.api.nvim_create_autocmd("CmdlineEnter", {
                 callback = function()
                     local cmp = require('cmp')
-                    
+
                     -- Setup search completion
                     cmp.setup.cmdline('/', {
                         completion = { autocomplete = false },
@@ -147,7 +165,7 @@ return {
                             { name = 'buffer', opts = { keyword_pattern = [=[[^[:blank:]].*]=] } }
                         }
                     })
-                    
+
                     cmp.setup.cmdline('?', {
                         completion = { autocomplete = false },
                         mapping = cmp.mapping.preset.cmdline(),
@@ -155,7 +173,7 @@ return {
                             { name = 'buffer', opts = { keyword_pattern = [=[[^[:blank:]].*]=] } }
                         }
                     })
-                    
+
                     -- Setup command completion
                     cmp.setup.cmdline(':', {
                         completion = { autocomplete = false },
@@ -169,6 +187,15 @@ return {
                 end,
                 once = true, -- Only run once
             })
+
+            -- Simple command to show active CMP sources & priorities
+            vim.api.nvim_create_user_command("CmpSourcesDebug", function()
+                local sources = {}
+                for _, s in ipairs(cmp.get_config().sources) do
+                    table.insert(sources, (s.name or "?") .. (s.priority and (":" .. s.priority) or ""))
+                end
+                vim.notify("CMP sources: " .. table.concat(sources, ", "), vim.log.levels.INFO)
+            end, {})
         end,
     },
 }
