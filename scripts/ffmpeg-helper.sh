@@ -1,18 +1,172 @@
 #!/bin/bash
-# Cross-platform ffmpeg detection & optional installation helper
+# Cross-platform ffmpeg detection & optional installation / diagnostics helper
 # Usage:
-#   ./scripts/ffmpeg-helper.sh [--auto-install]
-#   source within other scripts to ensure ffmpeg availability.
-# Respects project rule: keep dependencies minimal; only installs when explicitly requested.
+#   ./scripts/ffmpeg-helper.sh [--auto-install] [--force-conflicts] [--diagnose]
+#   ./scripts/ffmpeg-helper.sh input.srt output.txt --extract
+# Flags:
+#   --auto-install      Attempt to install ffmpeg via detected package manager (brew/apt/yum/pacman)
+#   --force-conflicts   (brew only) Force unlink + overwrite relink of known conflicting formulas before reinstall
+#   --diagnose          Run brew / environment diagnostics (non-destructive) after operations
+# Environment:
+#   FFMPEG_CONFLICTS    Space or comma separated extra brew formula names to treat as potential link conflicts
+# Notes:
+#   - Keeps dependencies minimal (project guideline). No static binary fallback unless explicitly added later.
+#   - Subtitle artifacts (*.srt, *.vtt) are ignored by .gitignore.
 
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh"
 
 AUTO_INSTALL=false
-if [[ "${1:-}" == "--auto-install" ]]; then
-  AUTO_INSTALL=true
-fi
+FORCE_CONFLICTS=false
+DIAGNOSE=false
+EXTRACT_MODE=false
+IN_SRT=""; OUT_TXT=""
+
+print_usage() {
+  cat <<'EOF'
+ffmpeg-helper: detect / install / diagnose ffmpeg, extract transcripts.
+
+Basic:
+  ./scripts/ffmpeg-helper.sh                # Detect only
+  ./scripts/ffmpeg-helper.sh --auto-install # Detect + install if missing
+
+Transcript extraction:
+  ./scripts/ffmpeg-helper.sh input.srt output.txt --extract
+
+Advanced flags:
+  --force-conflicts   Force relink known + user-provided conflict formulas (brew)
+  --diagnose          Show brew doctor/info/linkage diagnostics for ffmpeg
+
+Env customization:
+  FFMPEG_CONFLICTS="formula1 formula2"  (space or comma separated)
+EOF
+}
+
+parse_args() {
+  # Support: flags can appear in any order; extraction form uses two positional args + --extract
+  local positional=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --auto-install)    AUTO_INSTALL=true; shift ;;
+      --force-conflicts) FORCE_CONFLICTS=true; shift ;;
+      --diagnose)        DIAGNOSE=true; shift ;;
+      --extract)         EXTRACT_MODE=true; shift ;;
+      -h|--help)         print_usage; exit 0 ;;
+      *) positional+=("$1"); shift ;;
+    esac
+  done
+
+  if $EXTRACT_MODE; then
+    if [[ ${#positional[@]} -lt 2 ]]; then
+      log_error "Extraction mode requires: input.srt output.txt --extract"
+      exit 1
+    fi
+    IN_SRT="${positional[0]}"; OUT_TXT="${positional[1]}"
+  fi
+}
+
+# Turn a list with commas into space separated unique tokens
+normalize_formula_list() {
+  local raw="$1"
+  echo "$raw" | tr ',;' ' ' | tr -s ' ' | tr ' ' '\n' | awk 'NF' | sort -u | tr '\n' ' '
+}
+
+brew_conflict_formula_base() {
+  # Curated common ffmpeg-related formulae that occasionally produce link conflicts
+  # (OpenEXR tools, AV1 codecs, crypto/SSL libs, streaming libs)
+  echo "openexr aom rav1e dav1d libvpx nettle gnutls librist libbluray libidn2"
+}
+
+brew_effective_conflict_formulas() {
+  local base extra
+  base="$(brew_conflict_formula_base)"
+  extra="${FFMPEG_CONFLICTS:-}"
+  if [[ -n "$extra" ]]; then
+    normalize_formula_list "$base $extra"
+  else
+    normalize_formula_list "$base"
+  fi
+}
+
+brew_relink_formula() {
+  local formula="$1"
+  if brew list --versions "$formula" >/dev/null 2>&1; then
+    log_info "Unlinking $formula (if linked)..."
+    brew unlink "$formula" >/dev/null 2>&1 || true
+    log_info "Relinking $formula with --overwrite..."
+    brew link --overwrite "$formula" >/dev/null 2>&1 || true
+  fi
+}
+
+brew_detect_conflict_for_formula() {
+  # Heuristic: if formula installed AND has known binaries that are *symlinks* in Homebrew prefix
+  local formula="$1"; shift || true
+  local bins=()
+  case "$formula" in
+    openexr) bins=(exrinfo exrheader exr2aces) ;;
+    aom)     bins=(aomenc aomdec) ;;
+    rav1e)   bins=(rav1e) ;;
+    dav1d)   bins=(dav1d) ;;
+    libvpx)  bins=(vpxenc vpxdec) ;;
+    nettle)  bins=() ;; # libraries only; rely on force mode
+    gnutls)  bins=() ;;
+    librist) bins=(rist) ;;
+    libbluray) bins=() ;;
+    libidn2) bins=() ;;
+    *) bins=() ;;
+  esac
+  local prefix
+  if [[ "$(uname -m)" == "arm64" ]]; then
+    prefix="/opt/homebrew/bin"
+  else
+    prefix="/usr/local/bin"
+  fi
+  local b
+  for b in "${bins[@]}"; do
+    [[ -L "$prefix/$b" ]] && return 0
+  done
+  return 1
+}
+
+brew_attempt_conflict_resolution() {
+  local formulas
+  formulas="$(brew_effective_conflict_formulas)"
+  local attempted=false
+  for f in $formulas; do
+    if brew list --versions "$f" >/dev/null 2>&1; then
+      if $FORCE_CONFLICTS || brew_detect_conflict_for_formula "$f"; then
+        log_warning "Handling potential conflict formula: $f"
+        brew_relink_formula "$f"
+        attempted=true
+      fi
+    fi
+  done
+  if $attempted; then
+    log_info "Reinstalling ffmpeg after conflict handling..."
+    brew reinstall ffmpeg || true
+  fi
+}
+
+run_diagnostics() {
+  log_header "ffmpeg diagnostics"
+  if cmd_exists ffmpeg; then
+    log_success "ffmpeg present: $(ffmpeg -version | head -n1)"
+  else
+    log_warning "ffmpeg still missing"
+  fi
+  if cmd_exists brew; then
+    log_step "brew info ffmpeg (truncated)"
+    brew info ffmpeg | head -n 20 || true
+    if cmd_exists ffmpeg; then
+      log_step "brew linkage --test ffmpeg"
+      brew linkage --test ffmpeg || true
+    fi
+    log_step "brew doctor (filtered warnings)"
+    brew doctor 2>&1 | grep -E 'Warning|error|Error' | head -n 25 || true
+  fi
+  log_info "Potential conflict formulas considered: $(brew_effective_conflict_formulas)"
+}
 
 ensure_ffmpeg() {
   if cmd_exists ffmpeg; then
@@ -27,71 +181,26 @@ ensure_ffmpeg() {
   local manager
   manager=$(detect_package_manager)
   log_info "Attempting to install ffmpeg (manager: $manager)..."
-  install_package ffmpeg || true
 
-  if cmd_exists ffmpeg; then
-    log_success "ffmpeg installed successfully: $(ffmpeg -version | head -n1)"
-    return 0
-  fi
-
-  # Special handling for common Homebrew link conflicts (openexr, aom, others)
   if [[ "$manager" == "brew" ]]; then
-    local conflict_formulas=(openexr aom)
-    local attempted_fix=false
-
-    for formula in "${conflict_formulas[@]}"; do
-      if brew list --versions "$formula" >/dev/null 2>&1; then
-        # Check if any of its expected binaries already exist & point elsewhere (heuristic)
-        case "$formula" in
-          openexr)
-            local bins=(exrinfo exrheader exr2aces)
-            ;;
-          aom)
-            local bins=(aomenc aomdec)
-            ;;
-          *) bins=() ;;
-        esac
-        local conflict_detected=false
-        for b in "${bins[@]}"; do
-          if [[ -L "/opt/homebrew/bin/$b" ]]; then
-            conflict_detected=true; break
-          fi
-        done
-        if [[ "$conflict_detected" == true ]]; then
-          log_warning "Potential brew link conflict involving $formula detected (blocking ffmpeg). Attempting relink." 
-          attempted_fix=true
-          log_info "Unlinking $formula..."
-          brew unlink "$formula" || true
-          log_info "Relinking $formula with overwrite..."
-          brew link --overwrite "$formula" || true
-        fi
-      fi
-    done
-
-    if [[ "$attempted_fix" == true ]]; then
-      log_info "Reinstalling ffmpeg after resolving detected link conflicts..."
-      brew reinstall ffmpeg || true
+    # First attempt (capture logs for future enhancement if needed)
+    local log_file; log_file="$(mktemp /tmp/ffmpeg_install.XXXXXX.log)"
+    if ! brew install ffmpeg 2>&1 | tee "$log_file"; then
+      log_warning "Initial brew install attempt encountered warnings/errors (continuing)."
     fi
 
     if ! cmd_exists ffmpeg; then
-      log_warning "ffmpeg still not found after conflict resolution attempts. Showing dry-run info for each candidate formula..."
-      for formula in "${conflict_formulas[@]}"; do
-        if brew list --versions "$formula" >/dev/null 2>&1; then
-          brew link --overwrite "$formula" --dry-run || true
-        fi
-      done
-      cat <<'EOF'
-Manual resolution steps (execute manually if desired):
-  1. Review above dry-run outputs for conflicting files.
-  2. Force relink any culprit: brew link --overwrite <formula>
-  3. Reinstall ffmpeg: brew reinstall ffmpeg
-  4. Verify: which ffmpeg && ffmpeg -version
-  5. If still failing, run: brew doctor  (inspect guidance) and re-attempt.
-EOF
-    else
-      log_success "ffmpeg installed after resolving brew link conflicts: $(ffmpeg -version | head -n1)"
-      return 0
+      log_info "ffmpeg still missing after initial brew install. Trying brew upgrade..."
+      brew upgrade ffmpeg || true
     fi
+
+    if ! cmd_exists ffmpeg; then
+      log_info "Attempting conflict resolution (force mode: $FORCE_CONFLICTS)..."
+      brew_attempt_conflict_resolution
+    fi
+  else
+    # Non-brew path uses generic installer
+    install_package ffmpeg || true
   fi
 
   if cmd_exists ffmpeg; then
@@ -99,7 +208,14 @@ EOF
     return 0
   fi
 
-  log_error "ffmpeg installation failed. Please resolve conflicts manually (see above)."
+  log_warning "ffmpeg installation failed after automated attempts. Suggested manual steps:"
+  cat <<'EOF'
+Manual resolution (brew example):
+  1. Check conflicts: brew link --overwrite <formula> --dry-run
+  2. Force relink formulas you trust.
+  3. Reinstall: brew reinstall ffmpeg
+  4. Diagnostics: ./scripts/ffmpeg-helper.sh --diagnose
+EOF
   return 1
 }
 
@@ -111,20 +227,19 @@ extract_plaintext_from_srt() {
     log_error "Missing SRT file: $srt_file"
     return 1
   fi
-  # Remove numeric indices, timestamps, blank collapse
+  # Remove numeric indices, timestamps, carriage returns; collapse extra blank lines
   sed -E '/^[0-9]+$/d; /-->/d; s/\r//g' "$srt_file" | awk 'NF' >"$out_file"
   log_success "Extracted transcript: $out_file"
 }
 
 main() {
+  parse_args "$@"
   ensure_ffmpeg || true
-  if [[ ${3:-} == "--extract" ]]; then
-    local in_srt="${1:-}" out_txt="${2:-}";
-    if [[ -z "$in_srt" || -z "$out_txt" ]]; then
-      log_error "Usage: ffmpeg-helper.sh input.srt output.txt --extract"
-      exit 1
-    fi
-    extract_plaintext_from_srt "$in_srt" "$out_txt"
+  if $DIAGNOSE; then
+    run_diagnostics || true
+  fi
+  if $EXTRACT_MODE; then
+    extract_plaintext_from_srt "$IN_SRT" "$OUT_TXT"
   fi
 }
 
