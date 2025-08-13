@@ -71,6 +71,29 @@ version_gte() {
     printf '%s\n%s\n' "$2" "$1" | sort -V -C
 }
 
+# Detect the first available package manager (prioritized)
+# Returns: brew | apt | yum | pacman | unknown
+# Usage:
+#   manager=$(detect_package_manager)
+#   if [[ $manager == "unknown" ]]; then
+#       log_error "No supported package manager found"
+#   else
+#       log_info "Using package manager: $manager"
+#   fi
+detect_package_manager() {
+    if cmd_exists brew; then
+        echo "brew"
+    elif cmd_exists apt-get; then
+        echo "apt"
+    elif cmd_exists yum; then
+        echo "yum"
+    elif cmd_exists pacman; then
+        echo "pacman"
+    else
+        echo "unknown"
+    fi
+}
+
 # Cross-platform package installation
 install_package() {
     local package="$1"

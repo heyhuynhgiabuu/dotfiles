@@ -52,6 +52,29 @@ The repository is organized by tool, making it easy to navigate and manage confi
 └── docs/          # Documentation and guides
 ```
 
+## 🛠️ Utilities
+
+### Package Manager Detection
+A helper function is available in scripts/common.sh to detect the first available package manager on the system.
+
+Example usage inside a script:
+```bash
+manager=$(detect_package_manager)
+if [[ $manager == "unknown" ]]; then
+  log_error "No supported package manager found"
+else
+  log_info "Using package manager: $manager"
+  case "$manager" in
+    brew) brew install jq ;;
+    apt) sudo apt-get update && sudo apt-get install -y jq ;;
+    yum) sudo yum install -y jq ;;
+    pacman) sudo pacman -S --noconfirm jq ;;
+  esac
+fi
+```
+
+Supported managers (priority order): Homebrew (macOS), apt, yum, pacman.
+
 ## 💻 Development Workflows
 
 ### Java Development
