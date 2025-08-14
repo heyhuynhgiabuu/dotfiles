@@ -9,7 +9,7 @@
 #  - High concentration: > 60% of file lines changed (approx via git diff --numstat vs git ls-files size)
 # Score = number of triggered heuristics; candidates with score >=2 emitted (or all if --all supplied)
 # Usage:
-#   ./scripts/legacy-hotspot-detector.sh [--base <branch>] [--md] [--all]
+#   ./scripts/ci/legacy-hotspot-detector.sh [--base <branch>] [--md] [--all]
 # Dependencies: git, bash, grep, wc.
 
 set -euo pipefail

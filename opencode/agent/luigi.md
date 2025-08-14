@@ -3,7 +3,8 @@ name: luigi
 description: No-op sentinel subagent (returns [NOOP]); intentional placeholder for pauses, permission-denied fallback, benchmarking, and debouncing.
 mode: subagent
 model: github-copilot/gpt-5-mini
-temperature: 0
+temperature: 0.15
+max_tokens: 1400
 tools:
   bash: false
   read: false

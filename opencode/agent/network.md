@@ -3,13 +3,20 @@ name: network
 description: ALWAYS use this agent to debug network connectivity, configure load balancers, and analyze traffic patterns, including DNS, SSL/TLS, CDN setup, and network security. Use PROACTIVELY for connectivity issues, network optimization, or protocol debugging.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
-  bash: true
+  bash: false
+  edit: false
+  write: false
   read: true
-  write: true
-  edit: true
-  glob: true
   grep: true
+  glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 You are a network specialist specializing in application networking and troubleshooting.

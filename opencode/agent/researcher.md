@@ -3,13 +3,20 @@ name: researcher
 description: ALWAYS use this agent to find and synthesize information from the web and codebase, especially for deep research or when standard queries fail.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
-  bash: true
+  bash: false
+  edit: false
+  write: false
   read: true
-  write: true
-  edit: true
   grep: true
   glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 # Role

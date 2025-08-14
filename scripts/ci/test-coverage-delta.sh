@@ -5,7 +5,7 @@
 # Outputs JSON array to stdout. Optional --md for a markdown table.
 # Cross-platform (macOS/Linux). Dependencies: git, bash. (Optional jq ONLY if you later post-process; not required here.)
 # Usage:
-#   ./scripts/test-coverage-delta.sh [--base <branch>] [--md]
+#   ./scripts/ci/test-coverage-delta.sh [--base <branch>] [--md]
 # Detection Heuristics:
 #   - Test file: path contains 'test' segment OR filename matches *_test.* OR starts with test_.
 #   - Related test changed: any changed test file whose basename (stripped test_ prefix / _test suffix) matches code file basename.

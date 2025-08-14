@@ -3,15 +3,20 @@ name: analyst
 description: "ALWAYS use this agent for analyzing OpenCode's context management, caching mechanisms, and billing integration with GitHub Copilot."
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
   bash: false
-  write: false
   edit: false
-  glob: false
-  webfetch: false
-  task: false
-  todowrite: false
-  todoread: false
+  write: false
+  read: true
+  grep: true
+  glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 # OpenCode Context & Billing Analyst

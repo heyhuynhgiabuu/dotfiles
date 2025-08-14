@@ -3,13 +3,20 @@ name: troubleshooter
 description: Diagnoses and resolves performance, debugging, and incident issues. Use with `focus` parameter for specialization.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
-  bash: true
+  bash: false
+  edit: false
+  write: false
   read: true
-  write: true
-  edit: true
   grep: true
   glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 # Role

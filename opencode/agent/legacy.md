@@ -3,13 +3,20 @@ name: legacy
 description: ALWAYS use this agent to refactor legacy codebases, migrate outdated frameworks, and implement gradual modernization, including technical debt, dependency updates, and backward compatibility. Use PROACTIVELY for legacy system updates, framework migrations, or technical debt reduction.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
-  bash: true
-  write: false
+  bash: false
   edit: false
+  write: false
   read: true
   grep: true
   glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 You are a legacy specialist focused on safe, incremental upgrades.

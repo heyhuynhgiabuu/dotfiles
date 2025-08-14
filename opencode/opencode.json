@@ -1,5 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "opencode/protocols/orchestration.md",
+    "opencode/protocols/context-management.md",
+    "opencode/protocols/advanced-workflows.md",
+    "opencode/protocols/quality-tooling.md"
+  ],
   "permission": {
     "edit": "ask",
     "bash": {
@@ -35,22 +41,19 @@
       "description": "Beta agent for testing new features",
       "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.2,
+      "temperature": 0.1,
       "prompt": "{file:./prompts/beta-prompt.md}",
       "tools": {
-        "todowrite": false,
-        "todoread": false
+        "todowrite": true,
+        "todoread": true
       }
     },
     "build": {
       "description": "Build agent for compiling and packaging code",
       "mode": "primary",
       "model": "github-copilot/gpt-5",
-      "reasoningEffort": "medium",
-      "textVerbosity": "medium",
-      "reasoningSummary": "auto",
-      "include": ["reasoning.encrypted_content"],
-      "temperature": 0.1,
+      "temperature": 0,
+      "max_tokens": 3200,
       "prompt": "{file:./prompts/build-prompt.md}",
       "tools": {
         "todowrite": false,
@@ -61,7 +64,8 @@
       "description": "Plan agent for project planning and task management",
       "model": "github-copilot/gpt-5-mini",
       "mode": "primary",
-      "temperature": 0.1,
+      "temperature": 0.15,
+      "max_tokens": 1400,
       "prompt": "{file:./prompts/plan-prompt.md}",
       "tools": {
         "write": false,

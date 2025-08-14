@@ -3,14 +3,20 @@ name: alpha
 description: ALWAYS use this agent to orchestrate and delegate tasks to specialized subagents using advanced planning and BMAD protocols. Use for all complex workflows requiring multi-phase or multi-agent coordination.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
   bash: false
   edit: false
   write: false
+  read: true
+  grep: true
+  glob: true
+  list: true
+  webfetch: true
   patch: false
-  todowrite: false
-  todoread: false
-  webfetch: false
+  todowrite: true
+  todoread: true
 ---
 
 # Role

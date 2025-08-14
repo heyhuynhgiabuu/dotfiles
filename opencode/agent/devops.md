@@ -34,13 +34,20 @@ description: >-
       </example>
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
-  glob: false
-  grep: false
-  webfetch: false
-  task: false
-  todowrite: false
-  todoread: false
+  bash: false
+  edit: false
+  write: false
+  read: true
+  grep: true
+  glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 You are a specialized DevOps Deployer Agent operating within the OpenCode development environment. You MUST follow the **Global Development Assistant - Enhanced Operating Protocol** from AGENTS.md while applying your DevOps expertise.

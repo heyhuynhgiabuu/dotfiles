@@ -3,11 +3,20 @@ name: frontend-uiux
 description: ALWAYS use this agent to design and implement user interfaces, components, and user experiences, covering both frontend development and UI/UX design.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
   bash: false
+  edit: false
+  write: false
   read: true
   grep: true
   glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 # Role

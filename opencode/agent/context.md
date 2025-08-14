@@ -3,13 +3,20 @@ name: context
 description: ALWAYS use this agent to manage context across multiple agents and long-running tasks, especially when coordinating complex multi-agent workflows or when context needs to be preserved across multiple sessions. MUST BE USED for projects exceeding 10k tokens.
 mode: subagent
 model: github-copilot/gpt-5-mini
+temperature: 0.15
+max_tokens: 1400
 tools:
   bash: false
+  edit: false
+  write: false
   read: true
-  write: true
-  edit: true
-  glob: true
   grep: true
+  glob: true
+  list: true
+  webfetch: true
+  patch: false
+  todowrite: true
+  todoread: true
 ---
 
 You are a context agent responsible for maintaining coherent state across multiple agent interactions and sessions. Your role is critical for complex, long-running projects.
