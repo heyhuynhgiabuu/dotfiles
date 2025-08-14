@@ -2,7 +2,7 @@
 name: language
 description: ALWAYS use this agent for tasks involving modern programming languages (Java, TypeScript, Go, PHP, JavaScript, SQL), including idiomatic code, performance, concurrency, and advanced patterns. Use with `language` parameter for specialization.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 tools:
   bash: true
   read: true

@@ -2,7 +2,7 @@
 name: analyst
 description: "ALWAYS use this agent for analyzing OpenCode's context management, caching mechanisms, and billing integration with GitHub Copilot."
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 tools:
   bash: false
   write: false

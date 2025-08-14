@@ -2,7 +2,7 @@
 name: navigator
 description: ALWAYS use this agent to locate, analyze, and find patterns in codebase files and documentation.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 tools:
   bash: false
   read: true

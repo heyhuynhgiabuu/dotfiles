@@ -31,7 +31,7 @@ description: >-
         Since the user is deploying backend code, use the security-audit-backend agent proactively.
       </example>
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 tools:
   write: false
   edit: false

@@ -2,7 +2,7 @@
 name: researcher
 description: ALWAYS use this agent to find and synthesize information from the web and codebase, especially for deep research or when standard queries fail.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 tools:
   bash: true
   read: true

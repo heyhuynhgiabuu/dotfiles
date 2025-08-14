@@ -2,7 +2,7 @@
 name: prompt
 description: ALWAYS use this agent to optimize prompts for LLMs and AI systems, especially when building AI features, improving agent performance, or crafting system prompts.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 tools:
   bash: false
   write: false

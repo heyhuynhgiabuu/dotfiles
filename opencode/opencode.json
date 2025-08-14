@@ -59,7 +59,7 @@
     },
     "plan": {
       "description": "Plan agent for project planning and task management",
-      "model": "github-copilot/gpt-4.1",
+      "model": "github-copilot/gpt-5-mini",
       "mode": "primary",
       "temperature": 0.1,
       "prompt": "{file:./prompts/plan-prompt.md}",
