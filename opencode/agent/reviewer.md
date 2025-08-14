@@ -103,8 +103,8 @@ If missing information prevents confident assessment:
 
 ## Automation Integration
 Use available scripts to accelerate structured diff triage:
-- `scripts/pre-review-manifest.sh` — Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
-- `scripts/diff-risk-classifier.sh` — JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
+- `scripts/ci/pre-review-manifest.sh` — Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
+- `scripts/ci/diff-risk-classifier.sh` — JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
 
 Suggested Flow:
 1. Run manifest → confirm scope & initial high-risk guess.

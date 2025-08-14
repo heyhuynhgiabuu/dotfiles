@@ -58,8 +58,8 @@ The repository is organized by tool, making it easy to navigate and manage confi
 The repository includes a lightweight, cross-platform review automation suite (Bash 3.2+ compatible) to surface risk, coverage deltas, and legacy hotspots for any branch vs a base (default main).
 
 Scripts:
-- scripts/pre-review-manifest.sh — Diff manifest (JSON/Markdown)
-- scripts/diff-risk-classifier.sh — Classifies diff risk tags
+- scripts/ci/pre-review-manifest.sh — Diff manifest (JSON/Markdown)
+- scripts/ci/diff-risk-classifier.sh — Classifies diff risk tags
 - scripts/test-coverage-delta.sh — Heuristic test adjacency & missing test delta detection
 - scripts/legacy-hotspot-detector.sh — Composite heuristic legacy/refactor hotspot scoring
 - scripts/review-scope.sh — Orchestrator producing consolidated artifacts (review_artifacts/)

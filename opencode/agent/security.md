@@ -151,8 +151,8 @@ When performing security audits, use Serena's capabilities for precise code anal
 
 ## Automation Integration
 Use pre-review automation to enrich security triage while remaining diff-focused:
-- `scripts/pre-review-manifest.sh` — Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
-- `scripts/diff-risk-classifier.sh` — JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
+- `scripts/ci/pre-review-manifest.sh` — Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
+- `scripts/ci/diff-risk-classifier.sh` — JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
 
 Workflow:
 1. Run manifest first to visualize overall scope.

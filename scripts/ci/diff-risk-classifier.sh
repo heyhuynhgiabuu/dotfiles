@@ -4,7 +4,7 @@
 # and emit a machine-consumable JSON manifest (and optional markdown table).
 # Cross-platform (macOS/Linux) – bash 3.2 compatible (no arrays requiring bash 4 features).
 # Usage:
-#   ./scripts/diff-risk-classifier.sh [--base <branch>] [--md]
+#   ./scripts/ci/diff-risk-classifier.sh [--base <branch>] [--md]
 # Defaults: base=main, output JSON to stdout. If --md supplied, prints a
 # markdown table after JSON (separated by a blank line).
 # Rationale: Provides a slightly richer (but still lightweight) risk signal

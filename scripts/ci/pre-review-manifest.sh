@@ -4,7 +4,7 @@
 # Cross-platform (macOS/Linux) and compatible with macOS system bash 3.2 (no associative arrays, no mapfile).
 # No external deps beyond: git, awk, sed, grep (prefer rg if present). jq optional (only used downstream by other scripts, not here).
 # Usage:
-#   ./scripts/pre-review-manifest.sh [--json] [BASE_BRANCH]
+#   ./scripts/ci/pre-review-manifest.sh [--json] [BASE_BRANCH]
 # If BASE_BRANCH omitted, tries to detect via gh (if installed) else defaults to main.
 # --json emits machine readable JSON array (one object per file) to stdout instead of markdown table.
 

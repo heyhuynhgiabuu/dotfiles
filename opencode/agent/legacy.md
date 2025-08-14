@@ -110,8 +110,8 @@ Final Outcome:
 
 ## Automation & Cross-Link Integration
 Leverage lightweight diff automation to prioritize legacy hotspots early:
-- `scripts/pre-review-manifest.sh` – Surface large / legacy-named files touched.
-- `scripts/diff-risk-classifier.sh` – JSON risk signals (`legacy`, `large_change`, `coverage`, `security`) to rank refactor candidates.
+- `scripts/ci/pre-review-manifest.sh` – Surface large / legacy-named files touched.
+- `scripts/ci/diff-risk-classifier.sh` – JSON risk signals (`legacy`, `large_change`, `coverage`, `security`) to rank refactor candidates.
 
 Heuristics for Hotspot Elevation:
 1. Large change (>200 added lines) in file with low/modular structure (few functions, giant methods).
