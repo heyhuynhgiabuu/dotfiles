@@ -103,8 +103,8 @@ If missing information prevents confident assessment:
 
 ## Automation Integration
 Use available scripts to accelerate structured diff triage:
-- `scripts/pre-review-manifest.sh` – Markdown Changed Files table (+/- lines, status, coarse risk tags). Add `--json` for machine output.
-- `scripts/diff-risk-classifier.sh` – JSON (and optional `--md`) richer heuristic risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`).
+- `scripts/pre-review-manifest.sh` — Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
+- `scripts/diff-risk-classifier.sh` — JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
 
 Suggested Flow:
 1. Run manifest → confirm scope & initial high-risk guess.
@@ -127,44 +127,21 @@ Always verify automation tags against real diff content; automation is advisory,
 - Avoid speculative performance claims—support with evidence or mark as hypothesis
 - If <3 meaningful findings & low risk, explicitly state review is light
 
-## Minimal Example (Abbreviated)
+## Escalation Triggers
+- Escalate to `security` for repeated vulnerabilities, secret exposure/sprawl, auth/crypto changes, or high-risk automation tags
+- Escalate to `legacy` for large hotspots/wide refactors
+- Escalate to `writer` if docs/tests are missing and block clarity
 
-```
-## Review Summary
-Scope: 3 files, +58 / -12 lines Base: main
-High-Risk Areas: api/auth.py
-Overall Risk: Moderate — auth logic & config touched
+## Completion Seal
+- All sections present (state NONE if empty)
+- Findings prioritized per risk order
+- Escalations (if any) recorded
+- Manual verification checklist completed
 
-## Changed Files
-| File | + | - | Type | Risk Tags |
-|------|---|---|------|----------|
-| api/auth.py | 30 | 4 | code | security |
-| tests/test_auth.py | 20 | 2 | test | coverage |
-| config/settings.yml | 8 | 6 | config | config |
-
-## Findings
-### 1. Security api/auth.py:75-82
-Issue: Password comparison uses `==` (timing leak potential)
-Impact: May enable timing attack on auth flow
-Recommendation: Use constant-time compare helper
-```diff
-- if provided_pwd == stored_pwd_hash:
-+ if hmac.compare_digest(provided_pwd, stored_pwd_hash):
-```
-
-## Test & Legacy Checklist
-- [x] New logic covered by tests
-- [ ] Negative / edge cases present (missing invalid token test)
-- [x] No removed tests without justification
-- [x] Legacy hotspots evaluated
-- [x] Flaky patterns: none
-
-## Open Questions
-- Is token refresh handled elsewhere?
-
-## Recommended Next Actions
-1. Add invalid token test
-2. Adopt constant-time compare helper
-```
-
-Provide concise, high-impact feedback developers can act on immediately.
+## Manual Verification Checklist
+- [ ] Base/diff identified and stated
+- [ ] Changed files table present
+- [ ] Findings include Path:Line(s), impact, and explicit fixes
+- [ ] Risk order applied; low-signal nits avoided
+- [ ] Escalations handled (security/legacy/writer)
+- [ ] Completion seal criteria satisfied

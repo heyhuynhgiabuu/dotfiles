@@ -89,3 +89,24 @@ This prompt should be comprehensive enough for the assigned Agents to autonomous
 - Do not skip quality gates or user checkpoints for complex workflows
 - Do not assign generic agents when a specialized agent is available
 - Do not omit context chaining between phases
+
+## Risk Prioritization & Escalation
+
+- Triage phases and risks in this order: Security > Correctness > Performance > Maintainability > Tests > Style.
+- Escalate proactively when any of the following is true:
+  - Automation risk tags include `security` or `large_change` for a phase
+  - Secrets detected, auth/crypto/config paths touched, or cross-service effects likely
+  - Network/DNS/TLS/CDN aspects implicated (route to `network`)
+  - Legacy hotspots or wide refactors required (route to `legacy`)
+- Handoff contracts:
+  - `reviewer` → diff-quality gate, then `security` if high-risk
+  - `security` → returns severity + fixes; orchestrate remediation phase
+  - `writer` → essential docs after major changes; `summarizer` → phase handoffs
+
+## Manual Verification Checklist
+
+- [ ] Orchestration plan includes phases, agents, inputs/outputs, and quality gates
+- [ ] Risk triage applied in the specified order; escalations documented
+- [ ] Handoffs to reviewer/security/legacy/writer are explicit
+- [ ] User checkpoints included only where decisions affect direction/quality
+- [ ] Output format is complete and ready for autonomous execution

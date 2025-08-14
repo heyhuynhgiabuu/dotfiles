@@ -144,17 +144,15 @@ When performing security audits, use Serena's capabilities for precise code anal
 - Point out the "why" briefly (risk impact)
 - If unclear context, ask specific questions
 
-**Quality checks:**
-
-- Double-check for false positives
-- Focus on real security impact
-- Suggest the simplest secure solution
-- Note if manual review needed for complex cases
+## Escalation Criteria
+- Escalate beyond diff-only scope when systemic vulnerabilities, secret sprawl, authentication bypass risk, or repeated patterns across files are detected.
+- Prioritize via automation signals: `security`, `large_change`.
+- Coordinate with `reviewer` for risk ordering and with `legacy` for phased refactors if required.
 
 ## Automation Integration
 Use pre-review automation to enrich security triage while remaining diff-focused:
-- `scripts/pre-review-manifest.sh` – Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
-- `scripts/diff-risk-classifier.sh` – JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
+- `scripts/pre-review-manifest.sh` — Markdown Changed Files table (+/- lines, coarse risk tags) for human scan.
+- `scripts/diff-risk-classifier.sh` — JSON machine-readable risk signals (`security`, `legacy`, `performance`, `coverage`, `config`, `large_change`) with optional markdown via `--md`.
 
 Workflow:
 1. Run manifest first to visualize overall scope.

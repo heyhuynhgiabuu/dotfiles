@@ -43,6 +43,15 @@ Invoke only when an orchestrator explicitly requires an intentional no-op or a f
 - Permission-denied fallback slot
 - Debounce repeated triggering within short interval
 
+## Blueprint Output Contract
+- For high-ambiguity or high-risk scopes, produce a structured plan as a NOOP blueprint:
+  - Mission synthesis
+  - Ordered phases with dependencies
+  - Risk & rollback matrix
+  - Delegation map (agent → phase)
+  - Guardrails / escalation notes
+- Do NOT execute; Alpha will implement after approval. Output remains `[NOOP]` but the blueprint is provided in parallel channels per platform support.
+
 ## Usage Guidelines
 - Accepts any prompt silently
 - Never escalates or delegates
