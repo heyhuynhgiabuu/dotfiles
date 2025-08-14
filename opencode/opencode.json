@@ -42,11 +42,7 @@
       "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.1,
-      "prompt": "{file:./prompts/beta-prompt.md}",
-      "tools": {
-        "todowrite": true,
-        "todoread": true
-      }
+      "prompt": "{file:./prompts/beta-prompt.md}"
     },
     "build": {
       "description": "Build agent for compiling and packaging code",

@@ -98,6 +98,15 @@ This file references specialized protocols loaded via `opencode.json` instructio
 
 These protocols are loaded on-demand based on task complexity and requirements.
 
+## Serena MCP Integration
+
+A supported Serena MCP integration package is provided in `opencode/serena-integration/`:
+
+- **Purpose**: Examples, config and templates to integrate Serena MCP into OpenCode agents
+- **Key files**: serena-agent-config.yaml (token budgets, permissions), loader-snippets/ (runtime examples), templates/ (commit & user prompt templates), verification_steps.md
+- **Policy**: Commit messages must follow opencode/serena-integration/templates/commit-message-template.txt (no AI attribution)
+- **Checkpoints**: Follow the three Serena MCP checkpoints (think_about_collected_information, think_about_task_adherence, think_about_whether_you_are_done) when integrating
+
 ---
 
 > **Note**: This streamlined AGENTS.md focuses on project-specific rules and essential protocols. Complex orchestration, context management, and advanced workflow protocols are externalized to specialized files loaded via `opencode.json` instructions for optimal token efficiency.

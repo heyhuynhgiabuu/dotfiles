@@ -1,0 +1,17 @@
+# User approval prompt template (for interactive "ask" permission flows)
+# Keep concise, include only essential context and choices.
+
+Action:
+- Describe the action to be taken (one line)
+
+Files affected:
+- List important files or directories (one per line)
+
+Why:
+- Short justification (one line)
+
+Choices:
+- Approve / Cancel
+
+Notes:
+- Follow commit message template if approving commits.

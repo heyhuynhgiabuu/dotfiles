@@ -1,0 +1,16 @@
+# Commit message template (enforce no AI attribution)
+# Usage: copy template, fill placeholders, save as commit message.
+#
+# Do NOT include "Generated with opencode" or any AI attribution.
+
+Summary: [one-line summary of change]
+
+Scope: [path(s) changed]
+
+Description:
+- What changed and why (brief)
+- Testing/verification steps performed
+
+Reviewer: @<username> (optional)
+
+Signed-off-by: <Your Name> <you@example.com>

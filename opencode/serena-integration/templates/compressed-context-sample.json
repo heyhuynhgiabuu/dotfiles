@@ -1,0 +1,16 @@
+{
+  "summary": "Conversation and file change summary compressed for storage",
+  "timestamp": "2025-08-15T00:00:00Z",
+  "items": [
+    {
+      "type": "search_result",
+      "source": "repo",
+      "summary": "Found config files for serena integration; budget values set to scs_aws=2000"
+    },
+    {
+      "type": "change",
+      "path": "opencode/serena-integration/serena-agent-config.yaml",
+      "summary": "Added token budgets and permission mapping."
+    }
+  ]
+}

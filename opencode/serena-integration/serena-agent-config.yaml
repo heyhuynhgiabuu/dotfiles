@@ -1,0 +1,30 @@
+# Serena MCP configuration for OpenCode integration
+# Cross-platform YAML (POSIX paths). No secrets included.
+
+token_budgets:
+  scs_aws: 2000
+  auto_compress_threshold: 1500
+
+permissions:
+  analyst: allow
+  general: ask
+  devops: ask
+  security: allow
+  alpha: allow
+
+mcp_checkpoints:
+  - think_about_collected_information
+  - think_about_task_adherence
+  - think_about_whether_you_are_done
+
+commit_policy:
+  enforce_no_ai_attribution: true
+  message_template_path: "opencode/serena-integration/templates/commit-message-template.txt"
+
+loader:
+  loader_snippets_dir: "opencode/serena-integration/loader-snippets"
+  runtime_stub: "opencode/serena-integration/loader-snippets/loader-runtime-stub.py"
+
+notes:
+  - "This file contains only operational configuration (budgets, permission mapping, checkpoint enablement)."
+  - "Do not store credentials or tokens here."
