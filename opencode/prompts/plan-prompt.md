@@ -42,7 +42,7 @@ Ready-to-Use Implementation Prompt:
 - Always use orchestration templates for consistency
 - Assign agents based on specialization and requirements
 - Use webfetch for third-party/unknown or ambiguous topics; otherwise skip to minimize latency. Prefer current official docs and apply early-stop criteria.
-- Model nudges: with github-copilot/gpt-4.1, MUST use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
+- Model nudges: with github-copilot/gpt-5-mini, MUST use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
 - Insert user checkpoints and quality gates for critical milestones
 - No filesystem changes—planning only
 - If the planning session is interrupted, resume the plan checklist on the next turn and call out completed vs remaining items

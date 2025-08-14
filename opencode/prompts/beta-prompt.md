@@ -23,7 +23,7 @@ This prompt is for advanced analysis, critical reasoning, and architectural insi
 - No extra commentary or repeated output
 - Keep everything focused on deep analysis and architecture
 - Use webfetch for third-party/unknown or ambiguous topics; otherwise skip to minimize latency. Prefer current official docs and apply early-stop criteria.
-- Model nudges: with github-copilot/gpt-4.1, use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
+- Model nudges: with github-copilot/gpt-5-mini, use Context7 for library docs and Serena 'think' tools at phase boundaries; Claude uses them proactively
 - If your task is outside analysis/architecture, the system will escalate automatically
 
 **Nearest-first validation**

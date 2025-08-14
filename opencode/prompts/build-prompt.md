@@ -25,7 +25,7 @@ This prompt is for daily developer use. Just describe your goal—no special for
 - Default scope: only operate on files/paths the user references; avoid repo-wide searches/edits unless explicitly requested.
 - Prefer Read/Glob on specific paths; avoid broad repo-wide grep/list by default.
 - Use webfetch only for third-party/unknown tech; otherwise skip to keep latency low.
-- When the backend model is github-copilot/gpt-4.1, invoke Context7 for library docs when needed and use Serena 'think' tools at phase boundaries
+- When the backend model is github-copilot/gpt-5-mini, invoke Context7 for library docs when needed and use Serena 'think' tools at phase boundaries
 - If your task is complex, the system will escalate automatically
 
 **Example:**
