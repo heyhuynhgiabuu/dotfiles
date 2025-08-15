@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Quick Serena Update Runner
 # Executes the auto-update system immediately

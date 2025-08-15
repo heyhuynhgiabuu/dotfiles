@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Go Project Starter Script - cross-platform (macOS & Linux)
 # Creates a new Go project with standard structure and files

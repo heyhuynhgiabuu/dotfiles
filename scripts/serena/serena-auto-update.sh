@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Serena Auto-Update System for Dotfiles Project
 # This script automates the process of checking, updating, and configuring Serena

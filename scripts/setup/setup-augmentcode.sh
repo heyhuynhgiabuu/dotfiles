@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode setup script for dotfiles - cross-platform (macOS & Linux)
 # Handles installation and configuration of AugmentCode AI assistant

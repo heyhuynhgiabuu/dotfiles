@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode Configuration Test Script
 # Verifies that the stow-managed configuration is working correctly

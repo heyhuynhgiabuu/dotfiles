@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode Environment Test Script
 # Tests AugmentCode installation and environment

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode JSON Parsing Debug Script
 # Deep debugging for JSON authentication parsing errors

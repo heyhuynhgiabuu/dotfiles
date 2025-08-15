@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 # 
 # Common utilities and functions for dotfiles shell scripts
 # Source this file in other scripts: source "$(dirname "${BASH_SOURCE[0]}")/common.sh"

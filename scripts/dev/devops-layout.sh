@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # DevOps development layout script
 # Creates a specialized tmux layout for DevOps workflows

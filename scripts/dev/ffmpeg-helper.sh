@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 # Cross-platform ffmpeg detection & optional installation / diagnostics helper
 # Usage:
 #   ./scripts/ffmpeg-helper.sh [--auto-install] [--force-conflicts] [--diagnose] [--brew-fix]

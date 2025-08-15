@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Treesitter Cleanup and Fix Script
 # This script resolves "Impossible pattern" errors and parser issues

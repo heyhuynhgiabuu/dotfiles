@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Go development tmux layout with specialized windows
 # Usage: tmux-go-layout.sh [session-name] [project-path]

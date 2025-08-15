@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # NvChad update script - preserves custom configurations
 # Updates NvChad v2.0 while maintaining custom dotfiles integration

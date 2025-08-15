@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode Authentication Step-by-Step Guide
 # Provides detailed instructions for AugmentCode authentication

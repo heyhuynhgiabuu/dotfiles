@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Note management script with tmux integration
 # Find or create notes and open them in Neovim with tmux session management

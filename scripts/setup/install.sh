@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Dotfiles installation script - cross-platform (macOS & Linux)
 # Sets up symlinks and NvChad integration

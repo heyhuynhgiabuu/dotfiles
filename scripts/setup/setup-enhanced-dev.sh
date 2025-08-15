@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Enhanced Development Environment Setup - cross-platform (macOS & Linux)
 # Sets up Go and Java development with enhanced autocompletion

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Java development tmux layout
 # Usage: tmux-java-layout.sh [session-name] [project-path]

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Automation Installation Script for Serena Auto-Update
 # Supports both macOS (launchd) and Linux (systemd)

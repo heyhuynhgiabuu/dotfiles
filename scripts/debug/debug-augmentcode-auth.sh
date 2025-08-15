@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode Authentication Debug Script
 # Diagnoses authentication issues and provides troubleshooting

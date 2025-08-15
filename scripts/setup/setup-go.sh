@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Go development environment setup - cross-platform (macOS & Linux)
 # Installs Go and development tools

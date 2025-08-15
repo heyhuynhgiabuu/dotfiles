@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Neovim Java Setup Fix Verification Script
 # Verifies Java development environment fixes and configuration

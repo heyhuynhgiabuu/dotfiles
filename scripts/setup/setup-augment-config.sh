@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # AugmentCode Configuration Setup Script - cross-platform (macOS & Linux)
 # Manages AugmentCode configuration with stow integration

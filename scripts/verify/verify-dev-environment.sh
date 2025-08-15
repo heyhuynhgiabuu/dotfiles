@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Development Environment Verification Script
 # Checks status of Java, Go, and general development tools

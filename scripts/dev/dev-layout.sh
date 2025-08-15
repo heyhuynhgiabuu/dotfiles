@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # General development tmux layout
 # Usage: dev-layout.sh [session-name]
