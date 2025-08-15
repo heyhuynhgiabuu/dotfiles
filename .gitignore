@@ -21,3 +21,5 @@ review_artifacts/
 # Transcripts and subtitle artifacts (ignored by default)
 *.srt
 *.vtt
+# ZSH completion cache files
+.zcompdump*

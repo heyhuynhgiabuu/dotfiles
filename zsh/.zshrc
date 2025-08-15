@@ -1,13 +1,7 @@
-# 💡 Instant Prompt — phải ở đầu tiên
-# --- Conditional block for terminal-only commands ---
-if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
-    # Initialize Powerlevel10k prompt
-    if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-    fi
-fi
-
 # Performance & Shell options
+
+# Set up configuration directory for modular loading
+ZSH_CONFIG_DIR="$HOME/dotfiles/zsh/.zsh"
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -15,9 +9,6 @@ export EDITOR=vim
 export KUBE_EDITOR=vim
 export PAGER=less
 export LESS=-R 
-
-# Suppress Powerlevel10k instant prompt warnings\
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 setopt prompt_subst
 setopt hist_ignore_dups
@@ -31,6 +22,17 @@ setopt extended_history
 
 path_add() { [[ -d "$1" && ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"; }
 
+# Platform detection
+detect_platform() {
+    case "$(uname -s)" in
+        Darwin) echo "macos" ;;
+        Linux)  echo "linux" ;;
+        *)      echo "unknown" ;;
+    esac
+}
+
+PLATFORM=$(detect_platform)
+
 # Core paths
 path_add "/opt/homebrew/bin"
 path_add "/opt/homebrew/sbin"
@@ -40,27 +42,41 @@ path_add "$HOME/.krew/bin"
 
 # Dev tools
 path_add "$HOME/apache-maven-3.8.8/bin"
-path_add "$HOME/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin"
-path_add "/opt/homebrew/opt/postgresql@16/bin"
-path_add "/opt/homebrew/opt/mysql-client/bin"
+if [[ "$PLATFORM" == "macos" ]]; then
+    path_add "$HOME/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin"
+    path_add "/opt/homebrew/opt/postgresql@16/bin"
+    path_add "/opt/homebrew/opt/mysql-client/bin"
+elif [[ "$PLATFORM" == "linux" ]]; then
+    # Linux equivalent paths
+    [[ -d "/usr/lib/jvm/java-21-openjdk/bin" ]] && path_add "/usr/lib/jvm/java-21-openjdk/bin"
+    [[ -d "/usr/bin" ]] && path_add "/usr/bin" # PostgreSQL and MySQL typically in /usr/bin on Linux
+fi
 
 # App integrations
 path_add "$HOME/.cache/lm-studio/bin"
-path_add "/Applications/iTerm.app/Contents/Resources/utilities"
-path_add "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-path_add "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+if [[ "$PLATFORM" == "macos" ]]; then
+    path_add "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+    path_add "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+elif [[ "$PLATFORM" == "linux" ]]; then
+    # Linux equivalent paths
+    [[ -d "/usr/share/code/bin" ]] && path_add "/usr/share/code/bin"
+    [[ -d "$HOME/.local/share/JetBrains/Toolbox/scripts" ]] && path_add "$HOME/.local/share/JetBrains/Toolbox/scripts"
+fi
 
 export PATH
 
 # Prompt
 
-# Starship prompt (modern, theme Kanagawa compatible)
-export STARSHIP_CONFIG="$HOME/dotfiles/zsh/.zsh/starship.toml"
+# Load Starship OS detection and icon setup
+[[ -f "$ZSH_CONFIG_DIR/starship.zsh" ]] && source "$ZSH_CONFIG_DIR/starship.zsh"
+
+# Starship prompt (modern, theme Kanagawa compatible) - MUST be before oh-my-zsh
+export STARSHIP_CONFIG="$ZSH_CONFIG_DIR/starship.toml"
 eval "$(starship init zsh)"
 
 export ZSH="$HOME/.oh-my-zsh"
-# ZSH_THEME="powerlevel10k/powerlevel10k"
-# [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+# Disable oh-my-zsh themes when using Starship
+ZSH_THEME=""
 
 # Plugins & oh-my-zsh
 
@@ -87,7 +103,8 @@ zinit light-mode for \
 
 # Advanced completions
 
-zinit wait lucid for \
+# Lazy load Zinit completions for better startup performance
+zinit wait'1' lucid for \
     OMZP::golang \
     OMZP::docker \
     OMZP::docker-compose \
@@ -187,18 +204,31 @@ if command -v kubectl >/dev/null; then
   source ~/.kubectl-completion
 fi
 
-fpath=(/Users/killerkidbo/.docker/completions $fpath)
+fpath_add() { [[ -d "$1" && ":$fpath:" != *":$1:"* ]] && fpath=("$1" $fpath); }
+
+if [[ "$PLATFORM" == "macos" ]]; then
+    fpath_add "$HOME/.docker/completions"
+elif [[ "$PLATFORM" == "linux" ]]; then
+    # Linux Docker completion paths
+    [[ -d "/usr/share/bash-completion/completions" ]] && fpath_add "/usr/share/bash-completion/completions"
+    [[ -d "/etc/bash_completion.d" ]] && fpath_add "/etc/bash_completion.d"
+fi
 
 command -v ng >/dev/null && source <(ng completion script)
 
 # Lazy loading
 
-## nvm - immediate loading for AugmentCode compatibility
+## nvm - lazy loading for better performance
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-# Use Node.js v22 by default for AugmentCode
-nvm use v22.14.0 >/dev/null 2>&1
+nvm() {
+  unset -f nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+
+# Set default Node version without loading nvm initially
+export PATH="$NVM_DIR/versions/node/v22.14.0/bin:$PATH"
 
 ## sdkman
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -211,19 +241,38 @@ sdk() {
 ## Zoxide
 command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
 
-## TheFuck
-command -v thefuck >/dev/null && {
-  eval "$(thefuck --alias)"
-  eval "$(thefuck --alias fk)"
+## TheFuck - lazy loading
+fuck() {
+  unset -f fuck
+  command -v thefuck >/dev/null && {
+    eval "$(thefuck --alias)"
+    eval "$(thefuck --alias fk)"
+  }
+  fuck "$@"
 }
 
-## Herd PHP
+fk() {
+  unset -f fk
+  command -v thefuck >/dev/null && {
+    eval "$(thefuck --alias)"
+    eval "$(thefuck --alias fk)"
+  }
+  fk "$@"
+}
 
-if [[ -d "$HOME/Library/Application Support/Herd" ]]; then
-  export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
-  export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
-  export HERD_PHP_82_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/82/"
-  export HERD_PHP_74_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/74/"
+# Herd injected PHP configuration (macOS only)
+if [[ "$PLATFORM" == "macos" ]]; then
+    # Herd injected PHP 8.4 configuration.
+    export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
+
+    # Herd injected PHP 8.3 configuration.
+    export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
+    
+    # Herd injected PHP 8.2 configuration.
+    export HERD_PHP_82_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/82/"
+    
+    # Herd injected PHP 7.4 configuration.
+    export HERD_PHP_74_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/74/"
 fi
 
 # Conda
@@ -242,14 +291,54 @@ fi
 
 # Custom fields & Integrations
 
+# Wezterm Shell Integration
+if [[ "$TERM_PROGRAM" == "WezTerm" ]]; then
+    # OSC 7 for working directory tracking
+    function __wezterm_osc7() {
+        printf "\033]7;file://%s%s\033\\" "$HOST" "$PWD"
+    }
+    
+    # OSC 133 for semantic prompt zones (Input/Output/Prompt detection)
+    function __wezterm_semantic_precmd() {
+        printf "\033]133;D\033\\"  # Mark end of command output
+        __wezterm_osc7
+        printf "\033]133;A\033\\"  # Mark start of prompt
+    }
+    
+    function __wezterm_semantic_preexec() {
+        printf "\033]133;C\033\\"  # Mark end of prompt, start of command input
+    }
+    
+    # Set user variables for enhanced status bar
+    function __wezterm_set_user_vars() {
+        printf "\033]1337;SetUserVar=%s=%s\033\\" \
+            "WEZTERM_USER" "$(echo -n $(id -un) | base64)" \
+            "WEZTERM_HOST" "$(echo -n $(hostname) | base64)" \
+            "WEZTERM_IN_TMUX" "$(echo -n ${TMUX:+1} | base64)"
+    }
+    
+    # Hook into zsh prompt system
+    if [[ -n "${ZSH_VERSION}" ]]; then
+        precmd_functions+=(__wezterm_semantic_precmd __wezterm_set_user_vars)
+        preexec_functions+=(__wezterm_semantic_preexec)
+    fi
+    
+    # Convenience function to set custom user vars
+    function wezterm_set_user_var() {
+        if [[ $# -ne 2 ]]; then
+            echo "Usage: wezterm_set_user_var <name> <value>"
+            return 1
+        fi
+        printf "\033]1337;SetUserVar=%s=%s\033\\" "$1" "$(echo -n "$2" | base64)"
+    }
+fi
 
-[[ -f ~/.zsh/envs.zsh ]] && source ~/.zsh/envs.zsh
-[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
-[[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
-[[ -f ~/.zsh/advanced-completions.zsh ]] && source ~/dotfiles/zsh/advanced-completions.zsh
 
-# iTerm2 Shell Integration (for enhanced completions)
-[[ -f ~/.iterm2_shell_integration.zsh ]] && source ~/.iterm2_shell_integration.zsh
+# Load modular configuration files
+[[ -f "$ZSH_CONFIG_DIR/envs.zsh" ]] && source "$ZSH_CONFIG_DIR/envs.zsh"
+[[ -f "$ZSH_CONFIG_DIR/aliases.zsh" ]] && source "$ZSH_CONFIG_DIR/aliases.zsh"
+[[ -f "$ZSH_CONFIG_DIR/functions.zsh" ]] && source "$ZSH_CONFIG_DIR/functions.zsh"
+[[ -f "$ZSH_CONFIG_DIR/advanced-completions.zsh" ]] && source "$ZSH_CONFIG_DIR/advanced-completions.zsh"
 
 # GitHub Copilot CLI integration (if available)
 if command -v github-copilot-cli >/dev/null; then
@@ -257,14 +346,13 @@ if command -v github-copilot-cli >/dev/null; then
 fi
 
 # opencode
-export PATH=/Users/killerkidbo/.opencode/bin:$PATH
+if [[ "$PLATFORM" == "macos" ]]; then
+    export PATH="$HOME/.opencode/bin:$PATH"
+elif [[ "$PLATFORM" == "linux" ]]; then
+    # Adjust for Linux opencode installation path if different
+    [[ -d "$HOME/.opencode/bin" ]] && export PATH="$HOME/.opencode/bin:$PATH"
+fi
 
 . "$HOME/.local/bin/env"
 
 
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/84/"
-
-
-# Herd injected PHP 8.3 configuration.
-export HERD_PHP_83_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/83/"

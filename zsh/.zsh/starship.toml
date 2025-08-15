@@ -1,7 +1,7 @@
 # Starship prompt config - Real World Dev/DevOps, Kanagawa friendly (no bold, pastel powerline layout)
 
 format = """
-[](fg:#6C7086)$os$username$hostname[](fg:#6C7086 bg:#FAB387)$directory[](fg:#FAB387 bg:#A6E3A1)$git_branch$git_status$nodejs$python$rust$golang$java[](fg:#A6E3A1 bg:#F5C2E7)$git_state(fg:#A6E3A1 bg:#F5C2E7)$docker_context$kubernetes$terraform$aws$gcloud$azure$package[](fg:#F5C2E7 bg:#F5C2E7)$time[](fg:#F5C2E7)
+[](fg:#6C7086)$os$username$hostname[](fg:#6C7086 bg:#FAB387)$directory[](fg:#FAB387 bg:#A6E3A1)$git_branch$git_status$nodejs$python$rust$golang$java[](fg:#A6E3A1 bg:#F5C2E7)$git_state$docker_context$kubernetes$terraform$aws$gcloud$azure$package[](fg:#F5C2E7 bg:#F5C2E7)$time[](fg:#F5C2E7)
 $jobs$character
 """
 
