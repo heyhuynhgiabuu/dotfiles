@@ -3,8 +3,11 @@ name: optimizer
 description: ALWAYS use this agent to proactively improve developer experience, tooling, setup, and workflows, especially when setting up new projects, after team feedback, or when development friction is noticed.
 mode: subagent
 model: github-copilot/gpt-5-mini
-temperature: 0.15
+temperature: 0.2
 max_tokens: 1400
+additional:
+  reasoningEffort: low
+  textVerbosity: low
 tools:
   bash: false
   edit: false

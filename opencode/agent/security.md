@@ -32,8 +32,11 @@ description: >-
       </example>
 mode: subagent
 model: github-copilot/gpt-5-mini
-temperature: 0.15
+temperature: 0.1
 max_tokens: 1400
+additional:
+  reasoningEffort: medium
+  textVerbosity: low
 tools:
   bash: false
   edit: false

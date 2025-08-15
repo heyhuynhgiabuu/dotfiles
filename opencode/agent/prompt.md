@@ -3,8 +3,11 @@ name: prompt
 description: ALWAYS use this agent to optimize prompts for LLMs and AI systems, especially when building AI features, improving agent performance, or crafting system prompts.
 mode: subagent
 model: github-copilot/gpt-5-mini
-temperature: 0.15
+temperature: 0.3
 max_tokens: 1400
+additional:
+  reasoningEffort: medium
+  textVerbosity: low
 tools:
   bash: false
   edit: false

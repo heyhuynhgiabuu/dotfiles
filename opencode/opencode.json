@@ -41,15 +41,22 @@
       "description": "Beta agent for testing new features",
       "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.1,
+      "temperature": 0.15,
+      "thinking": {
+        "type": "enabled",
+        "budget_tokens": 2048
+      },
       "prompt": "{file:./prompts/beta-prompt.md}"
     },
     "build": {
       "description": "Build agent for compiling and packaging code",
       "mode": "primary",
       "model": "github-copilot/gpt-5",
-      "temperature": 0,
+      "temperature": 0.1,
       "max_tokens": 3200,
+      "reasoningEffort": "high",
+      "textVerbosity": "medium",
+      "chainOfThought": true,
       "prompt": "{file:./prompts/build-prompt.md}",
       "tools": {
         "todowrite": false,
@@ -60,8 +67,10 @@
       "description": "Plan agent for project planning and task management",
       "model": "github-copilot/gpt-5-mini",
       "mode": "primary",
-      "temperature": 0.15,
+      "temperature": 0.2,
       "max_tokens": 1400,
+      "reasoningEffort": "medium",
+      "textVerbosity": "low",
       "prompt": "{file:./prompts/plan-prompt.md}",
       "tools": {
         "write": false,

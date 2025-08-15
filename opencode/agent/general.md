@@ -1,7 +1,12 @@
 ---
 description: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks autonomously
 mode: subagent
+model: github-copilot/gpt-5-mini
 temperature: 0.3
+max_tokens: 1400
+additional:
+  reasoningEffort: medium
+  textVerbosity: medium
 tools:
   read: true
   grep: true
