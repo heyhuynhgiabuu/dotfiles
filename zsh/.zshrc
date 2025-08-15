@@ -1,5 +1,4 @@
 # Performance & Shell options
-
 # Set up configuration directory for modular loading
 ZSH_CONFIG_DIR="$HOME/dotfiles/zsh/.zsh"
 
@@ -18,8 +17,7 @@ setopt inc_append_history
 setopt share_history
 setopt extended_history
 
-# Path setup
-
+# Path setup (optimized with lazy loading)
 path_add() { [[ -d "$1" && ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"; }
 
 # Platform detection
@@ -33,40 +31,42 @@ detect_platform() {
 
 PLATFORM=$(detect_platform)
 
-# Core paths
+# Core paths (immediate loading)
 path_add "/opt/homebrew/bin"
 path_add "/opt/homebrew/sbin"
 path_add "/usr/local/bin"
 path_add "$HOME/bin"
-path_add "$HOME/.krew/bin"
 
-# Dev tools
+# Development tools (immediate loading - safer than background jobs)
+path_add "$HOME/.krew/bin"
 path_add "$HOME/apache-maven-3.8.8/bin"
+
 if [[ "$PLATFORM" == "macos" ]]; then
     path_add "$HOME/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin"
     path_add "/opt/homebrew/opt/postgresql@16/bin"
     path_add "/opt/homebrew/opt/mysql-client/bin"
-elif [[ "$PLATFORM" == "linux" ]]; then
-    # Linux equivalent paths
-    [[ -d "/usr/lib/jvm/java-21-openjdk/bin" ]] && path_add "/usr/lib/jvm/java-21-openjdk/bin"
-    [[ -d "/usr/bin" ]] && path_add "/usr/bin" # PostgreSQL and MySQL typically in /usr/bin on Linux
-fi
-
-# App integrations
-path_add "$HOME/.cache/lm-studio/bin"
-if [[ "$PLATFORM" == "macos" ]]; then
+    
+    # App integrations
     path_add "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
     path_add "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+    
+    # OpenCode
+    path_add "$HOME/.opencode/bin"
 elif [[ "$PLATFORM" == "linux" ]]; then
-    # Linux equivalent paths
+    [[ -d "/usr/lib/jvm/java-21-openjdk/bin" ]] && path_add "/usr/lib/jvm/java-21-openjdk/bin"
     [[ -d "/usr/share/code/bin" ]] && path_add "/usr/share/code/bin"
     [[ -d "$HOME/.local/share/JetBrains/Toolbox/scripts" ]] && path_add "$HOME/.local/share/JetBrains/Toolbox/scripts"
+    
+    # OpenCode
+    [[ -d "$HOME/.opencode/bin" ]] && path_add "$HOME/.opencode/bin"
 fi
+
+# Cache & app integrations
+path_add "$HOME/.cache/lm-studio/bin"
 
 export PATH
 
 # Prompt
-
 # Load Starship OS detection and icon setup
 [[ -f "$ZSH_CONFIG_DIR/starship.zsh" ]] && source "$ZSH_CONFIG_DIR/starship.zsh"
 
@@ -78,15 +78,14 @@ export ZSH="$HOME/.oh-my-zsh"
 # Disable oh-my-zsh themes when using Starship
 ZSH_THEME=""
 
-# Plugins & oh-my-zsh
-
-# plugins=(docker docker-compose kubectl terraform aws) 
-plugins=(brew zsh-autosuggestions zsh-syntax-highlighting zsh-z dotenv)
+# Plugins & oh-my-zsh (streamlined for performance)
+# Minimal oh-my-zsh plugins - let zinit handle advanced completions 
+plugins=(brew dotenv)
 
 source $ZSH/oh-my-zsh.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Zinit
+# Zinit - Advanced Plugin Management
 
 if [[ ! -f "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]]; then
   mkdir -p "$HOME/.local/share/zinit"
@@ -95,15 +94,12 @@ fi
 
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 
+# Core zinit annexes (lightweight)
 zinit light-mode for \
   zdharma-continuum/zinit-annex-as-monitor \
-  zdharma-continuum/zinit-annex-bin-gem-node \
-  zdharma-continuum/zinit-annex-patch-dl \
-  zdharma-continuum/zinit-annex-rust
+  zdharma-continuum/zinit-annex-bin-gem-node
 
-# Advanced completions
-
-# Lazy load Zinit completions for better startup performance
+# Consolidated completions via zinit (replaces oh-my-zsh duplicates)
 zinit wait'1' lucid for \
     OMZP::golang \
     OMZP::docker \
@@ -190,30 +186,39 @@ if command -v go >/dev/null; then
     compdef _go_custom go
 fi
 
-# Autocompletions
+# Autocompletions (streamlined)
 
 autoload -Uz compinit bashcompinit
-compinit
+
+# Cache completion initialization for faster startup
+if [[ $HOME/.zcompdump(#qNmh+24) ]]; then
+    compinit -C
+else
+    compinit
+fi
 bashcompinit
 
+# Conditional tool completions (only if tools exist)
 command -v terraform >/dev/null && complete -o nospace -C terraform terraform
 command -v aws_completer >/dev/null && complete -C '/usr/local/bin/aws_completer' aws
 
+# Kubectl completion (cached)
 if command -v kubectl >/dev/null; then
   [[ ! -f ~/.kubectl-completion ]] && kubectl completion zsh > ~/.kubectl-completion
   source ~/.kubectl-completion
 fi
 
+# Platform-specific completion paths
 fpath_add() { [[ -d "$1" && ":$fpath:" != *":$1:"* ]] && fpath=("$1" $fpath); }
 
 if [[ "$PLATFORM" == "macos" ]]; then
-    fpath_add "$HOME/.docker/completions"
+    [[ -d "$HOME/.docker/completions" ]] && fpath_add "$HOME/.docker/completions"
 elif [[ "$PLATFORM" == "linux" ]]; then
-    # Linux Docker completion paths
     [[ -d "/usr/share/bash-completion/completions" ]] && fpath_add "/usr/share/bash-completion/completions"
     [[ -d "/etc/bash_completion.d" ]] && fpath_add "/etc/bash_completion.d"
 fi
 
+# Angular CLI completion (if available)
 command -v ng >/dev/null && source <(ng completion script)
 
 # Lazy loading
@@ -260,23 +265,17 @@ fk() {
   fk "$@"
 }
 
-# Herd injected PHP configuration (macOS only)
-if [[ "$PLATFORM" == "macos" ]]; then
-    # Herd injected PHP 8.4 configuration.
-    export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
+# Conditional integrations (platform-specific)
 
-    # Herd injected PHP 8.3 configuration.
+# Herd PHP configuration (macOS only)
+if [[ "$PLATFORM" == "macos" ]]; then
+    export HERD_PHP_84_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/84/"
     export HERD_PHP_83_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/83/"
-    
-    # Herd injected PHP 8.2 configuration.
     export HERD_PHP_82_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/82/"
-    
-    # Herd injected PHP 7.4 configuration.
     export HERD_PHP_74_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/74/"
 fi
 
-# Conda
-
+# Conda (conditional loading)
 if [[ -d "$HOME/miniconda3" ]]; then
   __conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
   if [ $? -eq 0 ]; then
@@ -340,18 +339,10 @@ fi
 [[ -f "$ZSH_CONFIG_DIR/functions.zsh" ]] && source "$ZSH_CONFIG_DIR/functions.zsh"
 [[ -f "$ZSH_CONFIG_DIR/advanced-completions.zsh" ]] && source "$ZSH_CONFIG_DIR/advanced-completions.zsh"
 
-# GitHub Copilot CLI integration (if available)
-if command -v github-copilot-cli >/dev/null; then
-    eval "$(github-copilot-cli alias -- "$0")"
-fi
+# GitHub Copilot CLI integration (conditional)
+command -v github-copilot-cli >/dev/null && eval "$(github-copilot-cli alias -- "$0")"
 
-# opencode
-if [[ "$PLATFORM" == "macos" ]]; then
-    export PATH="$HOME/.opencode/bin:$PATH"
-elif [[ "$PLATFORM" == "linux" ]]; then
-    # Adjust for Linux opencode installation path if different
-    [[ -d "$HOME/.opencode/bin" ]] && export PATH="$HOME/.opencode/bin:$PATH"
-fi
+# OpenCode integration (removed from path section above)
 
 . "$HOME/.local/bin/env"
 
