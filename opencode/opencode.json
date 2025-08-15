@@ -57,11 +57,7 @@
       "reasoningEffort": "high",
       "textVerbosity": "medium",
       "chainOfThought": true,
-      "prompt": "{file:./prompts/build-prompt.md}",
-      "tools": {
-        "todowrite": false,
-        "todoread": false
-      }
+      "prompt": "{file:./prompts/build-prompt.md}"
     },
     "plan": {
       "description": "Plan agent for project planning and task management",
@@ -98,10 +94,21 @@
       ],
       "enabled": true,
       "environment": { "SERENA_READ_ONLY": "true" }
+    },
+    "figma": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "figma-developer-mcp",
+        "{env: FIGMA_API_KEY}",
+        "--stdio"
+      ],
+      "enabled": true
     }
   },
   "theme": "kanagawa",
-  "model": "github-copilot/gpt-5",
+  "model": "github-copilot/claude-sonnet-4",
   "share": "disabled",
   "autoupdate": true
 }
