@@ -244,7 +244,7 @@ sdk() {
 }
 
 ## Zoxide
-command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 
 ## TheFuck - lazy loading
 fuck() {
