@@ -27,8 +27,9 @@ brew "autoenv"
 brew "entr"
 brew "iproute2mac"
 brew "pipx"
-brew "tree"
+brew "tree"        # Lightweight; kept as fallback for scripts/CI compatibility
 brew "watchman"
+brew "nushell"     # Optional: modern structured shell (not a drop-in replacement)
 
 # Services / networking
 tap "nextdns/tap"
