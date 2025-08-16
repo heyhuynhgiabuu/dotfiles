@@ -100,12 +100,12 @@ alias awsconfig='cat ~/.aws/config'
 alias awslogin='aws sso login; aws configure list-profiles'
 alias awsprofiles='aws configure list-profiles'
 
-# Git
+# Git (basic commands)
 alias ga='git add'
 alias gcms='git commit -m'
-alias gs='git status'
-alias gp='git push'
-alias gl='git pull'
+alias gst='git status'      # Changed from gs to avoid conflict
+alias gpush='git push'      # Changed from gp to avoid conflict  
+alias gpull='git pull'      # Changed from gl to avoid conflict
 alias gcof='git fetch && git checkout $(git branch | fzf | sed 's/^..//')'
 alias gpr='gh pr create'           
 alias gprs='gh pr status'          
