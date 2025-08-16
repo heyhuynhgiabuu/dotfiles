@@ -36,6 +36,7 @@
 | security        | Rapid security audits & vuln detection           | New backend code, pre-deploy, config changes          | Non-security cosmetic review                 | high             | Yes (critical paths)            | reviewer / alpha     |
 | summarizer      | Concise actionable session/project summaries     | Need continuity or handoff clarity                    | Deep technical refactor                      | minimal→standard | Yes (handoffs)                  | context              |
 | troubleshooter  | Debugging, performance, incident response        | Failures, outages, perf regressions                   | Planned feature dev                          | standard→high    | Yes (incident triggers)         | reviewer / optimizer |
+| diagram         | Visual content analysis & automated diagram gen  | Content needs visual representation, architecture docs | Simple text responses, non-visual tasks     | standard→high    | Yes (architectural doc gaps)    | reviewer             |
 | writer          | Essential dev-focused documentation              | After new feature/refactor needing docs               | Brainstorming architecture plans             | minimal→standard | Yes (post-change)               | reviewer             |
 
 **Legend:**
