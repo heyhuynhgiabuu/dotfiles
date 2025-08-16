@@ -50,6 +50,9 @@ if [[ "$PLATFORM" == "macos" ]]; then
     path_add "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
     path_add "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
     
+    # Herd PHP
+    path_add "$HOME/Library/Application Support/Herd/bin"
+    
     # OpenCode
     path_add "$HOME/.opencode/bin"
 elif [[ "$PLATFORM" == "linux" ]]; then
@@ -345,5 +348,3 @@ command -v github-copilot-cli >/dev/null && eval "$(github-copilot-cli alias -- 
 # OpenCode integration (removed from path section above)
 
 . "$HOME/.local/bin/env"
-
-
