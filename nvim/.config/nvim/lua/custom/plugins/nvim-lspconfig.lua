@@ -1,4 +1,4 @@
--- LSP Configuration with Conform.nvim for formatting
+-- LSP Configuration with Performance Optimizations
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
@@ -11,7 +11,7 @@ return {
 		},
 	},
 	config = function()
-		require("plugins.configs.lspconfig")
-		require("custom.lsp-config")
-	end, -- Override to setup mason-lspconfig
+		-- Use unified LSP configuration for better performance and less conflicts
+		require("custom.configs.lspconfig-unified").setup()
+	end,
 }
