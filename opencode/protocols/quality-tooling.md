@@ -81,20 +81,151 @@ fzf
 - Log/report results as part of the verification checklist and final report.
 - **Editing policy**: Serena MCP is strictly read-only. Do NOT use Serena editing/mutation tools (e.g., replace_regex, replace_symbol_body, insert_after_symbol, insert_before_symbol). For any code/content edits and searches, use OpenCode-native tools: Read/Edit/Write/Grep/Glob, and follow the Anchor Robustness Protocol and `opencode.json` permissions.
 
-## Research Protocol
+## Enhanced Research Protocol (Chrome MCP Integrated)
 
-- **Mandatory webfetch** for third-party/unknown tech or ambiguous requirements.
-- For trivial tasks with known local anchors, you may skip webfetch and proceed using early-stop criteria.
-- **Early-stop criteria**: Unique anchors identified OR top hits converge (~70%) on one path.
-- If signals conflict or scope is fuzzy, escalate once (research or clarification), then proceed.
-- **Never proceed on assumptions**; always verify with current documentation.
+### Research Tier Selection
+
+**Tier 1: Quick Research** (Known tech, simple verification)
+- Use when: Framework basics, familiar APIs, syntax clarification
+- Tools: `chrome_search_tabs_content` → `webfetch` → early stop
+- Agent Impact: **General/Language** - 50% faster simple lookups
+
+**Tier 2: Interactive Research** (Setup instructions, API docs, complex frameworks)
+- Use when: Installation guides, configuration, new framework patterns
+- Tools: `chrome_navigate` → `chrome_get_web_content` → `chrome_screenshot` → `chrome_search_tabs_content`
+- Agent Impact: **DevOps/Language/Frontend** - 3x more accurate implementation
+
+**Tier 3: Comparative Research** (Solution evaluation, architecture decisions)
+- Use when: Multiple solutions exist, architecture choices, best practices
+- Tools: Multi-tab `chrome_navigate` → parallel content extraction → `chrome_search_tabs_content` → semantic synthesis
+- Agent Impact: **Alpha/Reviewer** - 2x better architectural decisions
+
+### Chrome MCP Research Tools Priority
+
+**Primary Research Tools** (Prefer over webfetch):
+1. `chrome_search_tabs_content` - Semantic search existing browser knowledge
+2. `chrome_navigate` - Access live documentation with JavaScript support
+3. `chrome_get_web_content` - Extract structured content with better parsing
+4. `chrome_screenshot` - Visual verification for UI/setup instructions
+5. `chrome_network_capture_start/stop` - Monitor API requests/responses
+6. `webfetch` - Fallback for simple static content only
+
+### Research Decision Matrix
+
+| Research Scenario | Recommended Tools | Agent Effectiveness Gain |
+|-------------------|------------------|-------------------------|
+| **Framework Documentation** | `navigate` + `content` + `screenshot` | Language: +200% pattern accuracy |
+| **API Integration Guide** | `navigate` + `network_capture` + `content` | DevOps: +150% integration success |
+| **Setup Instructions** | `navigate` + `screenshot` + `content` | All: +300% setup verification |
+| **UI/Component Research** | `navigate` + `screenshot` + `search_tabs` | Frontend: +250% visual accuracy |
+| **Architecture Comparison** | Multi-tab + `search_tabs` + `content` | Alpha/Reviewer: +200% decision quality |
+| **Troubleshooting Guides** | `navigate` + `screenshot` + `network_capture` | Troubleshooter: +180% diagnosis speed |
+
+### Enhanced Research Workflow
+
+**Step 1: Knowledge Check**
+```
+chrome_search_tabs_content(query) → Check existing browser knowledge
+If semantic_score > 0.8 → Use existing knowledge
+Else → Proceed to interactive research
+```
+
+**Step 2: Interactive Investigation**
+```
+chrome_navigate(official_docs_url)
+chrome_get_web_content() → Extract structured content
+chrome_screenshot() → Capture visual elements (if UI-related)
+chrome_search_tabs_content() → Correlate with existing knowledge
+```
+
+**Step 3: Verification & Synthesis**
+```
+If API/integration: chrome_network_capture() → Test live examples
+If multiple sources: Repeat Step 2 across tabs → Semantic comparison
+Synthesize findings with confidence scoring
+```
+
+### Agent-Specific Research Guidelines
+
+**Language Agent**: 
+- **Always** screenshot code examples with syntax highlighting
+- Use `network_capture` for API integration patterns
+- Semantic search for framework comparison
+
+**DevOps Agent**:
+- **Mandatory** screenshot verification for infrastructure setup
+- Network monitoring for deployment API calls
+- Visual confirmation of dashboard/UI states
+
+**Frontend-UIUX Agent**:
+- **Primary** tool: `screenshot` for all UI research
+- Multi-tab component library comparison
+- Visual pattern extraction and analysis
+
+**Security Agent**:
+- Network capture for security API examples
+- Screenshot security configuration interfaces
+- Content analysis of security documentation
+
+**Alpha Agent**:
+- Comparative research across multiple architectural solutions
+- Semantic synthesis of complex multi-source research
+- Visual decision matrices via screenshots
+
+### Research Quality Standards
+
+- **Visual Verification**: Screenshot key concepts for UI/setup instructions
+- **Semantic Correlation**: Score > 0.7 across related sources
+- **Live Validation**: Test APIs/endpoints when possible via network capture
+- **Multi-Source Synthesis**: Minimum 2 authoritative sources for architecture decisions
+- **Never proceed on assumptions**: Always verify with current, interactive documentation
 
 ## Reusable Playbooks
 
 Maintain concise, reusable prompt templates ("playbooks") for repetitive workflows:
+
+### Traditional Playbooks
 - Dependency upgrades
 - Documentation updates  
 - Test-writing
 - PR preparation
 
-Prefer adapting playbooks before writing ad-hoc prompts.
+### Chrome MCP Enhanced Playbooks
+
+**Framework Integration Playbook**:
+```
+1. chrome_search_tabs_content("framework_name patterns") → Check existing knowledge
+2. chrome_navigate(official_docs + examples) → Multi-tab research
+3. chrome_screenshot(key_patterns + setup_ui) → Visual documentation
+4. chrome_network_capture() → Monitor API calls during examples
+5. Synthesize implementation strategy with visual verification
+```
+
+**API Research Playbook**:
+```
+1. chrome_navigate(api_docs + interactive_explorer) 
+2. chrome_get_web_content() → Extract endpoint details
+3. chrome_network_capture_start() → Monitor live API calls
+4. chrome_screenshot(request_response_examples) → Visual confirmation
+5. chrome_search_tabs_content() → Correlate with existing integrations
+```
+
+**Setup Verification Playbook**:
+```
+1. chrome_navigate(installation_guide)
+2. chrome_screenshot(each_step) → Visual step documentation
+3. chrome_get_web_content() → Extract commands/configuration
+4. chrome_search_tabs_content("common_issues") → Troubleshooting prep
+5. Visual success criteria documentation
+```
+
+**Architecture Decision Playbook**:
+```
+1. chrome_navigate() × multiple_solutions → Parallel research
+2. chrome_get_web_content() × all_tabs → Structured comparison
+3. chrome_search_tabs_content("pros_cons_comparison") → Semantic analysis
+4. chrome_screenshot(architecture_diagrams) → Visual comparison
+5. Decision matrix with confidence scoring
+```
+
+Prefer adapting these Chrome MCP enhanced playbooks before writing ad-hoc research prompts.

@@ -65,6 +65,44 @@ Follow these key principles from AGENTS.md:
 - **Research-First Methodology**: Always verify DevOps practices against current documentation
 - **13-Step Structured Workflow**: For complex deployment setups (3+ components)
 
+## Chrome MCP DevOps Research Protocol
+
+**MANDATORY: Use Chrome MCP for all infrastructure documentation research** - visual verification is critical for DevOps tasks.
+
+### Infrastructure Documentation Strategy
+
+**For Setup Instructions/Configuration**:
+1. `chrome_navigate(infrastructure_docs)` → Access live documentation
+2. `chrome_screenshot(each_setup_step)` → **MANDATORY** visual step documentation
+3. `chrome_get_web_content()` → Extract commands and configuration details
+4. `chrome_search_tabs_content("common_issues troubleshooting")` → Proactive error prevention
+
+**For API/Service Integration**:
+1. `chrome_navigate(service_docs + dashboard_interfaces)`
+2. `chrome_screenshot(configuration_interfaces)` → Visual confirmation of settings
+3. `chrome_network_capture_start()` → Monitor deployment API calls
+4. `chrome_get_web_content()` → Extract deployment configuration examples
+
+**For Architecture Documentation**:
+1. `chrome_navigate()` × multiple_architecture_sources → Comparative analysis
+2. `chrome_screenshot(architecture_diagrams + network_topologies)` → Visual comparison
+3. `chrome_search_tabs_content("deployment patterns best_practices")` → Semantic analysis
+
+### DevOps Visual Verification Requirements
+
+- **Screenshot ALL setup steps** for infrastructure configuration
+- **Capture dashboard/UI states** for service configuration verification
+- **Visual confirmation** of deployment pipeline interfaces
+- **Network monitoring** for API integration patterns during deployment
+- **Error state documentation** via screenshots for troubleshooting guides
+
+### DevOps Research Quality Standards
+
+- **Visual Step Verification**: Screenshot every setup instruction for accuracy
+- **Live Configuration Testing**: Use network capture to verify API deployments
+- **Cross-Platform Validation**: Ensure instructions work on both macOS and Linux
+- **Security Interface Verification**: Screenshot security configuration interfaces
+
 ## Serena MCP Integration
 
 This agent follows the Serena MCP (Meta-Control Protocol) for autonomous self-reflection and quality assurance:
