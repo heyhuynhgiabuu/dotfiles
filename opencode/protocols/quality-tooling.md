@@ -83,6 +83,36 @@ fzf
 
 ## Enhanced Research Protocol (Chrome MCP Integrated)
 
+### Chrome MCP Auto-Start Requirement
+
+**BEFORE using any Chrome MCP research tools, ensure Chrome is running:**
+
+```bash
+# Check if Chrome is running, start if needed (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) 
+      open -a "Google Chrome" 
+      ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi
+      ;;
+  esac
+  sleep 3  # Wait for Chrome initialization
+fi
+```
+
+**Auto-Start Integration Rules:**
+- **Automatic activation**: Run before first Chrome MCP tool use
+- **Silent operation**: Minimal output, handle errors gracefully  
+- **Regular browser**: Use user's normal Chrome (with Google login, extensions)
+- **Cross-platform**: Works on macOS and Linux
+- **Idempotent**: Safe to run multiple times
+
 ### Research Tier Selection
 
 **Tier 1: Quick Research** (Known tech, simple verification)

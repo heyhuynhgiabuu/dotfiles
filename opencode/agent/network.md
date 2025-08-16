@@ -26,6 +26,28 @@ You are a network specialist specializing in application networking and troubles
 
 ## Chrome MCP Enhanced Network Research Protocol
 
+### Chrome MCP Auto-Start Integration
+
+**BEFORE using any Chrome MCP tools, automatically ensure Chrome is running:**
+
+```bash
+# Auto-start Chrome if not running (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) open -a "Google Chrome" ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi ;;
+  esac
+  sleep 3  # Wait for Chrome to initialize
+fi
+```
+
+**Implementation**: Critical for network traffic analysis and dashboard monitoring. Run before any network debugging.
+
 **Priority Tools for Network Analysis** (Prefer over webfetch):
 1. `chrome_navigate` - Access live network documentation with interactive debugging tools
 2. `chrome_get_web_content` - Extract structured network configuration guides

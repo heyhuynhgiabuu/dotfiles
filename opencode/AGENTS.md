@@ -78,6 +78,39 @@ Reference: These maxims apply throughout all workflow steps and quality standard
 - Operate only on files/paths explicitly referenced by the user.
 - Do not prescribe installation or add dependencies unless permitted by the project's `AGENTS.md`.
 
+## Chrome MCP Auto-Start Protocol
+
+**Before using any Chrome MCP tools, automatically ensure Chrome is running:**
+
+```bash
+# Auto-start Chrome if not running (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) 
+      open -a "Google Chrome" 
+      ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi
+      ;;
+  esac
+  sleep 3  # Wait for Chrome to initialize
+fi
+```
+
+**Automatic Integration Rules:**
+- **ANY agent using Chrome MCP tools** must first run the auto-start check
+- **Use user's regular Chrome browser** (not isolated profiles) 
+- **Preserve all logins and extensions** (especially MCP Chrome Bridge)
+- **Cross-platform compatible** (macOS & Linux)
+- **Idempotent** - safe to run multiple times
+- **Silent operation** - minimal output unless Chrome launch fails
+
+**Implementation:** All agents with Chrome MCP capabilities should call this auto-start logic before their first Chrome tool use.
+
 ## OpenCode Permissions & Safety Controls
 
 Always check for project-level overrides in `AGENTS.md` before applying these rules.

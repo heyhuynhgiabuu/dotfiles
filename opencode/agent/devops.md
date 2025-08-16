@@ -69,6 +69,28 @@ Follow these key principles from AGENTS.md:
 
 **MANDATORY: Use Chrome MCP for all infrastructure documentation research** - visual verification is critical for DevOps tasks.
 
+### Chrome MCP Auto-Start Integration
+
+**BEFORE using any Chrome MCP tools, automatically ensure Chrome is running:**
+
+```bash
+# Auto-start Chrome if not running (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) open -a "Google Chrome" ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi ;;
+  esac
+  sleep 3  # Wait for Chrome to initialize
+fi
+```
+
+**Implementation**: Always run this check before Chrome MCP research. Essential for infrastructure visual verification.
+
 ### Infrastructure Documentation Strategy
 
 **For Setup Instructions/Configuration**:

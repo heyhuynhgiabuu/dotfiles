@@ -54,6 +54,28 @@ Specify the `language` parameter (e.g., `language: Java`).
 
 **ALWAYS use Chrome MCP for framework and language research** - provides visual code examples and live documentation.
 
+### Chrome MCP Auto-Start Integration
+
+**BEFORE using any Chrome MCP tools, automatically ensure Chrome is running:**
+
+```bash
+# Auto-start Chrome if not running (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) open -a "Google Chrome" ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi ;;
+  esac
+  sleep 3  # Wait for Chrome to initialize
+fi
+```
+
+**Implementation**: Required for visual code pattern analysis and framework research. Run before any language documentation research.
+
 ### Framework Research Strategy
 
 **For New Frameworks/Libraries**:

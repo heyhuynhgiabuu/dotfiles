@@ -38,6 +38,28 @@ You are a frontend and UI/UX specialist. Your responsibilities include:
 
 **PRIMARY tool for UI/UX research** - visual analysis is essential for frontend work.
 
+### Chrome MCP Auto-Start Integration
+
+**BEFORE using any Chrome MCP tools, automatically ensure Chrome is running:**
+
+```bash
+# Auto-start Chrome if not running (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) open -a "Google Chrome" ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi ;;
+  esac
+  sleep 3  # Wait for Chrome to initialize
+fi
+```
+
+**Implementation**: Critical for visual UI/UX analysis. Run automatically before component research.
+
 ### UI Component Research Strategy
 
 **Component Library Research**:

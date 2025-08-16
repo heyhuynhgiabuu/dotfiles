@@ -57,6 +57,13 @@ This prompt is for advanced analysis, critical reasoning, and architectural insi
 - Use multiple tools in parallel when analyzing independent components
 - Batch tool calls together for optimal performance during investigation
 
+**Chrome MCP Auto-Start Integration:**
+- **BEFORE using any Chrome MCP tools**, automatically ensure Chrome is running
+- Run the Chrome auto-start check silently in background (via bash tool)
+- Use user's regular Chrome browser (preserves Google login and extensions)
+- Implementation: `pgrep -f "Google Chrome" || (open -a "Google Chrome" && sleep 3)` on macOS
+- **Never ask user to manually start Chrome** - handle automatically
+
 **Output Formatting (CLI Optimized):**
 - Use minimal headers only when helpful for navigation
 - Concise, scan-friendly bullets for findings

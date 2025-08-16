@@ -57,6 +57,28 @@ You are a specialized Security Audit Agent operating within the OpenCode develop
 
 **Use Chrome MCP for security documentation and configuration interface research** - visual verification is critical for security configurations.
 
+### Chrome MCP Auto-Start Integration
+
+**BEFORE using any Chrome MCP tools, automatically ensure Chrome is running:**
+
+```bash
+# Auto-start Chrome if not running (cross-platform)
+if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Darwin) open -a "Google Chrome" ;;
+    Linux) 
+      if command -v google-chrome >/dev/null 2>&1; then
+        nohup google-chrome >/dev/null 2>&1 &
+      elif command -v chromium >/dev/null 2>&1; then
+        nohup chromium >/dev/null 2>&1 &
+      fi ;;
+  esac
+  sleep 3  # Wait for Chrome to initialize
+fi
+```
+
+**Implementation**: Essential for security configuration verification. Run before any security interface research.
+
 ### Security Documentation Research
 
 **Security Best Practices Research**:

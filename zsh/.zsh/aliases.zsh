@@ -158,10 +158,29 @@ alias oc-plan='opencode --mode plan'          # Start NEW session in plan mode (
 alias oc-build='opencode --mode build'        # Start NEW session in build mode (Gemini 2.5 Pro)
 alias oc-enhanced='opencode --mode enhanced'  # Start NEW session in enhanced mode (Claude Sonnet 4)
 
-# Layer 2.1: Model & Session Management
-alias oc-models='opencode models'             # List all available models
-alias oc-agents='opencode agent'              # Manage agents
-alias oc-serve='opencode serve'               # Start headless server
+# Layer 2.2: Auto-Chrome OpenCode Commands
+# These commands automatically ensure Chrome is running before starting OpenCode
+oc-chrome() {
+    auto_chrome
+    if [[ $? -eq 0 ]]; then
+        echo "🔄 Starting OpenCode with Chrome ready..."
+        opencode "$@"
+    else
+        echo "❌ Failed to start Chrome - OpenCode not launched"
+        return 1
+    fi
+}
+
+oc-enhanced-chrome() {
+    auto_chrome
+    if [[ $? -eq 0 ]]; then
+        echo "🔄 Starting OpenCode Enhanced mode with Chrome ready..."
+        opencode --mode enhanced "$@"
+    else
+        echo "❌ Failed to start Chrome - OpenCode not launched"
+        return 1
+    fi
+}
 
 
 
@@ -353,68 +372,72 @@ alias brewclean="brew-perf cleanup"                           # Optimized brew c
 alias dev-status="git-perf status && brew-perf status"       # Combined status check
 alias dev-update="git-perf fetch && brew-perf update"        # Update everything
 
-# Chrome MCP Bridge: strong isolation launcher (cross-platform)
-# Usage: chrome-automation [profile_dir]
-# - profile_dir defaults to "$CHROME_AUTOMATION_DIR" or "$HOME/chrome-profiles/automation"
-# - macOS opens a new app instance; Linux runs in background (&)
-# - Includes health check to verify Chrome launched successfully
-chrome-automation() {
-    local dir
-    dir=${1:-"${CHROME_AUTOMATION_DIR:-$HOME/chrome-profiles/automation}"}
-    mkdir -p "$dir" 2>/dev/null || true
-    chmod 700 "$dir" 2>/dev/null || true
-
-    echo "🚀 Launching Chrome with isolated profile..."
-    echo "📁 Profile directory: $dir"
-
+# Auto-open Chrome for MCP Chrome Bridge usage
+# Ensures Chrome is running before MCP operations, using your regular browser
+# with all your extensions, logins, and settings intact
+auto_chrome() {
+    echo "🔍 Checking Chrome status..."
+    
+    # Check if Chrome is already running
+    if pgrep -f "Google Chrome" >/dev/null 2>&1; then
+        echo "✅ Chrome is already running"
+        echo "🔗 Ready for MCP Chrome Bridge operations"
+        return 0
+    fi
+    
+    echo "🚀 Starting Chrome for MCP operations..."
+    
     # Detect platform and launch Chrome
     case "$(uname -s)" in
         Darwin)
             if command -v "open" >/dev/null; then
-                open -na "Google Chrome" --args --user-data-dir="$dir" --no-first-run --no-default-browser-check
+                open -a "Google Chrome"
+                echo "📱 Launched Chrome on macOS"
             else
-                echo "❌ Error: 'open' command not found on macOS" >&2; return 1
+                echo "❌ Error: 'open' command not found on macOS" >&2
+                return 1
             fi
             ;;
         Linux)
             if command -v google-chrome >/dev/null 2>&1; then
-                nohup google-chrome --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+                nohup google-chrome >/dev/null 2>&1 &
+                echo "🐧 Launched google-chrome on Linux"
             elif command -v google-chrome-stable >/dev/null 2>&1; then
-                nohup google-chrome-stable --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+                nohup google-chrome-stable >/dev/null 2>&1 &
+                echo "🐧 Launched google-chrome-stable on Linux"
             elif command -v chromium >/dev/null 2>&1; then
-                nohup chromium --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+                nohup chromium >/dev/null 2>&1 &
+                echo "🐧 Launched chromium on Linux"
             elif command -v chromium-browser >/dev/null 2>&1; then
-                nohup chromium-browser --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+                nohup chromium-browser >/dev/null 2>&1 &
+                echo "🐧 Launched chromium-browser on Linux"
             else
-                echo "❌ Error: google-chrome/google-chrome-stable/chromium not found" >&2; return 1
+                echo "❌ Error: No Chrome/Chromium found on Linux" >&2
+                return 1
             fi
             ;;
         *)
-            echo "❌ Error: Unsupported OS for chrome-automation" >&2; return 1
+            echo "❌ Error: Unsupported OS for auto-chrome" >&2
+            return 1
             ;;
     esac
-
-    # Health check: Wait for Chrome to start and verify process
+    
+    # Wait for Chrome to start
     echo "⏳ Waiting for Chrome to initialize..."
     sleep 3
-
-    # Check if Chrome process is running
-    if pgrep -f "Chrome.*${dir}" >/dev/null 2>&1; then
-        echo "✅ Chrome launched successfully with isolated profile"
-        echo "🔒 Security: Profile isolated with 700 permissions"
-        echo "📋 Next steps:"
-        echo "   1. Install mcp-chrome-bridge extension (if not already installed)"
-        echo "   2. Set extension site access to 'On all sites'"
-        echo "   3. Start your MCP client to begin automation"
+    
+    # Verify Chrome started
+    if pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
+        echo "✅ Chrome started successfully"
+        echo "🔗 Ready for MCP Chrome Bridge operations"
+        echo "💡 Tip: Use 'oc-enhanced' or other OpenCode commands with Chrome tools"
     else
-        echo "⚠️  Chrome process not detected - it may still be starting"
-        echo "💡 If Chrome doesn't appear, check:"
-        echo "   - Chrome is installed and in PATH"
-        echo "   - No conflicting Chrome processes running"
-        echo "   - Directory permissions: $(ls -ld "$dir" 2>/dev/null | awk '{print $1, $3, $4}')"
+        echo "⚠️  Chrome may still be starting..."
+        echo "💡 Check manually or try again in a few seconds"
     fi
 }
 
-# Quick alias for chrome-automation
-alias ca='chrome-automation'
+# Shortcut aliases
+alias auto-chrome='auto_chrome'
+alias ac='auto_chrome'
 
