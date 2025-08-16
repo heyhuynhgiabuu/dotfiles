@@ -24,7 +24,7 @@ log_error() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; }
 
 # Performance: Cached Homebrew operations
 CACHE_DIR="$HOME/.cache/homebrew-perf"
-mkdir -p "$CACHE_DIR"
+mkdir -p "$CACHE_DIR" && chmod 700 "$CACHE_DIR"
 
 cache_file() {
     local operation="$1"
@@ -88,10 +88,19 @@ brew_smart_update() {
     if [[ -n "$outdated_critical" ]]; then
         log_warning "Critical packages outdated:"
         echo "$outdated_critical"
-        read -p "Update critical packages? [y/N] " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo "$outdated_critical" | xargs brew upgrade
+        
+        # Only prompt in interactive shells
+        if [[ -t 0 ]] && [[ "$-" == *i* ]]; then
+            read -p "Update critical packages? [y/N] " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                # Use safe iteration instead of xargs
+                while IFS= read -r package; do
+                    [[ -n "$package" ]] && brew upgrade -- "$package"
+                done <<< "$outdated_critical"
+            fi
+        else
+            log_info "Non-interactive shell detected - skipping critical package updates"
         fi
     fi
     

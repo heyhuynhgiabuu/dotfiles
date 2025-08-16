@@ -35,10 +35,21 @@ zstyle ':vcs_info:git*' actionformats " %b (%a)"
 
 # Performance: Cache expensive operations
 typeset -A __perf_cache
+
+# Secure cache directory setup
+__setup_cache_dir() {
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+  if [[ ! -d "$cache_dir" ]]; then
+    mkdir -p "$cache_dir" && chmod 700 "$cache_dir"
+  fi
+  echo "$cache_dir"
+}
+
 __cache_command() {
   local cache_key="$1"
   local cache_duration="${2:-300}" # 5 minutes default
-  local cache_file="/tmp/zsh_cache_${cache_key//\//_}"
+  local cache_dir="$(__setup_cache_dir)"
+  local cache_file="$cache_dir/$(printf '%s' "$cache_key" | sha256sum | cut -d' ' -f1).cache"
   
   if [[ -f "$cache_file" ]] && [[ $(($(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || echo 0))) -lt $cache_duration ]]; then
     cat "$cache_file"
@@ -50,8 +61,13 @@ __cache_command() {
 
 __set_cache() {
   local cache_key="$1"
-  local cache_file="/tmp/zsh_cache_${cache_key//\//_}"
-  cat > "$cache_file"
+  local cache_dir="$(__setup_cache_dir)"
+  local cache_file="$cache_dir/$(printf '%s' "$cache_key" | sha256sum | cut -d' ' -f1).cache"
+  local tmpfile
+  
+  # Create secure temporary file and move to final location
+  tmpfile=$(mktemp "$cache_dir/tmp.XXXXXX") || return 1
+  cat > "$tmpfile" && chmod 600 "$tmpfile" && mv "$tmpfile" "$cache_file"
 }
 
 # Cached git status for prompt (if using git-based prompt)
@@ -84,6 +100,7 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 # Cleanup old cache files periodically (silent, no background jobs)
 # Only run cleanup occasionally to avoid startup overhead
 if [[ -n ~/.zsh/cache(#qN.mh+24) ]]; then
-  # Clean up cache files older than 1 day, but do it silently and quickly
-  find /tmp -name "zsh_cache_*" -mtime +1 -delete 2>/dev/null || true
+  # Clean up cache files older than 1 day from secure cache directory
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+  [[ -d "$cache_dir" ]] && find "$cache_dir" -name "*.cache" -mtime +1 -delete 2>/dev/null || true
 fi

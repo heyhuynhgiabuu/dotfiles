@@ -9,15 +9,18 @@ CACHE_DIR="$HOME/.cache/git-perf"
 CACHE_DURATION_SECONDS=300  # 5 minutes
 MAX_REPOS=50  # Limit cached repositories
 
-mkdir -p "$CACHE_DIR"
+# Create secure cache directory
+mkdir -p "$CACHE_DIR" && chmod 700 "$CACHE_DIR"
 
 # Logging
 log() { printf "[git-perf] %s\n" "$*" >&2; }
 
 # Cache management
 get_cache_file() {
-    local repo_hash
-    repo_hash=$(echo "$PWD" | shasum -a 256 | cut -d' ' -f1)
+    local repo_root repo_hash
+    # Use canonical git root path for consistent caching
+    repo_root=$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")
+    repo_hash=$(printf '%s' "$repo_root" | sha256sum | cut -d' ' -f1)
     echo "$CACHE_DIR/repo_${repo_hash}.cache"
 }
 
@@ -34,11 +37,16 @@ is_cache_valid() {
 cleanup_old_cache() {
     find "$CACHE_DIR" -name "*.cache" -mtime +1 -delete 2>/dev/null || true
     
-    # Limit number of cached repos
+    # Limit number of cached repos using safe file handling
     local cache_count
     cache_count=$(find "$CACHE_DIR" -name "*.cache" | wc -l)
     if [[ $cache_count -gt $MAX_REPOS ]]; then
-        find "$CACHE_DIR" -name "*.cache" -exec ls -t {} + | tail -n +$((MAX_REPOS + 1)) | xargs rm -f
+        # Safe deletion using null delimiters
+        find "$CACHE_DIR" -name "*.cache" -type f -printf '%T@ %p\0' 2>/dev/null | \
+            sort -z -n | \
+            head -z -n -$MAX_REPOS | \
+            cut -z -d' ' -f2- | \
+            xargs -0 rm -f --
     fi
 }
 
