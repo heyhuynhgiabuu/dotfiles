@@ -32,6 +32,9 @@ alias vcf='cd ~/.config/nvim && nvim'
 alias f='fzf'
 alias fp="fzf --preview='bat --color=always {}'"  # preview with bat
 
+# Remove any existing fv alias to avoid conflicts
+unalias fv 2>/dev/null || true
+
 # Secure fzf + nvim integration with proper file handling
 fv() {
     local selected_files
