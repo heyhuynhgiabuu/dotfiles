@@ -28,10 +28,19 @@ alias stm='tmux source-file ~/.tmux.conf \;'
 alias vcf='cd ~/.config/nvim && nvim'
 
 
-#fzf
+#fzf - Security hardened with proper quoting
 alias f='fzf'
-alias fp='fzf --preview='bat --color=always {}'' # preview with bat
-alias fv='nvim $(fzf -m --preview='bat --color=always {}')' # open neovim with select file by tab
+alias fp="fzf --preview='bat --color=always {}'"  # preview with bat
+
+# Secure fzf + nvim integration with proper file handling
+fv() {
+    local selected_files
+    selected_files=$(fzf -m --preview='bat --color=always {}' --print0)
+    if [[ -n "$selected_files" ]]; then
+        # Handle null-delimited output safely
+        printf '%s\0' "$selected_files" | xargs -0 nvim --
+    fi
+}
 
 #z
 alias cd='z'       # Thay thế cd bằng z
@@ -144,23 +153,167 @@ alias oc-plan='opencode --mode plan'          # Start NEW session in plan mode (
 alias oc-build='opencode --mode build'        # Start NEW session in build mode (Gemini 2.5 Pro)
 alias oc-enhanced='opencode --mode enhanced'  # Start NEW session in enhanced mode (Claude Sonnet 4)
 
+# Layer 2.1: Model & Session Management
+alias oc-models='opencode models'             # List all available models
+alias oc-agents='opencode agent'              # Manage agents
+alias oc-serve='opencode serve'               # Start headless server
+
 
 
 # Runs a specific tool in a NEW, non-interactive session using a FREE model.
 # Example: ocs-find "my_function"
-ocs-find() { opencode run --model 'github-copilot/gpt-4.1' "@serena find_symbol \"$1\""; }
-ocs-refs() { opencode run --model 'github-copilot/gpt-4.1' "@serena find_referencing_symbols \"$1\" relative_path:\"$2\""; }
-ocs-grep() { opencode run --model 'github-copilot/gpt-4.1' "@serena search_for_pattern \"$1\""; }
-ocs-list() { opencode run --model 'github-copilot/gpt-4.1' "@serena list_dir \"$1\""; }
-ocs-read() { opencode run --model 'github-copilot/gpt-4.1' "@read \"$1\""; }
 
-# Layer 3.1: Serena Memory Management (using FREE model)
-ocs-memw() { opencode run --model 'github-copilot/gpt-4.1' "@serena write_memory '$1' content:'$2'"; }
-ocs-memr() { opencode run --model 'github-copilot/gpt-4.1' "@serena read_memory '$1'"; }
+# Security-hardened OpenCode wrapper functions with input validation
+ocs-find() {
+    if [[ -z "$1" ]]; then 
+        printf "Usage: ocs-find <symbol>\n" >&2
+        return 2
+    fi
+    # Validate input: allow only safe characters for symbol names
+    case "$1" in
+        *[!a-zA-Z0-9._/:@-]*) 
+            printf "Error: Invalid characters in symbol name. Use only alphanumeric, dots, slashes, underscores, colons, @ and hyphens.\n" >&2
+            return 1 ;;
+        "") 
+            printf "Error: Empty symbol name\n" >&2
+            return 1 ;;
+    esac
+    if [[ ${#1} -gt 200 ]]; then
+        printf "Error: Symbol name too long (max 200 chars)\n" >&2
+        return 1
+    fi
+    opencode run --model 'github-copilot/gpt-4.1' "@serena find_symbol $(printf %q "$1")"
+}
+
+ocs-refs() {
+    if [[ -z "$1" || -z "$2" ]]; then 
+        printf "Usage: ocs-refs <symbol> <relative_path>\n" >&2
+        return 2
+    fi
+    # Validate both symbol and path arguments
+    case "$1" in
+        *[!a-zA-Z0-9._/:@-]*) 
+            printf "Error: Invalid characters in symbol name\n" >&2
+            return 1 ;;
+    esac
+    case "$2" in
+        *[!a-zA-Z0-9._/:-]*) 
+            printf "Error: Invalid characters in path. Use only alphanumeric, dots, slashes, underscores, colons and hyphens.\n" >&2
+            return 1 ;;
+    esac
+    if [[ ${#1} -gt 200 || ${#2} -gt 500 ]]; then
+        printf "Error: Arguments too long\n" >&2
+        return 1
+    fi
+    opencode run --model 'github-copilot/gpt-4.1' "@serena find_referencing_symbols $(printf %q "$1") relative_path:$(printf %q "$2")"
+}
+
+ocs-grep() {
+    if [[ -z "$1" ]]; then 
+        printf "Usage: ocs-grep <pattern>\n" >&2
+        return 2
+    fi
+    if [[ ${#1} -gt 500 ]]; then
+        printf "Error: Pattern too long (max 500 chars)\n" >&2
+        return 1
+    fi
+    opencode run --model 'github-copilot/gpt-4.1' "@serena search_for_pattern $(printf %q "$1")"
+}
+
+ocs-list() {
+    if [[ -z "$1" ]]; then 
+        printf "Usage: ocs-list <directory>\n" >&2
+        return 2
+    fi
+    # Validate directory path - more restrictive for security
+    case "$1" in
+        *[!a-zA-Z0-9._/:-]*) 
+            printf "Error: Invalid characters in directory path\n" >&2
+            return 1 ;;
+        *..*)
+            printf "Error: Path traversal not allowed\n" >&2
+            return 1 ;;
+    esac
+    if [[ ${#1} -gt 500 ]]; then
+        printf "Error: Path too long (max 500 chars)\n" >&2
+        return 1
+    fi
+    opencode run --model 'github-copilot/gpt-4.1' "@serena list_dir $(printf %q "$1")"
+}
+
+ocs-read() {
+    if [[ -z "$1" ]]; then 
+        printf "Usage: ocs-read <file_path>\n" >&2
+        return 2
+    fi
+    # Extra security for file reading - confirm intent
+    case "$1" in
+        *[!a-zA-Z0-9._/:-]*) 
+            printf "Error: Invalid characters in file path\n" >&2
+            return 1 ;;
+        *..*)
+            printf "Error: Path traversal not allowed\n" >&2
+            return 1 ;;
+    esac
+    if [[ ${#1} -gt 500 ]]; then
+        printf "Error: Path too long (max 500 chars)\n" >&2
+        return 1
+    fi
+    printf "Reading file: %s\nContinue? [y/N] " "$1"
+    read -r response
+    case "$response" in
+        [yY]|[yY][eE][sS]) 
+            opencode run --model 'github-copilot/gpt-4.1' "@read $(printf %q "$1")" ;;
+        *) 
+            printf "Cancelled\n" ;;
+    esac
+}
+
+# Layer 3.1: Serena Memory Management (using FREE model) - Security Hardened
+ocs-memw() { 
+    if [[ -z "$1" || -z "$2" ]]; then 
+        printf "Usage: ocs-memw <memory_name> <content>\n" >&2
+        return 2
+    fi
+    # Validate memory name (alphanumeric, underscore, hyphen only)
+    case "$1" in
+        *[!a-zA-Z0-9._-]*) 
+            printf "Error: Memory name contains invalid characters\n" >&2
+            return 1 ;;
+    esac
+    if [[ ${#1} -gt 100 || ${#2} -gt 2000 ]]; then
+        printf "Error: Memory name or content too long\n" >&2
+        return 1
+    fi
+    opencode run --model 'github-copilot/gpt-4.1' "@serena write_memory $(printf %q "$1") content:$(printf %q "$2")"
+}
+
+ocs-memr() { 
+    if [[ -z "$1" ]]; then 
+        printf "Usage: ocs-memr <memory_name>\n" >&2
+        return 2
+    fi
+    case "$1" in
+        *[!a-zA-Z0-9._-]*) 
+            printf "Error: Memory name contains invalid characters\n" >&2
+            return 1 ;;
+    esac
+    if [[ ${#1} -gt 100 ]]; then
+        printf "Error: Memory name too long\n" >&2
+        return 1
+    fi
+    opencode run --model 'github-copilot/gpt-4.1' "@serena read_memory $(printf %q "$1")"
+}
+
 ocs-memlist() { opencode run --model 'github-copilot/gpt-4.1' "@serena list_memories"; }
 
 # Layer 3.2: General Purpose Quick Commands (using FREE model)
 oc-explain() { opencode run --model 'github-copilot/gpt-4.1' "Explain this: $1"; }
 oc-fix() { opencode run --model 'github-copilot/gpt-4.1' "Fix this code: $1"; }
 oc-test() { opencode run "Write tests for this: $1"; }
+
+# Layer 3.3: Project & Session Utilities  
+alias oc-status='opencode status'              # Show project status (if supported)
+oc_init() { cd "$1" && opencode run "Initialize this project for development"; }
+alias oc-init='oc_init'                        # Initialize project wrapper
 

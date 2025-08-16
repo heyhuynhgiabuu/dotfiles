@@ -1,8 +1,34 @@
 #My custom functions
 
 # Access to GPT in the CLI. Requires https://github.com/openai/openai-python
+# Security hardened with input validation and safe argument handling
 gpt() {
-    openai api chat_completions.create -m gpt-3.5-turbo -g user "\"$*\""
+    if [[ $# -eq 0 ]]; then
+        printf "Usage: gpt <prompt>\n" >&2
+        printf "Example: gpt 'Explain how to use git'\n" >&2
+        return 2
+    fi
+    
+    local prompt="$*"
+    
+    # Input validation
+    if [[ ${#prompt} -gt 4000 ]]; then
+        printf "Error: Prompt too long (max 4000 characters)\n" >&2
+        return 1
+    fi
+    
+    # Check for potentially sensitive patterns
+    if [[ "$prompt" =~ (password|secret|key|token|credential) ]]; then
+        printf "Warning: Prompt may contain sensitive information. Continue? [y/N] " >&2
+        read -r response
+        case "$response" in
+            [yY]|[yY][eE][sS]) ;;
+            *) printf "Cancelled\n" >&2; return 1 ;;
+        esac
+    fi
+    
+    # Use safer argument passing - avoid embedding quotes in command
+    printf '%s\n' "$prompt" | openai api chat_completions.create -m gpt-3.5-turbo -g user
 }
 
 # Create and CD into folder 

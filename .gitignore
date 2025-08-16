@@ -7,6 +7,14 @@
 **/secrets.json
 **/.local/
 
+# Security-sensitive files
+*.key
+*.pem
+*credentials*
+*secret*
+.aws/credentials
+.netrc
+
 .serena/cache/
 # Deprecated files and old configurations
 deprecated/

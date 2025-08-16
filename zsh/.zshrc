@@ -89,13 +89,14 @@ source $ZSH/oh-my-zsh.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Zinit - Advanced Plugin Management
+# SECURITY: Manual installation required - run scripts/setup/install-zinit.sh
+# This prevents automatic network fetches at shell startup
 
-if [[ ! -f "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]]; then
-  mkdir -p "$HOME/.local/share/zinit"
-  git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git"
+if [[ -f "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]]; then
+    source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+else
+    printf "\033[33mWarning: zinit not found. Run 'scripts/setup/install-zinit.sh' to install safely.\033[0m\n" >&2
 fi
-
-source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 
 # Core zinit annexes (lightweight)
 zinit light-mode for \
