@@ -353,3 +353,41 @@ alias brewclean="brew-perf cleanup"                           # Optimized brew c
 alias dev-status="git-perf status && brew-perf status"       # Combined status check
 alias dev-update="git-perf fetch && brew-perf update"        # Update everything
 
+# Chrome MCP Bridge: strong isolation launcher (cross-platform)
+# Usage: chrome-automation [profile_dir]
+# - profile_dir defaults to "$CHROME_AUTOMATION_DIR" or "$HOME/chrome-profiles/automation"
+# - macOS opens a new app instance; Linux runs in background (&)
+chrome-automation() {
+    local dir
+    dir=${1:-"${CHROME_AUTOMATION_DIR:-$HOME/chrome-profiles/automation}"}
+    mkdir -p "$dir" 2>/dev/null || true
+    chmod 700 "$dir" 2>/dev/null || true
+
+    # Detect platform
+    case "$(uname -s)" in
+        Darwin)
+            if command -v "open" >/dev/null; then
+                open -na "Google Chrome" --args --user-data-dir="$dir" --no-first-run --no-default-browser-check
+            else
+                echo "Error: 'open' command not found on macOS" >&2; return 1
+            fi
+            ;;
+        Linux)
+            if command -v google-chrome >/dev/null 2>&1; then
+                nohup google-chrome --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+            elif command -v google-chrome-stable >/dev/null 2>&1; then
+                nohup google-chrome-stable --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+            elif command -v chromium >/dev/null 2>&1; then
+                nohup chromium --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+            elif command -v chromium-browser >/dev/null 2>&1; then
+                nohup chromium-browser --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
+            else
+                echo "Error: google-chrome/google-chrome-stable/chromium not found" >&2; return 1
+            fi
+            ;;
+        *)
+            echo "Error: Unsupported OS for chrome-automation" >&2; return 1
+            ;;
+    esac
+}
+
