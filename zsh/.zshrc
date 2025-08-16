@@ -88,7 +88,6 @@ ZSH_THEME=""
 plugins=(brew dotenv)
 
 source $ZSH/oh-my-zsh.sh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Zinit - Advanced Plugin Management
 # SECURITY: Manual installation required - run scripts/setup/install-zinit.sh
@@ -351,3 +350,6 @@ command -v github-copilot-cli >/dev/null && eval "$(github-copilot-cli alias -- 
 # OpenCode integration (removed from path section above)
 
 . "$HOME/.local/bin/env"
+
+# FZF - Fuzzy finder integration (load LAST to avoid key binding conflicts)
+[[ -f "$ZSH_CONFIG_DIR/fzf.zsh" ]] && source "$ZSH_CONFIG_DIR/fzf.zsh"
