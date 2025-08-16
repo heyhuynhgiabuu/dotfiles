@@ -357,19 +357,23 @@ alias dev-update="git-perf fetch && brew-perf update"        # Update everything
 # Usage: chrome-automation [profile_dir]
 # - profile_dir defaults to "$CHROME_AUTOMATION_DIR" or "$HOME/chrome-profiles/automation"
 # - macOS opens a new app instance; Linux runs in background (&)
+# - Includes health check to verify Chrome launched successfully
 chrome-automation() {
     local dir
     dir=${1:-"${CHROME_AUTOMATION_DIR:-$HOME/chrome-profiles/automation}"}
     mkdir -p "$dir" 2>/dev/null || true
     chmod 700 "$dir" 2>/dev/null || true
 
-    # Detect platform
+    echo "🚀 Launching Chrome with isolated profile..."
+    echo "📁 Profile directory: $dir"
+
+    # Detect platform and launch Chrome
     case "$(uname -s)" in
         Darwin)
             if command -v "open" >/dev/null; then
                 open -na "Google Chrome" --args --user-data-dir="$dir" --no-first-run --no-default-browser-check
             else
-                echo "Error: 'open' command not found on macOS" >&2; return 1
+                echo "❌ Error: 'open' command not found on macOS" >&2; return 1
             fi
             ;;
         Linux)
@@ -382,12 +386,35 @@ chrome-automation() {
             elif command -v chromium-browser >/dev/null 2>&1; then
                 nohup chromium-browser --user-data-dir="$dir" --no-first-run --no-default-browser-check >/dev/null 2>&1 &
             else
-                echo "Error: google-chrome/google-chrome-stable/chromium not found" >&2; return 1
+                echo "❌ Error: google-chrome/google-chrome-stable/chromium not found" >&2; return 1
             fi
             ;;
         *)
-            echo "Error: Unsupported OS for chrome-automation" >&2; return 1
+            echo "❌ Error: Unsupported OS for chrome-automation" >&2; return 1
             ;;
     esac
+
+    # Health check: Wait for Chrome to start and verify process
+    echo "⏳ Waiting for Chrome to initialize..."
+    sleep 3
+
+    # Check if Chrome process is running
+    if pgrep -f "Chrome.*${dir}" >/dev/null 2>&1; then
+        echo "✅ Chrome launched successfully with isolated profile"
+        echo "🔒 Security: Profile isolated with 700 permissions"
+        echo "📋 Next steps:"
+        echo "   1. Install mcp-chrome-bridge extension (if not already installed)"
+        echo "   2. Set extension site access to 'On all sites'"
+        echo "   3. Start your MCP client to begin automation"
+    else
+        echo "⚠️  Chrome process not detected - it may still be starting"
+        echo "💡 If Chrome doesn't appear, check:"
+        echo "   - Chrome is installed and in PATH"
+        echo "   - No conflicting Chrome processes running"
+        echo "   - Directory permissions: $(ls -ld "$dir" 2>/dev/null | awk '{print $1, $3, $4}')"
+    fi
 }
+
+# Quick alias for chrome-automation
+alias ca='chrome-automation'
 
