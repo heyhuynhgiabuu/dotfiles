@@ -1,6 +1,8 @@
-# Performance & Shell options
-# Set up configuration directory for modular loading
-ZSH_CONFIG_DIR="$HOME/dotfiles/zsh/.zsh"
+# Set up ZSH configuration directory
+export ZSH_CONFIG_DIR="$HOME/.zsh"
+
+# Load performance optimizations early
+[ -f "$ZSH_CONFIG_DIR/performance-opts.zsh" ] && source "$ZSH_CONFIG_DIR/performance-opts.zsh"
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8

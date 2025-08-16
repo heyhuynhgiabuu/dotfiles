@@ -37,17 +37,9 @@ setup_shell_configs() {
     backup_file "${HOME}/.zshrc"
     create_symlink "${DOTFILES_DIR}/zsh/.zshrc" "${HOME}/.zshrc"
     
-    # Setup zsh directory
-    mkdir -p "${HOME}/.zsh"
-    if [[ -d "${DOTFILES_DIR}/zsh/.zsh" ]]; then
-        for item in "${DOTFILES_DIR}/zsh/.zsh"/*; do
-            if [[ -e "$item" ]]; then
-                item_name=$(basename "$item")
-                create_symlink "$item" "${HOME}/.zsh/$item_name"
-            fi
-        done
-    fi
-    
+    # Setup zsh directory as single symlink
+    backup_file "${HOME}/.zsh"
+    create_symlink "${DOTFILES_DIR}/zsh/.zsh" "${HOME}/.zsh"    
     log_success "Shell configurations setup complete"
 }
 
@@ -200,17 +192,9 @@ setup_shell_configs() {
     backup_file "${HOME}/.zshrc"
     create_symlink "${DOTFILES_DIR}/zsh/.zshrc" "${HOME}/.zshrc"
     
-    # Setup zsh directory
-    mkdir -p "${HOME}/.zsh"
-    if [[ -d "${DOTFILES_DIR}/zsh/.zsh" ]]; then
-        for item in "${DOTFILES_DIR}/zsh/.zsh"/*; do
-            if [[ -e "$item" ]]; then
-                item_name=$(basename "$item")
-                create_symlink "$item" "${HOME}/.zsh/$item_name"
-            fi
-        done
-    fi
-    
+    # Setup zsh directory as single symlink
+    backup_file "${HOME}/.zsh"
+    create_symlink "${DOTFILES_DIR}/zsh/.zsh" "${HOME}/.zsh"    
     log_success "Shell configurations setup complete"
 }
 
