@@ -35,10 +35,12 @@ alias fp="fzf --preview='bat --color=always {}'"  # preview with bat
 # Secure fzf + nvim integration with proper file handling
 fv() {
     local selected_files
-    selected_files=$(fzf -m --preview='bat --color=always {}' --print0)
+    selected_files=$(fzf -m --preview='bat --color=always {}')
     if [[ -n "$selected_files" ]]; then
-        # Handle null-delimited output safely
-        printf '%s\0' "$selected_files" | xargs -0 nvim --
+        # Handle selected files safely
+        echo "$selected_files" | while IFS= read -r file; do
+            [[ -f "$file" ]] && nvim "$file"
+        done
     fi
 }
 
@@ -72,7 +74,7 @@ alias pip='pip3'
 alias dc='docker compose'
 alias dcu='docker compose up -d'
 alias dcd='docker compose down'
-alias dps='docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}''
+alias dps='docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"'
 alias dlogs='docker logs -f'
 alias dclogs='docker compose logs -f'
 alias dprune='docker system prune -af' # Prune all unused docker objects
@@ -164,7 +166,7 @@ alias oc-serve='opencode serve'               # Start headless server
 # Example: ocs-find "my_function"
 
 # Security-hardened OpenCode wrapper functions with input validation
-ocs-find() {
+ocs_find() {
     if [[ -z "$1" ]]; then 
         printf "Usage: ocs-find <symbol>\n" >&2
         return 2
@@ -185,7 +187,7 @@ ocs-find() {
     opencode run --model 'github-copilot/gpt-4.1' "@serena find_symbol $(printf %q "$1")"
 }
 
-ocs-refs() {
+ocs_refs() {
     if [[ -z "$1" || -z "$2" ]]; then 
         printf "Usage: ocs-refs <symbol> <relative_path>\n" >&2
         return 2
@@ -208,7 +210,7 @@ ocs-refs() {
     opencode run --model 'github-copilot/gpt-4.1' "@serena find_referencing_symbols $(printf %q "$1") relative_path:$(printf %q "$2")"
 }
 
-ocs-grep() {
+ocs_grep() {
     if [[ -z "$1" ]]; then 
         printf "Usage: ocs-grep <pattern>\n" >&2
         return 2
@@ -220,7 +222,7 @@ ocs-grep() {
     opencode run --model 'github-copilot/gpt-4.1' "@serena search_for_pattern $(printf %q "$1")"
 }
 
-ocs-list() {
+ocs_list() {
     if [[ -z "$1" ]]; then 
         printf "Usage: ocs-list <directory>\n" >&2
         return 2
@@ -241,7 +243,7 @@ ocs-list() {
     opencode run --model 'github-copilot/gpt-4.1' "@serena list_dir $(printf %q "$1")"
 }
 
-ocs-read() {
+ocs_read() {
     if [[ -z "$1" ]]; then 
         printf "Usage: ocs-read <file_path>\n" >&2
         return 2
@@ -270,7 +272,7 @@ ocs-read() {
 }
 
 # Layer 3.1: Serena Memory Management (using FREE model) - Security Hardened
-ocs-memw() { 
+ocs_memw() { 
     if [[ -z "$1" || -z "$2" ]]; then 
         printf "Usage: ocs-memw <memory_name> <content>\n" >&2
         return 2
@@ -288,7 +290,7 @@ ocs-memw() {
     opencode run --model 'github-copilot/gpt-4.1' "@serena write_memory $(printf %q "$1") content:$(printf %q "$2")"
 }
 
-ocs-memr() { 
+ocs_memr() { 
     if [[ -z "$1" ]]; then 
         printf "Usage: ocs-memr <memory_name>\n" >&2
         return 2
@@ -305,15 +307,42 @@ ocs-memr() {
     opencode run --model 'github-copilot/gpt-4.1' "@serena read_memory $(printf %q "$1")"
 }
 
-ocs-memlist() { opencode run --model 'github-copilot/gpt-4.1' "@serena list_memories"; }
+ocs_memlist() { opencode run --model 'github-copilot/gpt-4.1' "@serena list_memories"; }
+
+# Create aliases for the hyphenated versions (backward compatibility)
+alias ocs-find='ocs_find'
+alias ocs-refs='ocs_refs'
+alias ocs-grep='ocs_grep'
+alias ocs-list='ocs_list'
+alias ocs-read='ocs_read'
+alias ocs-memw='ocs_memw'
+alias ocs-memr='ocs_memr'
+alias ocs-memlist='ocs_memlist'
 
 # Layer 3.2: General Purpose Quick Commands (using FREE model)
-oc-explain() { opencode run --model 'github-copilot/gpt-4.1' "Explain this: $1"; }
-oc-fix() { opencode run --model 'github-copilot/gpt-4.1' "Fix this code: $1"; }
-oc-test() { opencode run "Write tests for this: $1"; }
+oc_explain() { opencode run --model 'github-copilot/gpt-4.1' "Explain this: $1"; }
+oc_fix() { opencode run --model 'github-copilot/gpt-4.1' "Fix this code: $1"; }
+oc_test() { opencode run "Write tests for this: $1"; }
 
-# Layer 3.3: Project & Session Utilities  
-alias oc-status='opencode status'              # Show project status (if supported)
-oc_init() { cd "$1" && opencode run "Initialize this project for development"; }
-alias oc-init='oc_init'                        # Initialize project wrapper
+# Aliases for backward compatibility
+alias oc-explain='oc_explain'
+alias oc-fix='oc_fix'
+alias oc-test='oc_test'
+
+# Layer 4: Performance and Development Tools
+alias brew-perf="$HOME/dotfiles/scripts/dev/brew-perf.sh"     # Optimized Homebrew operations
+alias git-perf="$HOME/dotfiles/scripts/dev/git-perf.sh"       # Cached git operations
+alias bp="brew-perf"                                          # Short alias for brew performance
+alias gp="git-perf"                                           # Short alias for git performance
+
+# Performance aliases for common operations
+alias gs="git-perf status"                                    # Cached git status
+alias gl="git-perf log"                                       # Cached git log
+alias gf="git-perf fetch"                                     # Smart git fetch
+alias brewup="brew-perf update"                               # Smart brew update
+alias brewclean="brew-perf cleanup"                           # Optimized brew cleanup
+
+# Development workflow optimization
+alias dev-status="git-perf status && brew-perf status"       # Combined status check
+alias dev-update="git-perf fetch && brew-perf update"        # Update everything
 
