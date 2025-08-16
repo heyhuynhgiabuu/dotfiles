@@ -1,6 +1,9 @@
 # Shell Performance Optimization Configuration
 # Caching and lazy loading strategies to improve startup time
 
+# Fix for recursive function issues (starship/prompt)
+export FUNCNEST=500
+
 # Enable additional performance optimizations
 setopt NO_CASE_GLOB        # Case insensitive globbing
 setopt AUTO_CD             # Auto cd without typing cd

@@ -342,6 +342,10 @@ alias gp="git-perf"                                           # Short alias for 
 alias gs="git-perf status"                                    # Cached git status
 alias gl="git-perf log"                                       # Cached git log
 alias gf="git-perf fetch"                                     # Smart git fetch
+alias ghealth="git-perf health"                               # Git repository health check
+alias gopt="git-perf optimize"                                # Apply git performance settings
+alias grefresh="git-perf refresh"                             # Force refresh all caches
+alias gcleanup="git-perf cleanup"                             # Clean git caches
 alias brewup="brew-perf update"                               # Smart brew update
 alias brewclean="brew-perf cleanup"                           # Optimized brew cleanup
 
