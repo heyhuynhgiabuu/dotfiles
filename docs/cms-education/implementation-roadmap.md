@@ -24,7 +24,7 @@ This roadmap provides a **simple-to-hard progression** from MVP to full-featured
 
 ### Week 1-2: Foundation & Authentication
 **Sprint Goals**:
-- [ ] Spring Boot project setup with MySQL
+- [ ] Spring Boot project setup with Gradle and MySQL
 - [ ] User authentication (email/password)
 - [ ] Role-based access (Admin, Parent, Tutor)
 - [ ] Basic user profile management

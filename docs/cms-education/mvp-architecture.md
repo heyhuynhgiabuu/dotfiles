@@ -9,6 +9,7 @@
 ## Technology Stack (MVP)
 
 - **Framework**: Spring Boot 3.x
+- **Build Tool**: Gradle 8.x
 - **Frontend**: Thymeleaf + Bootstrap 5 + minimal HTMX
 - **Database**: MySQL 8.x with JDBC (simplified queries)
 - **Payments**: Stripe Checkout (hosted)
@@ -386,10 +387,91 @@ public String bookSession(@ModelAttribute SessionBookingRequest request, Model m
 }
 ```
 
+### 7. Gradle Build Configuration
+
+```gradle
+// build.gradle
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'uk.co.cms'
+version = '1.0.0-SNAPSHOT'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    
+    // Database
+    runtimeOnly 'mysql:mysql-connector-java'
+    
+    // Frontend Dependencies
+    implementation 'org.webjars:bootstrap:5.3.2'
+    implementation 'org.webjars:htmx.org:1.9.6'
+    implementation 'org.webjars:webjars-locator-core'
+    
+    // Stripe Payment Processing
+    implementation 'com.stripe:stripe-java:24.16.0'
+    
+    // JWT for Authentication
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:mysql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Gradle wrapper configuration
+wrapper {
+    gradleVersion = '8.5'
+    distributionType = Wrapper.DistributionType.BIN
+}
+```
+
+**Gradle Project Structure:**
+```
+tutor-system/
+├── build.gradle
+├── settings.gradle
+├── gradle/
+│   └── wrapper/
+├── gradlew
+├── gradlew.bat
+├── src/
+│   ├── main/
+│   │   ├── java/uk/co/cms/education/
+│   │   └── resources/
+│   │       ├── application.yml
+│   │       ├── templates/
+│   │       └── static/
+│   └── test/
+└── docs/
+```
+
 ## MVP Implementation Priority
 
 ### Week 1-2: Foundation
-1. **Spring Boot Setup**: Basic project with security
+1. **Gradle Project Setup**: Initialize Spring Boot project with Gradle
 2. **Database Schema**: Create 6 core tables
 3. **User Management**: Registration and authentication
 4. **Basic Controllers**: Admin, Tutor, Client dashboards

@@ -85,7 +85,7 @@ payments (id, session_id, amount, stripe_payment_id, status, created_at)
 
 ## Technical Stack (MVP)
 
-- **Backend**: Spring Boot + MySQL + JDBC
+- **Backend**: Spring Boot + Gradle + MySQL + JDBC
 - **Frontend**: Thymeleaf + Bootstrap + basic HTMX
 - **Payments**: Stripe Checkout (hosted)
 - **Deployment**: Single Docker container on AWS

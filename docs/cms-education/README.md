@@ -65,7 +65,7 @@
 - Focus on GCSE and A-Level subjects initially
 
 ### Technology Stack
-- **Backend**: Spring Boot + MySQL + JDBC
+- **Backend**: Spring Boot + Gradle + MySQL + JDBC
 - **Frontend**: Thymeleaf + Bootstrap + HTMX
 - **Payments**: Stripe Checkout
 - **Deployment**: Docker + AWS

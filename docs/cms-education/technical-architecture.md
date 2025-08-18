@@ -45,7 +45,7 @@ This technical architecture is organized into **phase-specific documents** to su
 ### MVP Stack (Simple & Fast)
 ```
 Frontend:  Thymeleaf + Bootstrap + Basic HTMX
-Backend:   Spring Boot + Traditional Layers
+Backend:   Spring Boot + Gradle + Traditional Layers
 Database:  MySQL + Simple JDBC
 Payments:  Stripe Checkout (hosted)
 Deploy:    Single Docker container
@@ -54,7 +54,7 @@ Deploy:    Single Docker container
 ### Advanced Stack (Scalable & Sophisticated)
 ```
 Frontend:  Thymeleaf + Bootstrap + Advanced HTMX + Alpine.js
-Backend:   Spring Boot + DDD + Domain Events + CQRS
+Backend:   Spring Boot + Gradle + DDD + Domain Events + CQRS
 Database:  MySQL + Advanced JDBC + Read Models
 Payments:  Stripe API + Webhook handling
 Deploy:    Microservices consideration + Event store
