@@ -31,7 +31,7 @@ Defines unified, cross-project agent protocols for safety, consistency, and auto
 
 Note: "Do not ask for confirmation" never overrides Permissions "ask". Always respect project-specific commit message policies.
 
-## Workflow Decision: Simple vs Complex Tasks (Fast Path Default)
+## Workflow Decision: Simple vs Complex Tasks (Fast Path Default + 12-Factor)
 
 **Simple Tasks (1–2 steps, no deviations):**
 - Execute immediately; skip plan/preamble.
@@ -43,11 +43,15 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 **Complex Tasks (3+ steps or significant scope):**
 - Present a plan for approval before implementation.
 - Use the 13-step structured workflow (see advanced-workflows.md).
+- **Event-Driven Execution**: Use structured XML events for multi-agent coordination.
+- **Stateless Operations**: Each phase operates independently with complete context.
 - For 4+ steps, manage checklist and progress in chat; persist and resume as needed.
 
-**Context Management Pattern for Multi-Session Work:**
+**Context Management Pattern for Multi-Session Work (Enhanced):**
 - **Phase-based sessions**: Research → Spec/Planning → Building → Implementation
 - **Always write to files** between phases to persist context and decisions
+- **Event-driven handoffs**: Use structured XML events for context transfer (see event-schema.md)
+- **Stateless checkpoints**: Enable workflow resumption from any major phase
 - **Start new sessions** for each major phase to keep context small and focused
 - **Document next steps** in files before ending sessions for seamless handoffs
 
@@ -74,6 +78,48 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 - **Consistency**: Reuse existing project patterns, libraries, and architectural choices
 
 Reference: These maxims apply throughout all workflow steps and quality standards. Avoid repeating them in other sections—refer to this list as needed.
+
+## Stateless Reducer Patterns (12-Factor Compliance)
+
+**Stateless Agent Operations**: Each agent phase operates as a pure function with explicit inputs and outputs:
+
+```
+Agent_Output = AgentReducer(Structured_Input, Agent_Capabilities, Quality_Gates)
+```
+
+**Reducer Pattern Requirements:**
+1. **No Hidden State**: All required context provided in structured XML events (see event-schema.md)
+2. **Deterministic Operations**: Same input produces same output (idempotent where possible)
+3. **Complete Context**: Agent can operate independently without external dependencies
+4. **Explicit Outputs**: Structured results enable next phase to operate autonomously
+5. **Error Boundaries**: Clear failure modes with recovery strategies
+
+**Context Engineering Principles:**
+- **Input Validation**: Validate complete context before agent execution
+- **State Compression**: Minimize context to essential information between phases  
+- **Output Specification**: Define exact format expected from each agent
+- **Handoff Integrity**: Preserve critical decisions and constraints across boundaries
+
+**Implementation Pattern:**
+```xml
+<agent_input>
+  <context>complete_mission_context</context>
+  <constraints>all_applicable_limitations</constraints>
+  <previous_outputs>structured_results_from_prior_phases</previous_outputs>
+  <quality_gates>validation_requirements</quality_gates>
+</agent_input>
+
+<!-- Agent operates independently -->
+
+<agent_output>
+  <deliverables>structured_results</deliverables>
+  <decisions_made>critical_choices_with_rationale</decisions_made>
+  <next_phase_inputs>context_for_next_agent</next_phase_inputs>
+  <quality_validation>gate_status_and_results</quality_validation>
+</agent_output>
+```
+
+**Resumability Design**: Every agent output includes sufficient context for workflow restart at any point.
 
 ## Tooling & Scope Discipline
 
