@@ -21,9 +21,6 @@ alias jq='jq'
 # Standard OpenCode with colors
 alias oc="FORCE_COLOR=1 opencode"
 
-# Follow the latest OpenCode log file (from functions.zsh)
-alias logocode="logocode"
-
 #Basics
 alias ll='eza --color=always --icons --long'
 alias ls='eza --color=always --icons --long --no-user --git --no-time --no-filesize --no-permissions'
@@ -166,7 +163,7 @@ alias oc-enhanced='opencode --mode enhanced'  # Start NEW session in enhanced mo
 
 # Layer 2.2: Auto-Chrome OpenCode Commands
 # These commands automatically ensure Chrome is running before starting OpenCode
-oc-chrome() {
+oc_chrome() {
     auto_chrome
     if [[ $? -eq 0 ]]; then
         echo "🔄 Starting OpenCode with Chrome ready..."
@@ -177,7 +174,7 @@ oc-chrome() {
     fi
 }
 
-oc-enhanced-chrome() {
+oc_enhanced_chrome() {
     auto_chrome
     if [[ $? -eq 0 ]]; then
         echo "🔄 Starting OpenCode Enhanced mode with Chrome ready..."
@@ -187,6 +184,10 @@ oc-enhanced-chrome() {
         return 1
     fi
 }
+
+# Aliases for hyphenated versions (backward compatibility)
+alias oc-chrome='oc_chrome'
+alias oc-enhanced-chrome='oc_enhanced_chrome'
 
 
 
