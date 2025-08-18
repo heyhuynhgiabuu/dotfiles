@@ -17,21 +17,12 @@ alias delta='delta'
 alias sd='sd'
 alias jq='jq'
 
-# === OPENCODE LOGGING ALIASES ===
-# Enable colored OpenCode logging in terminal
-alias opencode-debug="FORCE_COLOR=1 opencode --print-logs --log-level=DEBUG"
-alias opencode-info="FORCE_COLOR=1 opencode --print-logs --log-level=INFO" 
-alias opencode-verbose="FORCE_COLOR=1 opencode --print-logs --log-level=INFO"
-alias opencode-logs="FORCE_COLOR=1 opencode --print-logs"
-
+# === OPENCODE ALIASES ===
 # Standard OpenCode with colors
 alias oc="FORCE_COLOR=1 opencode"
 
 # Follow the latest OpenCode log file (from functions.zsh)
 alias logocode="logocode"
-
-# Test OpenCode color setup
-alias test-opencode-colors="$HOME/dotfiles/scripts/test/test-opencode-colors.sh"
 
 #Basics
 alias ll='eza --color=always --icons --long'

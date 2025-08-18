@@ -6,6 +6,18 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
+-- === ENVIRONMENT VARIABLES FOR COLOR SUPPORT ===
+config.set_environment_variables = {
+  -- Enable colors for all terminal programs by default
+  FORCE_COLOR = "1",
+  CLICOLOR = "1", 
+  CLICOLOR_FORCE = "1",
+  -- Ensure proper terminal capabilities
+  COLORTERM = "truecolor",
+  -- OpenCode specific - ensure colored logging
+  OPENCODE_COLOR = "always",
+}
+
 -- === THEME & APPEARANCE ===
 function scheme_for_appearance(appearance)
 	if appearance:find("Dark") then

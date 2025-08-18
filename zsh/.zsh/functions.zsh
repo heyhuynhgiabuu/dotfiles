@@ -23,20 +23,3 @@ logocode() {
     echo "💡 Try running OpenCode first to create logs"
   fi
 }
-
-# OpenCode colored logging test function
-test_opencode_colors() {
-    echo "🎨 Testing OpenCode colored logging..."
-    echo ""
-    echo "1. Testing DEBUG level (most verbose):"
-    FORCE_COLOR=1 opencode --print-logs --log-level=DEBUG --version
-    echo ""
-    echo "2. Testing INFO level (standard):"
-    FORCE_COLOR=1 opencode --print-logs --log-level=INFO --version
-    echo ""
-    echo "3. Regular OpenCode with color:"
-    FORCE_COLOR=1 opencode --version
-    echo ""
-    echo "✅ Test complete! You should see colored output above."
-    echo "💡 Use 'opencode-debug' or 'opencode-info' aliases for colored logging"
-}
