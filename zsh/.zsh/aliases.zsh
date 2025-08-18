@@ -17,6 +17,22 @@ alias delta='delta'
 alias sd='sd'
 alias jq='jq'
 
+# === OPENCODE LOGGING ALIASES ===
+# Enable colored OpenCode logging in terminal
+alias opencode-debug="FORCE_COLOR=1 opencode --print-logs --log-level=DEBUG"
+alias opencode-info="FORCE_COLOR=1 opencode --print-logs --log-level=INFO" 
+alias opencode-verbose="FORCE_COLOR=1 opencode --print-logs --log-level=INFO"
+alias opencode-logs="FORCE_COLOR=1 opencode --print-logs"
+
+# Standard OpenCode with colors
+alias oc="FORCE_COLOR=1 opencode"
+
+# Follow the latest OpenCode log file (from functions.zsh)
+alias logocode="logocode"
+
+# Test OpenCode color setup
+alias test-opencode-colors="$HOME/dotfiles/scripts/test/test-opencode-colors.sh"
+
 #Basics
 alias ll='eza --color=always --icons --long'
 alias ls='eza --color=always --icons --long --no-user --git --no-time --no-filesize --no-permissions'
@@ -138,7 +154,6 @@ alias gol='golangci-lint run'
 # --- OpenCode & Serena Integration ---
 
 # Layer 1: Session Management & Basic Commands
-alias oc='opencode' # Ensure log directory exists
 alias occ='opencode run --continue'           # Continue the last session (USE WITH CAUTION: only if model is the same)
 alias ocs='opencode run --share'              # Run and share a session
 alias ocup='opencode upgrade'                 # Upgrade to the latest version
