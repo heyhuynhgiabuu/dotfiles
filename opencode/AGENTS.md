@@ -45,6 +45,12 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 - Use the 13-step structured workflow (see advanced-workflows.md).
 - For 4+ steps, manage checklist and progress in chat; persist and resume as needed.
 
+**Context Management Pattern for Multi-Session Work:**
+- **Phase-based sessions**: Research → Spec/Planning → Building → Implementation
+- **Always write to files** between phases to persist context and decisions
+- **Start new sessions** for each major phase to keep context small and focused
+- **Document next steps** in files before ending sessions for seamless handoffs
+
 **Minimal Reasoning Scaffold**: For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge (~70%). See advanced-workflows.md for details.
 
 ## Core Philosophy
