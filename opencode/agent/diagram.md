@@ -1,8 +1,11 @@
 ---
 description: Visual content analysis and automated diagram generation via browser automation
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: github-copilot/gpt-5-mini
 temperature: 0.3
+options:
+  reasoningEffort: medium
+  textVerbosity: medium
 tools:
   write: false
   edit: false

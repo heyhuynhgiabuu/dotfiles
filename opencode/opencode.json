@@ -54,19 +54,14 @@
       "model": "github-copilot/gpt-5",
       "temperature": 0.1,
       "max_tokens": 3200,
-      "reasoningEffort": "high",
-      "textVerbosity": "medium",
-      "chainOfThought": true,
       "prompt": "{file:./prompts/build-prompt.md}"
     },
     "plan": {
       "description": "Plan agent for project planning and task management",
       "model": "github-copilot/gpt-5-mini",
-      "mode": "primary",
+      "mode": "primary", 
       "temperature": 0.2,
       "max_tokens": 1400,
-      "reasoningEffort": "medium",
-      "textVerbosity": "low",
       "prompt": "{file:./prompts/plan-prompt.md}",
       "tools": {
         "write": false,
