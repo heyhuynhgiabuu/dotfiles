@@ -60,7 +60,7 @@
     "plan": {
       "description": "Plan agent for project planning and task management",
       "model": "github-copilot/gpt-5-mini",
-      "mode": "primary", 
+      "mode": "primary",
       "temperature": 0.2,
       "max_tokens": 1400,
       "prompt": "{file:./prompts/plan-prompt.md}",

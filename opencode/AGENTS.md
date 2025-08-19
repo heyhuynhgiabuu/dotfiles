@@ -34,6 +34,7 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 ## Workflow Decision: Simple vs Complex Tasks (Fast Path Default + 12-Factor)
 
 **Simple Tasks (1–2 steps, no deviations):**
+
 - Execute immediately; skip plan/preamble.
 - Return results and a one-line summary.
 - Approvals: Where `opencode.json` requires "ask", accept y/yes for single-file anchored edits.
@@ -41,6 +42,7 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 - Scope: only user-referenced files/paths; do not scan repo by default.
 
 **Complex Tasks (3+ steps or significant scope):**
+
 - Present a plan for approval before implementation.
 - Use the 13-step structured workflow (see advanced-workflows.md).
 - **Event-Driven Execution**: Use structured XML events for multi-agent coordination.
@@ -48,6 +50,7 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 - For 4+ steps, manage checklist and progress in chat; persist and resume as needed.
 
 **Context Management Pattern for Multi-Session Work (Enhanced):**
+
 - **Phase-based sessions**: Research → Spec/Planning → Building → Implementation
 - **Always write to files** between phases to persist context and decisions
 - **Event-driven handoffs**: Use structured XML events for context transfer (see event-schema.md)
@@ -88,6 +91,7 @@ Agent_Output = AgentReducer(Structured_Input, Agent_Capabilities, Quality_Gates)
 ```
 
 **Reducer Pattern Requirements:**
+
 1. **No Hidden State**: All required context provided in structured XML events (see event-schema.md)
 2. **Deterministic Operations**: Same input produces same output (idempotent where possible)
 3. **Complete Context**: Agent can operate independently without external dependencies
@@ -95,12 +99,14 @@ Agent_Output = AgentReducer(Structured_Input, Agent_Capabilities, Quality_Gates)
 5. **Error Boundaries**: Clear failure modes with recovery strategies
 
 **Context Engineering Principles:**
+
 - **Input Validation**: Validate complete context before agent execution
-- **State Compression**: Minimize context to essential information between phases  
+- **State Compression**: Minimize context to essential information between phases
 - **Output Specification**: Define exact format expected from each agent
 - **Handoff Integrity**: Preserve critical decisions and constraints across boundaries
 
 **Implementation Pattern:**
+
 ```xml
 <agent_input>
   <context>complete_mission_context</context>
@@ -138,10 +144,10 @@ Agent_Output = AgentReducer(Structured_Input, Agent_Capabilities, Quality_Gates)
 # Auto-start Chrome if not running (cross-platform)
 if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
   case "$(uname -s)" in
-    Darwin) 
-      open -a "Google Chrome" 
+    Darwin)
+      open -a "Google Chrome"
       ;;
-    Linux) 
+    Linux)
       if command -v google-chrome >/dev/null 2>&1; then
         nohup google-chrome >/dev/null 2>&1 &
       elif command -v chromium >/dev/null 2>&1; then
@@ -154,8 +160,9 @@ fi
 ```
 
 **Automatic Integration Rules:**
+
 - **ANY agent using Chrome MCP tools** must first run the auto-start check
-- **Use user's regular Chrome browser** (not isolated profiles) 
+- **Use user's regular Chrome browser** (not isolated profiles)
 - **Preserve all logins and extensions** (especially MCP Chrome Bridge)
 - **Cross-platform compatible** (macOS & Linux)
 - **Idempotent** - safe to run multiple times
@@ -195,3 +202,4 @@ A supported Serena MCP integration package is provided in `opencode/serena-integ
 ---
 
 > **Note**: This streamlined AGENTS.md focuses on project-specific rules and essential protocols. Complex orchestration, context management, and advanced workflow protocols are externalized to specialized files loaded via `opencode.json` instructions for optimal token efficiency.
+
