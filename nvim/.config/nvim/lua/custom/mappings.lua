@@ -239,10 +239,10 @@ map("v", "<leader>c", function()
   vim.notify("Copied selected lines to clipboard")
 end, { desc = "Copy selected lines content to clipboard" })
 
--- BUILD TOOLS & PROJECT SETUP
--- Gradle commands for project initialization and management
+-- JAVA BUILD TOOLS & PROJECT SETUP
+-- Gradle commands for Java project initialization and management
 
-map("n", "<leader>bw", function()
+map("n", "<leader>jw", function()
   vim.ui.input({ 
     prompt = "Gradle version (default: 8.5): ",
     default = "8.5"
@@ -256,31 +256,31 @@ map("n", "<leader>bw", function()
     vim.cmd("startinsert")
     vim.notify("Creating Gradle wrapper with version " .. version)
   end)
-end, { desc = "Create Gradle wrapper with specified version" })
+end, { desc = "Java: Create Gradle wrapper" })
 
-map("n", "<leader>bi", function()
+map("n", "<leader>ji", function()
   local cmd = "gradle init --type java-application --dsl groovy"
   vim.cmd("split")
   vim.cmd("term " .. cmd)
   vim.cmd("startinsert")
-  vim.notify("Initializing Gradle project")
-end, { desc = "Initialize Gradle Java project" })
+  vim.notify("Initializing Gradle Java project")
+end, { desc = "Java: Initialize Gradle project" })
 
-map("n", "<leader>bb", function()
+map("n", "<leader>jb", function()
   local cmd = "./gradlew build"
   vim.cmd("split")
   vim.cmd("term " .. cmd)
   vim.cmd("startinsert")
   vim.notify("Building Gradle project")
-end, { desc = "Build Gradle project" })
+end, { desc = "Java: Build Gradle project" })
 
-map("n", "<leader>bt", function()
+map("n", "<leader>jg", function()
   local cmd = "./gradlew test"
   vim.cmd("split")
   vim.cmd("term " .. cmd)
   vim.cmd("startinsert")
   vim.notify("Running Gradle tests")
-end, { desc = "Run Gradle tests" })
+end, { desc = "Java: Run Gradle tests" })
 
 -- VIM-VISUAL-MULTI ENHANCED KEYBINDINGS  
 -- Alternative keybindings for vim-visual-multi if defaults don't work
