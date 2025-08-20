@@ -5,7 +5,11 @@
     "opencode/protocols/orchestration.md",
     "opencode/protocols/context-management.md",
     "opencode/protocols/advanced-workflows.md",
-    "opencode/protocols/quality-tooling.md"
+    "opencode/protocols/quality-tooling.md",
+    "opencode/protocols/advanced-reasoning.md",
+    "opencode/protocols/xml-handling.md",
+    "opencode/protocols/feedback-loop.md",
+    "opencode/protocols/performance-optimization.md"
   ],
   "permission": {
     "edit": "ask",
@@ -38,6 +42,17 @@
     }
   },
   "agent": {
+    "delta": {
+      "description": "Delta agent for testing new features",
+      "mode": "primary",
+      "model": "opencode/sonic",
+      "temperature": 0.15,
+      "thinking": {
+        "type": "enabled",
+        "budget_tokens": 2048
+      },
+      "prompt": "{file:./prompts/delta-prompt.md}"
+    },
     "beta": {
       "description": "Beta agent for testing new features",
       "mode": "primary",
@@ -59,7 +74,7 @@
     },
     "plan": {
       "description": "Plan agent for project planning and task management",
-      "model": "github-copilot/gpt-5-mini",
+      "model": "opencode/sonic",
       "mode": "primary",
       "temperature": 0.2,
       "max_tokens": 1400,
@@ -150,7 +165,7 @@
     "input_newline": "shift+enter,ctrl+j"
   },
   "theme": "kanagawa",
-  "model": "github-copilot/claude-sonnet-4",
+  "model": "opencode/sonic",
   "share": "disabled",
   "autoupdate": true
 }

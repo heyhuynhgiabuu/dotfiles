@@ -29,9 +29,9 @@ description: >-
         assistant: "I'll use the security-audit-backend agent to check for vulnerabilities and compliance issues."
         <commentary>
         Since the user is deploying backend code, use the security-audit-backend agent proactively.
-      </example>
+       </example>
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.1
 max_tokens: 1400
 additional:

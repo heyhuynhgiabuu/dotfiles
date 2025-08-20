@@ -32,9 +32,9 @@ description: >-
         <commentary>
         Since the user is asking for best practices, use the devops-docker-deployer agent to supply actionable advice.
         </commentary>
-      </example>
+       </example>
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.2
 max_tokens: 1400
 additional:

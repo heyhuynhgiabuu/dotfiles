@@ -1,7 +1,7 @@
 ---
 description: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks autonomously
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.3
 max_tokens: 1400
 additional:

@@ -2,7 +2,7 @@
 name: alpha
 description: ALWAYS use this agent to orchestrate and delegate tasks to specialized subagents using advanced planning and BMAD protocols. Use for all complex workflows requiring multi-phase or multi-agent coordination.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.2
 max_tokens: 1400
 additional:

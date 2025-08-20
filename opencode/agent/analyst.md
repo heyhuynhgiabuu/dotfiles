@@ -2,7 +2,7 @@
 name: analyst
 description: "ALWAYS use this agent for analyzing OpenCode's context management, caching mechanisms, and billing integration with GitHub Copilot."
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.15
 max_tokens: 1400
 additional:

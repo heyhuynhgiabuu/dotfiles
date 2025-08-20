@@ -1,7 +1,7 @@
 ---
 description: Visual content analysis and automated diagram generation via browser automation
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.3
 options:
   reasoningEffort: medium

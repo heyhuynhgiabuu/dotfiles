@@ -2,7 +2,7 @@
 name: legacy
 description: ALWAYS use this agent to refactor legacy codebases, migrate outdated frameworks, and implement gradual modernization, including technical debt, dependency updates, and backward compatibility. Use PROACTIVELY for legacy system updates, framework migrations, or technical debt reduction.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.2
 max_tokens: 1400
 additional:

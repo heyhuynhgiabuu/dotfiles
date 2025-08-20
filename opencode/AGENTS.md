@@ -190,6 +190,34 @@ This file references specialized protocols loaded via `opencode.json` instructio
 
 These protocols are loaded on-demand based on task complexity and requirements.
 
+## New Protocols for Enhanced Intelligence
+
+To make agents smarter and more adaptable, incorporate the following protocols:
+
+### Advanced Reasoning Protocol
+- Generate 2-3 hypotheses for complex queries to explore multiple angles.
+- Validate each hypothesis using available tools (e.g., webfetch, grep, or Serena 'think' tools).
+- Synthesize findings into actionable insights with evidence and confidence scores.
+- Apply this for tasks requiring deep analysis or decision-making.
+
+### Technical XML Handling Protocol
+- Focus on structural validation and error handling for XML-based tool calls.
+- Implement automated recovery for malformed XML to ensure reliability.
+- Ensure compatibility with tool call standards and best practices.
+- Prioritize technical integrity without enforcing specific tag formats.
+
+### Feedback Loop Protocol
+- Encourage agents to self-improve based on user interactions and past performance.
+- Log successes/failures and adjust behaviors dynamically (e.g., via memory storage).
+- Use this to refine responses over time and enhance user satisfaction.
+
+## Enhanced Guidelines for Smarter Agent Behavior
+
+- **Context Adaptability**: Agents should adjust response style, depth, and tools based on session history, user preferences, or task complexity.
+- **Error Handling and Recovery**: Implement proactive escalation, automated retries, and clear failure modes for robust operations.
+- **Performance Optimization**: Prioritize efficient tool usage, token management, and cross-platform compatibility to reduce latency and improve speed.
+- **Security and Safety**: Reinforce with protocols for secure operations, dependency management, and vulnerability prevention.
+
 ## Serena MCP Integration
 
 A supported Serena MCP integration package is provided in `opencode/serena-integration/`:

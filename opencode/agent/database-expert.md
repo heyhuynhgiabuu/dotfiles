@@ -2,7 +2,7 @@
 name: database-expert
 description: ALWAYS use this agent for SQL, schema design, optimization, migrations, and database operations. Use with `role` parameter for specialization.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.15
 max_tokens: 1400
 additional:

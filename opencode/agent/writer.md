@@ -22,9 +22,9 @@ description: >-
         <commentary>
         Since code was updated, use the concise-docs-writer agent to create succinct documentation for the changes.
         </commentary>
-      </example>
+       </example>
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.3
 max_tokens: 1400
 additional:

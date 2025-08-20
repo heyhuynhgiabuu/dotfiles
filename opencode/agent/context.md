@@ -2,7 +2,7 @@
 name: context
 description: ALWAYS use this agent to manage context across multiple agents and long-running tasks, especially when coordinating complex multi-agent workflows or when context needs to be preserved across multiple sessions. MUST BE USED for projects exceeding 10k tokens.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.15
 max_tokens: 1400
 additional:

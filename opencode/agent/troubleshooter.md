@@ -2,7 +2,7 @@
 name: troubleshooter
 description: Diagnoses and resolves performance, debugging, and incident issues. Use with `focus` parameter for specialization.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.15
 max_tokens: 1400
 additional:

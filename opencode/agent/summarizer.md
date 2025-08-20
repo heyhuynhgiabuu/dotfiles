@@ -2,7 +2,7 @@
 name: summarizer
 description: "ALWAYS use this agent to create concise, actionable conversation summaries across all OpenCode sessions and projects."
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: opencode/sonic
 temperature: 0.15
 max_tokens: 1400
 additional:
