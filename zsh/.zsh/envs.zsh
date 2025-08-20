@@ -12,3 +12,9 @@ export GOBIN="$HOME/go/bin"
 # Use Homebrew Go (no need to set GOROOT manually)
 export PATH="$PATH:$GOBIN"
 unset GOROOT
+
+
+# export JASYPT_ENCRYPTOR_PASSWORD=s35kWyczEbT8kJR8
+export JASYPT_ENCRYPTOR_PASSWORD=$(pass dev/halo-jasypt)
+export FIGMA_API_KEY=$(pass dev/figma-tung-pat)
+export JAVA_HOME=/Users/killerkidbo/Library/Java/JavaVirtualMachines/corretto-17.0.15/Contents/Home

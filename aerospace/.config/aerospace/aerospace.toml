@@ -32,7 +32,7 @@ after-startup-command = [
 alt-r = 'reload-config'
 
 # Terminal và applications
-alt-enter = 'exec-and-forget open -n /Applications/WezTerm.app/'
+alt-e = 'exec-and-forget open -n /Applications/WezTerm.app/'
 alt-c = 'exec-and-forget open -n "/Applications/Google Chrome.app"'
 alt-shift-c = 'exec-and-forget open -n "/Applications/Cursor.app/"'
 alt-x = 'exec-and-forget open -n "/Applications/Firefox.app/"'
