@@ -185,7 +185,9 @@ This file references specialized protocols loaded via `opencode.json` instructio
 
 - **orchestration-protocol.md**: Multi-agent coordination, BMAD protocols, luigi planning
 - **management-protocol.md**: Token budgeting, parallelization criteria, compression strategies
-- **workflows-protocol.md**: 13-step workflow, checklist protocols, failure recovery
+- **workflow-execution-protocol.md**: 13-step workflow, checklist protocols, failure recovery
+- **workflow-checkpoints-protocol.md**: Checkpoint architecture, pause/resume, state persistence
+- **control-flow-protocol.md**: Control flow ownership, async operations, human-in-the-loop
 - **tooling-protocol.md**: Quality standards, tooling hierarchy, anchor robustness
 - **security-protocol.md**: Security-first design, automated validation, threat modeling
 - **handling-protocol.md**: Error classification, recovery strategies, resilience patterns

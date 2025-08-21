@@ -1,10 +1,15 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": [
+    "opencode/protocols/context-rot-protocol.md",
+    "opencode/protocols/checkpoint-schema.md",
+    "opencode/protocols/protocol-examples.md",
+    "opencode/protocols/workflow-checkpoints-protocol.md",
+    "opencode/protocols/workflow-execution-protocol.md",
+    "opencode/protocols/control-flow-protocol.md",
     "opencode/protocols/schema-protocol.md",
     "opencode/protocols/orchestration-protocol.md",
     "opencode/protocols/management-protocol.md",
-    "opencode/protocols/workflows-protocol.md",
     "opencode/protocols/tooling-protocol.md",
     "opencode/protocols/reasoning-protocol.md",
     "opencode/protocols/xml-protocol.md",
@@ -12,7 +17,6 @@
     "opencode/protocols/optimization-protocol.md",
     "opencode/protocols/security-protocol.md",
     "opencode/protocols/handling-protocol.md",
-    "opencode/protocols/loop-protocol.md",
     "opencode/protocols/specialization-protocol.md",
     "opencode/protocols/preservation-protocol.md"
   ],

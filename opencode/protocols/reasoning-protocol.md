@@ -50,81 +50,15 @@ This protocol enhances agent reasoning capabilities for complex queries by intro
 - [ ] Confidence scores are evidence-based.
 - [ ] Synthesis provides actionable insights.
 
-## Context Rot Integration for Advanced Reasoning
+## Context Rot Integration
 
-### Context-Aware Hypothesis Generation
+This protocol integrates with Context Rot principles for optimized reasoning processes. For detailed Context Rot implementation, see `context-rot-protocol.md`.
 
-When generating hypotheses, consider Context Rot principles:
+### Key Integration Points
+- **Context-Aware Hypothesis Generation**: Generate hypotheses based on context length and structure
+- **Context Rot-Aware Validation**: Use optimized validation strategies for different context sizes
+- **Dynamic Context Management**: Apply context optimization during reasoning processes
+- **Performance-Based Reasoning**: Adjust reasoning complexity based on context constraints
 
-#### 1. Context Length Impact
-- **Short Context (<500 tokens)**: Generate detailed, comprehensive hypotheses
-- **Medium Context (500-2000 tokens)**: Focus on high-quality, focused hypotheses
-- **Long Context (>2000 tokens)**: Prioritize essential hypotheses, avoid over-analysis
-
-#### 2. Information Structure Considerations
-- **Critical Information First**: Place most important hypotheses at the beginning
-- **Logical Flow Disruption**: Break complex reasoning into digestible chunks
-- **Relevance Filtering**: Focus on hypotheses directly related to the core problem
-- **Semantic Similarity Management**: Avoid redundant or overlapping hypotheses
-
-### Context Rot-Aware Validation Strategy
-
-#### Validation Efficiency
-- **Relevance-Based Validation**: Prioritize validation of hypotheses with highest relevance scores
-- **Context Length Optimization**: Use compressed context for validation when appropriate
-- **Progressive Validation**: Validate simpler hypotheses first, complex ones later
-- **Early Termination**: Stop validation when sufficient evidence is gathered
-
-#### Performance-Based Validation
-- **Quality Thresholds**: Set different validation standards based on context length
-- **Adaptive Rigor**: Increase validation depth for critical hypotheses
-- **Resource-Aware Validation**: Adjust validation complexity based on available context
-
-### Context Optimization During Reasoning
-
-#### Dynamic Context Management
-- **Compression During Reasoning**: Apply relevance filtering as hypotheses are generated
-- **Information Structure Optimization**: Reorganize context based on reasoning progress
-- **Staleness Prevention**: Remove outdated reasoning branches and assumptions
-- **Critical Path Preservation**: Ensure essential reasoning context remains accessible
-
-#### Reasoning Quality Gates
-- **Context Quality Checks**: Validate context quality before major reasoning steps
-- **Performance Monitoring**: Track reasoning effectiveness as context changes
-- **Optimization Triggers**: Automatically optimize context when reasoning quality drops
-
-### Context Rot Mitigation Strategies
-
-#### 1. Hypothesis Prioritization
-- **Relevance Scoring**: Score hypotheses by relevance to core objective
-- **Context Efficiency**: Prioritize hypotheses that require less context to validate
-- **Information Density**: Focus on hypotheses with high information value per token
-
-#### 2. Validation Optimization
-- **Targeted Validation**: Use specific context chunks for hypothesis validation
-- **Context Chunking**: Break large contexts into focused validation units
-- **Progressive Refinement**: Start with broad validation, refine with focused context
-
-#### 3. Reasoning Structure
-- **Modular Reasoning**: Break complex reasoning into independent modules
-- **Context Boundaries**: Use clear separators between reasoning phases
-- **Essential Information Focus**: Keep critical information prominent throughout reasoning
-
-### Implementation Guidelines
-
-#### Context Length Thresholds for Reasoning
-- **<500 tokens**: Full reasoning with comprehensive hypothesis exploration
-- **500-2000 tokens**: Focused reasoning with optimized hypothesis selection
-- **>2000 tokens**: Minimal reasoning with essential hypothesis validation only
-
-#### Quality Metrics Integration
-- **Relevance Score Tracking**: Monitor hypothesis relevance throughout reasoning
-- **Context Efficiency Measurement**: Track tokens used per reasoning step
-- **Performance Correlation**: Link reasoning quality to context optimization
-
-#### Continuous Optimization
-- **Feedback Integration**: Use reasoning outcomes to improve context optimization
-- **Adaptive Strategies**: Adjust reasoning approach based on context performance
-- **Learning Loop**: Incorporate successful patterns into future reasoning processes
-
-This integration ensures advanced reasoning processes are optimized for Context Rot principles, maximizing reasoning effectiveness while minimizing context-related performance degradation.
+### Reference Implementation
+See `context-rot-protocol.md` for complete context optimization strategies and reasoning enhancement techniques.

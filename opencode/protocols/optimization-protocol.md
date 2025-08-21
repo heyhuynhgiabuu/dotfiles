@@ -207,43 +207,17 @@ const CACHE_CONFIG = {
 - Implement automated optimizations
 - Generate performance reports
 
-## Integration with Context Rot Optimizations
+## Context Rot Integration
 
-### Context-Aware Performance Optimization
-```javascript
-function optimizeWithContextAwareness(operation, context) {
-  const contextMetrics = analyzeContext(context);
+This protocol integrates with Context Rot optimizations for performance enhancement. For detailed Context Rot implementation, see `context-rot-protocol.md`.
 
-  // Apply Context Rot optimizations
-  const optimizedContext = applyContextRotOptimizations(context);
+### Key Integration Points
+- **Context-Aware Optimization**: Apply performance strategies based on context analysis
+- **Adaptive Thresholds**: Adjust performance thresholds based on context length and complexity
+- **Optimization Strategies**: Use Context Rot principles for optimal performance
 
-  // Performance optimization based on context
-  const performanceStrategy = selectPerformanceStrategy(contextMetrics);
-
-  return executeWithOptimization(operation, optimizedContext, performanceStrategy);
-}
-```
-
-### Adaptive Performance Thresholds
-```javascript
-function adjustThresholdsBasedOnContext(contextLength, complexity) {
-  const baseThresholds = PERFORMANCE_THRESHOLDS;
-
-  // Adjust thresholds based on context characteristics
-  const adjustmentFactor = calculateAdjustmentFactor(contextLength, complexity);
-
-  return {
-    responseTime: {
-      warning: baseThresholds.responseTime.warning * adjustmentFactor,
-      critical: baseThresholds.responseTime.critical * adjustmentFactor
-    },
-    tokenUsage: {
-      warning: baseThresholds.tokenUsage.warning * adjustmentFactor,
-      critical: baseThresholds.tokenUsage.critical * adjustmentFactor
-    }
-  };
-}
-```
+### Reference Implementation
+See `context-rot-protocol.md` for complete context optimization strategies and performance enhancement techniques.
 
 ## Monitoring and Alerting
 
