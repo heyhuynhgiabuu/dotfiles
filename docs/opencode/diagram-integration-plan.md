@@ -10,7 +10,7 @@
 - **Integration**: Full OpenCode agent protocol compliance
 
 **2. Orchestration Matrix Update** 
-- **File**: `/Users/killerkidbo/dotfiles/opencode/protocols/orchestration.md`
+- **File**: `/Users/killerkidbo/dotfiles/opencode/protocols/orchestration-protocol.md`
 - **Addition**: Added diagram agent to subagent role matrix
 - **Positioning**: Between troubleshooter and writer agents
 

@@ -1,15 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": [
-    "opencode/protocols/event-schema.md",
-    "opencode/protocols/orchestration.md",
-    "opencode/protocols/context-management.md",
-    "opencode/protocols/advanced-workflows.md",
-    "opencode/protocols/quality-tooling.md",
-    "opencode/protocols/advanced-reasoning.md",
-    "opencode/protocols/xml-handling.md",
-    "opencode/protocols/feedback-loop.md",
-    "opencode/protocols/performance-optimization.md"
+    "opencode/protocols/schema-protocol.md",
+    "opencode/protocols/orchestration-protocol.md",
+    "opencode/protocols/management-protocol.md",
+    "opencode/protocols/workflows-protocol.md",
+    "opencode/protocols/tooling-protocol.md",
+    "opencode/protocols/reasoning-protocol.md",
+    "opencode/protocols/xml-protocol.md",
+    "opencode/protocols/loop-protocol.md",
+    "opencode/protocols/optimization-protocol.md",
+    "opencode/protocols/security-protocol.md",
+    "opencode/protocols/handling-protocol.md",
+    "opencode/protocols/loop-protocol.md",
+    "opencode/protocols/specialization-protocol.md",
+    "opencode/protocols/preservation-protocol.md"
   ],
   "permission": {
     "edit": "ask",

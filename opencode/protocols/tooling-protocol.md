@@ -259,3 +259,131 @@ Maintain concise, reusable prompt templates ("playbooks") for repetitive workflo
 ```
 
 Prefer adapting these Chrome MCP enhanced playbooks before writing ad-hoc research prompts.
+
+## Context Rot Quality Metrics & Testing Framework
+
+### Context Quality Assessment Metrics
+
+#### 1. Relevance Metrics
+- **Relevance Score**: Percentage of context directly relevant to current task (target: >80%)
+- **Critical Information Placement**: Position of most important information (target: top 25% of context)
+- **Redundancy Ratio**: Percentage of duplicate or overlapping information (target: <15%)
+- **Staleness Ratio**: Percentage of outdated or superseded information (target: <10%)
+
+#### 2. Structure Metrics
+- **Information Density**: Ratio of useful tokens to total tokens (target: >75%)
+- **Block Size Distribution**: Average size of information blocks (target: <150 tokens per block)
+- **Boundary Clarity**: Number of clear information separators (target: adequate for content types)
+- **Flow Disruption Score**: Measure of how well logical flow is broken up (target: optimized for LLM processing)
+
+#### 3. Performance Metrics
+- **Response Quality Score**: LLM output quality as context length increases
+- **Processing Time**: Time taken to generate response vs context length
+- **Error Rate**: Frequency of hallucinations or incorrect responses
+- **Consistency Score**: Response consistency across similar queries with different context lengths
+
+### Context Rot Testing Framework
+
+#### Test Categories
+
+**1. Context Length Impact Tests**
+- Test LLM performance across different context lengths (500, 1000, 2000, 5000 tokens)
+- Measure response quality, accuracy, and processing time
+- Validate compression effectiveness at different thresholds
+
+**2. Information Structure Tests**
+- Test different information placement strategies
+- Compare performance with critical info at beginning vs. end
+- Validate impact of information boundaries and separators
+
+**3. Relevance Filtering Tests**
+- Test performance with different levels of irrelevant content (10%, 25%, 50%)
+- Measure improvement from relevance-based filtering
+- Validate preservation of critical information during compression
+
+**4. Dynamic Optimization Tests**
+- Test adaptive compression based on performance feedback
+- Validate threshold-based optimization triggers
+- Measure improvement from dynamic context management
+
+#### Testing Procedures
+
+**Pre-Implementation Baseline**
+1. Run standard tasks with original context management
+2. Record performance metrics (quality, speed, accuracy)
+3. Document baseline context characteristics
+
+**Post-Implementation Validation**
+1. Run identical tasks with Context Rot optimizations
+2. Compare performance metrics against baseline
+3. Validate optimization effectiveness
+
+**Regression Testing**
+1. Monitor for performance degradation
+2. Test edge cases and boundary conditions
+3. Validate optimization stability
+
+#### Quality Gates
+
+**Context Quality Gates**
+- Relevance Score > 80%
+- Critical Information in top 25% of context
+- Information Density > 75%
+- Redundancy Ratio < 15%
+
+**Performance Quality Gates**
+- Response Quality Score improvement > 15%
+- Processing Time reduction > 10%
+- Error Rate reduction > 20%
+- Consistency Score improvement > 10%
+
+### Implementation Validation Checklist
+
+#### Context Management Validation
+- [ ] Relevance-based filtering removes >30% irrelevant content
+- [ ] Critical information placement optimized
+- [ ] Context length monitoring active
+- [ ] Compression triggers functioning
+- [ ] Quality metrics being tracked
+
+#### Workflow Validation
+- [ ] Context length thresholds implemented
+- [ ] Performance-based adjustments working
+- [ ] Information structure guidelines followed
+- [ ] Quality gates enforced
+
+#### Agent Validation
+- [ ] Context optimization integrated into agent workflows
+- [ ] Performance improvements measurable
+- [ ] Error rates reduced
+- [ ] Response consistency improved
+
+### Monitoring & Analytics
+
+#### Real-time Monitoring
+- Context length tracking
+- Performance metric collection
+- Optimization trigger activation
+- Quality gate compliance
+
+#### Analytics Dashboard
+- Performance improvement trends
+- Context optimization effectiveness
+- Error rate reductions
+- Quality metric improvements
+
+#### Alert System
+- Performance degradation alerts
+- Quality gate violations
+- Optimization failure notifications
+- Context length threshold breaches
+
+### Continuous Improvement Process
+
+1. **Collect Metrics**: Gather performance and quality data
+2. **Analyze Results**: Identify optimization opportunities
+3. **Implement Improvements**: Update algorithms and thresholds
+4. **Validate Changes**: Test improvements against quality gates
+5. **Monitor Impact**: Track long-term performance trends
+
+This testing framework ensures Context Rot optimizations deliver measurable performance improvements while maintaining system reliability and quality.

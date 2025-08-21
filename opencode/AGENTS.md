@@ -44,7 +44,7 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 **Complex Tasks (3+ steps or significant scope):**
 
 - Present a plan for approval before implementation.
-- Use the 13-step structured workflow (see advanced-workflows.md).
+- Use the 13-step structured workflow (see workflows-protocol.md).
 - **Event-Driven Execution**: Use structured XML events for multi-agent coordination.
 - **Stateless Operations**: Each phase operates independently with complete context.
 - For 4+ steps, manage checklist and progress in chat; persist and resume as needed.
@@ -53,12 +53,12 @@ Note: "Do not ask for confirmation" never overrides Permissions "ask". Always re
 
 - **Phase-based sessions**: Research → Spec/Planning → Building → Implementation
 - **Always write to files** between phases to persist context and decisions
-- **Event-driven handoffs**: Use structured XML events for context transfer (see event-schema.md)
+- **Event-driven handoffs**: Use structured XML events for context transfer (see schema-protocol.md)
 - **Stateless checkpoints**: Enable workflow resumption from any major phase
 - **Start new sessions** for each major phase to keep context small and focused
 - **Document next steps** in files before ending sessions for seamless handoffs
 
-**Minimal Reasoning Scaffold**: For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge (~70%). See advanced-workflows.md for details.
+**Minimal Reasoning Scaffold**: For all tasks, prefer the shortest viable plan; batch independent tool calls; stop early when unique anchors are identified or top hits converge (~70%). See workflows-protocol.md for details.
 
 ## Core Philosophy
 
@@ -92,7 +92,7 @@ Agent_Output = AgentReducer(Structured_Input, Agent_Capabilities, Quality_Gates)
 
 **Reducer Pattern Requirements:**
 
-1. **No Hidden State**: All required context provided in structured XML events (see event-schema.md)
+1. **No Hidden State**: All required context provided in structured XML events (see schema-protocol.md)
 2. **Deterministic Operations**: Same input produces same output (idempotent where possible)
 3. **Complete Context**: Agent can operate independently without external dependencies
 4. **Explicit Outputs**: Structured results enable next phase to operate autonomously
@@ -183,10 +183,16 @@ Always check for project-level overrides in `AGENTS.md` before applying these ru
 
 This file references specialized protocols loaded via `opencode.json` instructions:
 
-- **orchestration.md**: Multi-agent coordination, BMAD protocols, luigi planning
-- **context-management.md**: Token budgeting, parallelization criteria, compression strategies
-- **advanced-workflows.md**: 13-step workflow, checklist protocols, failure recovery
-- **quality-tooling.md**: Quality standards, tooling hierarchy, anchor robustness
+- **orchestration-protocol.md**: Multi-agent coordination, BMAD protocols, luigi planning
+- **management-protocol.md**: Token budgeting, parallelization criteria, compression strategies
+- **workflows-protocol.md**: 13-step workflow, checklist protocols, failure recovery
+- **tooling-protocol.md**: Quality standards, tooling hierarchy, anchor robustness
+- **security-protocol.md**: Security-first design, automated validation, threat modeling
+- **handling-protocol.md**: Error classification, recovery strategies, resilience patterns
+- **optimization-protocol.md**: Dynamic monitoring, resource-aware processing, intelligent caching
+- **loop-protocol.md**: Sentiment analysis, pattern recognition, automated optimization
+- **specialization-protocol.md**: Capability mapping, intelligent routing, skill development
+- **preservation-protocol.md**: Versioning, compression, selective restoration, integrity validation
 
 These protocols are loaded on-demand based on task complexity and requirements.
 

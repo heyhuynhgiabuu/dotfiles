@@ -69,3 +69,37 @@ Request → General → Luigi (plan only) → Alpha (orchestrated execution) →
 `/plan "Refactor legacy auth module across services: add MFA with rollback strategy"`
 
 **Related Agents**: Alpha, Legacy, Security, Reviewer
+
+## Context Rot Information Structure Guidelines
+
+Guidelines for structuring information to optimize LLM performance based on Context Rot research:
+
+### Critical Information Placement
+- **Position Strategy**: Place most important information in the first 25% of context
+- **Progressive Importance**: Order information by decreasing importance/relevance
+- **Early Context Priority**: Critical decisions, objectives, and constraints first
+- **Anchor Placement**: Position unique identifiers and anchors prominently
+
+### Information Organization Patterns
+- **Logical Flow Disruption**: Break up long, structured text blocks (>200 tokens)
+- **Clear Boundaries**: Use explicit separators between different information types
+- **Semantic Clustering**: Group related information while avoiding distractor buildup
+- **Relevance Zoning**: Create distinct zones for different relevance levels
+
+### Context Structure Optimization
+- **Block Size Management**: Keep information blocks under 150 tokens when possible
+- **Information Density**: Maintain 75%+ useful information ratio
+- **Redundancy Elimination**: Remove duplicate or overlapping information
+- **Staleness Prevention**: Minimize outdated or superseded information
+
+### Dynamic Context Management
+- **Length-Based Adaptation**: Adjust structure based on total context length
+- **Performance Feedback**: Modify structure based on observed LLM performance
+- **Quality Gates**: Validate information structure before major operations
+- **Continuous Optimization**: Improve structure based on historical performance data
+
+### Implementation Checkpoints
+- **Pre-Processing**: Apply structure optimization before context assembly
+- **Quality Validation**: Check structure quality metrics before execution
+- **Performance Monitoring**: Track structure effectiveness during execution
+- **Post-Processing**: Optimize structure based on execution feedback

@@ -9,10 +9,10 @@ Successfully implemented strategic modularization of the OpenCode agent system p
 ## Files Created/Modified
 
 ### New Protocol Files:
-- `opencode/protocols/orchestration.md` - Multi-agent coordination and BMAD protocols
-- `opencode/protocols/context-management.md` - Token budgeting and parallelization policies  
-- `opencode/protocols/advanced-workflows.md` - 13-step workflow and failure recovery
-- `opencode/protocols/quality-tooling.md` - Quality standards and tooling hierarchy
+- `opencode/protocols/orchestration-protocol.md` - Multi-agent coordination and BMAD protocols
+- `opencode/protocols/management-protocol.md` - Token budgeting and parallelization policies
+- `opencode/protocols/workflows-protocol.md` - 13-step workflow and failure recovery
+- `opencode/protocols/tooling-protocol.md` - Quality standards and tooling hierarchy
 
 ### Modified Files:
 - `opencode/AGENTS.md` - Streamlined to ~1,200 tokens (from ~3,700 tokens)
@@ -55,25 +55,25 @@ Agent processing: Faster with focused guidance
 
 ## Protocol File Organization
 
-### `orchestration.md` (Multi-Agent Coordination)
+### `orchestration-protocol.md` (Multi-Agent Coordination)
 - Subagent role matrix and escalation paths
 - Multi-context orchestration guidelines
 - Luigi planning sentinel protocols
 - BMAD workflow patterns
 
-### `context-management.md` (Token Budget Policy)
+### `management-protocol.md` (Token Budget Policy)
 - Shared Context Slice (SCS) management
 - Parallelization criteria and thresholds
 - Summarization triggers and compression strategies
 - Memory usage guidelines
 
-### `advanced-workflows.md` (Complex Task Management)
+### `workflows-protocol.md` (Complex Task Management)
 - 13-step structured workflow for complex tasks
 - Checklist and summarization protocols
 - Failure recovery playbooks
 - State management for multi-step tasks
 
-### `quality-tooling.md` (Standards & Tools)
+### `tooling-protocol.md` (Standards & Tools)
 - Quality standards and verification protocols
 - Modern tooling hierarchy (rg, fd, bat, etc.)
 - Anchor robustness and safety protocols
@@ -86,10 +86,10 @@ Added `instructions` field to enable modular protocol loading:
 ```json
 {
   "instructions": [
-    "opencode/protocols/orchestration.md",
-    "opencode/protocols/context-management.md", 
-    "opencode/protocols/advanced-workflows.md",
-    "opencode/protocols/quality-tooling.md"
+    "opencode/protocols/orchestration-protocol.md",
+    "opencode/protocols/management-protocol.md",
+    "opencode/protocols/workflows-protocol.md",
+    "opencode/protocols/tooling-protocol.md"
   ]
 }
 ```

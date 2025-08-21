@@ -3,6 +3,8 @@
 ## Purpose
 Standardize when to parallelize, summarize, compress, or escalate based on live context/token utilization using 12-factor agent principles for structured context engineering and stateless operations.
 
+**Context Rot Integration**: This protocol now incorporates Context Rot research findings to optimize LLM performance by managing context length, relevance, and information structure according to proven principles.
+
 ## 12-Factor Context Engineering Principles
 
 ### Factor 3: Context Engineering (Official Implementation)
@@ -138,6 +140,34 @@ def select_context_format(context_size: int, agent_type: str, operation_type: st
 - **Stateless Handoff**: Complete context transfer via structured events (no hidden state).
 - **Context Format Efficiency**: Token reduction ratio achieved through custom formatting (target: >40% vs standard messages).
 - **Attention Optimization**: Context structure designed to maximize LLM focus on critical information.
+
+## Context Rot Optimization Principles
+
+Based on Context Rot research findings, implement these principles to maximize LLM performance:
+
+### 1. Relevance-Based Filtering
+- **Remove Irrelevant Information**: Filter out content that doesn't directly contribute to the current task
+- **Prioritize Critical Context**: Place essential information early in the context
+- **Eliminate Redundancy**: Remove duplicate or overlapping information
+- **Contextual Relevance Scoring**: Score information by relevance to current objective
+
+### 2. Information Structure Optimization
+- **Early Critical Placement**: Position most important information at the beginning
+- **Logical Flow Disruption**: Break up long, structured text blocks that may confuse LLMs
+- **Clear Information Boundaries**: Use explicit separators between different types of information
+- **Semantic Similarity Management**: Avoid clustering similar but non-relevant information
+
+### 3. Length-Aware Processing
+- **Progressive Context Building**: Add information incrementally rather than in large blocks
+- **Length Thresholds**: Monitor context length and trigger compression at optimal points
+- **Performance-Based Limits**: Adjust context size based on observed performance degradation
+- **Task Complexity Matching**: Scale context length according to task complexity
+
+### 4. Dynamic Context Management
+- **Real-time Performance Monitoring**: Track LLM performance as context grows
+- **Adaptive Compression**: Automatically compress when performance degradation is detected
+- **Context Quality Metrics**: Measure context effectiveness and optimize accordingly
+- **Feedback Loop Integration**: Use performance data to improve future context construction
 
 ## Context Format Implementation Strategy
 
@@ -390,6 +420,34 @@ At each phase boundary emit the smallest summary tier preserving the Shared Cont
 
 **Resume Protocol**: Workflow can restart from any checkpoint with complete context restoration and validation of event stream integrity.
 
+## Context Rot-Aware Compression Triggers
+
+Enhanced compression triggers that incorporate Context Rot research findings:
+
+### Performance-Based Triggers
+1. **Context Length Degradation**: When context length exceeds 1000 tokens, trigger relevance-based compression
+2. **Performance Drop Detection**: If LLM response quality decreases (based on confidence scores), trigger compression
+3. **Semantic Similarity Threshold**: When similar but non-relevant information clusters exceed 30% of context
+4. **Information Density Drop**: When useful information density falls below 70%
+
+### Relevance-Based Triggers
+1. **Irrelevant Content Ratio**: When >40% of context is not directly relevant to current task
+2. **Redundancy Detection**: When duplicate information exceeds 25% of context
+3. **Stale Information**: When >30% of context references outdated decisions or completed phases
+4. **Distractor Content**: When similar but incorrect information is present that could confuse the LLM
+
+### Structure Optimization Triggers
+1. **Long Block Detection**: When any single information block exceeds 200 tokens
+2. **Poor Information Flow**: When critical information is buried in the middle or end of context
+3. **Missing Clear Boundaries**: When different types of information are not clearly separated
+4. **Suboptimal Ordering**: When information is not ordered by importance/relevance
+
+### Adaptive Thresholds
+- **Short Tasks (<500 tokens)**: Compress when irrelevant content >20%
+- **Medium Tasks (500-2000 tokens)**: Compress when irrelevant content >30%
+- **Long Tasks (>2000 tokens)**: Compress when irrelevant content >40%
+- **Complex Tasks**: More aggressive compression with relevance scoring
+
 ## Glossary (Enhanced)
 
 **SCS (Shared Context Slice)**: Minimal token subset all concurrently active agents must share (objective, current phase plan, open risks, active anchors). Now transmitted via structured XML events.
@@ -415,3 +473,31 @@ At each phase boundary emit the smallest summary tier preserving the Shared Cont
 **Context Health Score**: Ratio of actionable context to total AWS tokens (target: >80% useful content).
 
 **Compression Ratio**: Percentage reduction in context size after compression events (target: >30% when needed).
+
+## Context Quality Metrics
+
+Metrics to measure and optimize context effectiveness based on Context Rot principles:
+
+### Relevance Metrics
+- **Relevance Score**: Percentage of context directly relevant to current task (target: >80%)
+- **Critical Information Placement**: Position of most important information (target: top 25% of context)
+- **Redundancy Ratio**: Percentage of duplicate or overlapping information (target: <15%)
+- **Staleness Ratio**: Percentage of outdated or superseded information (target: <10%)
+
+### Structure Metrics
+- **Information Density**: Ratio of useful tokens to total tokens (target: >75%)
+- **Block Size Distribution**: Average size of information blocks (target: <150 tokens per block)
+- **Boundary Clarity**: Number of clear information separators (target: adequate for content types)
+- **Flow Disruption Score**: Measure of how well logical flow is broken up (target: optimized for LLM processing)
+
+### Performance Metrics
+- **Response Quality Score**: LLM output quality as context length increases
+- **Processing Time**: Time taken to generate response vs context length
+- **Error Rate**: Frequency of hallucinations or incorrect responses
+- **Consistency Score**: Response consistency across similar queries with different context lengths
+
+### Optimization Targets
+- **Context Efficiency**: Maximize useful information per token
+- **Performance Stability**: Minimize performance degradation as context grows
+- **Information Accessibility**: Ensure critical information is easily accessible
+- **Processing Optimization**: Structure content for optimal LLM attention patterns

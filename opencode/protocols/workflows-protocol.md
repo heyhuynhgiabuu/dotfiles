@@ -1,5 +1,21 @@
 # Advanced Workflow Protocols (12-Factor Enhanced)
 
+## Context Rot Integration
+
+This protocol incorporates Context Rot research findings to optimize workflow execution:
+
+### Context Length Impact Awareness
+- **Performance Degradation Monitoring**: Track LLM performance as context length increases
+- **Adaptive Processing**: Adjust workflow complexity based on observed performance patterns
+- **Length-Based Decision Making**: Make routing and processing decisions based on context length thresholds
+- **Progressive Loading**: Load information incrementally to maintain optimal performance
+
+### Context Quality Gates
+- **Relevance Filtering**: Apply relevance-based filtering before major workflow phases
+- **Information Structure Optimization**: Ensure optimal information placement and organization
+- **Complexity Assessment**: Evaluate context complexity and adjust processing accordingly
+- **Performance Validation**: Validate that context structure supports optimal LLM performance
+
 ## Pause/Resume Checkpoint Architecture (Factor 6)
 
 **Checkpoint Generation Strategy**: Enable workflow resumption from any major phase boundary using structured state persistence.
@@ -684,3 +700,37 @@ _Summary: Awaiting input_
 - For tasks requiring 4+ steps, the checklist and progress MUST be managed directly in the conversation (chat).
 - Workflow: Post a markdown checklist in the chat → Execute each step → Mark each step as complete in the chat → Repeat until all steps are done
 - Autonomous Execution: Once the checklist is posted and approved in the chat, the agent must autonomously execute the entire plan without stopping for further approval after each step.
+
+## Context Rot-Aware Workflow Execution
+
+Enhanced workflow patterns that account for context length impact on LLM performance:
+
+### Context Length Thresholds
+- **Short Context (<500 tokens)**: Standard processing, minimal compression
+- **Medium Context (500-2000 tokens)**: Progressive compression, relevance filtering
+- **Long Context (2000-5000 tokens)**: Aggressive compression, information restructuring
+- **Extended Context (>5000 tokens)**: Maximum compression, critical information only
+
+### Performance-Based Workflow Adjustments
+- **Quality Degradation Detection**: Monitor LLM response quality and adjust context accordingly
+- **Adaptive Complexity**: Reduce workflow complexity when context length impacts performance
+- **Progressive Information Loading**: Load information incrementally to maintain optimal performance
+- **Context Quality Gates**: Validate context quality before major workflow decisions
+
+### Information Structure Patterns
+- **Critical Information First**: Place most important information at the beginning of context
+- **Logical Flow Disruption**: Break up long, structured text blocks that may confuse LLMs
+- **Clear Boundaries**: Use explicit separators between different types of information
+- **Relevance Clustering**: Group related information while avoiding distractor clustering
+
+### Context Optimization Workflows
+1. **Pre-Processing Phase**: Apply relevance filtering and information restructuring
+2. **Quality Assessment**: Evaluate context quality metrics before execution
+3. **Adaptive Execution**: Adjust processing based on context length and complexity
+4. **Post-Processing**: Apply compression and optimization based on performance feedback
+
+### Performance Monitoring Integration
+- **Real-time Metrics**: Track context length, relevance scores, and LLM performance
+- **Feedback Loops**: Use performance data to optimize future context construction
+- **Threshold Alerts**: Trigger optimization when performance thresholds are exceeded
+- **Historical Analysis**: Learn from past performance patterns to improve future workflows
