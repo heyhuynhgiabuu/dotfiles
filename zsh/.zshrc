@@ -351,5 +351,25 @@ command -v github-copilot-cli >/dev/null && eval "$(github-copilot-cli alias -- 
 
 . "$HOME/.local/bin/env"
 
+# GPG Agent Configuration
+# Start GPG agent and set environment variables
+if command -v gpg-agent >/dev/null; then
+    # Start GPG agent if not running
+    if ! pgrep -x gpg-agent >/dev/null; then
+        gpg-agent --daemon --enable-ssh-support >/dev/null 2>&1
+    fi
+
+    # Set GPG environment variables
+    export GPG_TTY=$(tty)
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+    # Source GPG agent info if available
+    if [ -f "${HOME}/.gpg-agent-info" ]; then
+        . "${HOME}/.gpg-agent-info"
+        export GPG_AGENT_INFO
+        export SSH_AUTH_SOCK
+    fi
+fi
+
 # FZF - Fuzzy finder integration (load LAST to avoid key binding conflicts)
 [[ -f "$ZSH_CONFIG_DIR/fzf.zsh" ]] && source "$ZSH_CONFIG_DIR/fzf.zsh"

@@ -155,3 +155,15 @@ alias pgit='pass git'
 alias pinit='pass init'
 alias pgrep='pass grep'
 alias phelp='pass help'
+
+# GPG Management
+alias gpg-restart='gpgconf --kill gpg-agent && gpg-agent --daemon'
+alias gpg-status='gpg-agent --status'
+alias gpg-stop='gpgconf --kill gpg-agent'
+alias gpg-list-keys='gpg --list-secret-keys --keyid-format LONG'
+alias gpg-list-public='gpg --list-keys --keyid-format LONG'
+alias gpg-export='gpg --armor --export'
+alias gpg-import='gpg --import'
+alias gpg-delete='gpg --delete-secret-key'
+alias gpg-trust='gpg --edit-key'
+
