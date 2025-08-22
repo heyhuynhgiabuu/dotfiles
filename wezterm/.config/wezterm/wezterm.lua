@@ -21,15 +21,48 @@ config.set_environment_variables = {
 -- === THEME & APPEARANCE ===
 function scheme_for_appearance(appearance)
 	if appearance:find("Dark") then
-		return "Kanagawa"
+		return "Tokyo Night"
 	else
-		return "Kanagawa (Dragon)"
+		return "Tokyo Night Day"
 	end
 end
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
-config.font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" })
-config.font_size = 15.0
+-- === FONT CONFIGURATION ===
+-- JetBrains Mono - reliable and widely supported
+config.font = wezterm.font {
+  family = "JetBrains Mono",
+  weight = "Regular",
+}
+
+-- Configure font rules for text formatting variants
+config.font_rules = {
+  {
+    intensity = "Bold",
+    font = wezterm.font {
+      family = "JetBrains Mono",
+      weight = "Bold",
+    },
+  },
+  {
+    italic = true,
+    font = wezterm.font {
+      family = "JetBrains Mono",
+      style = "Italic",
+    },
+  },
+  {
+    intensity = "Bold",
+    italic = true,
+    font = wezterm.font {
+      family = "JetBrains Mono",
+      weight = "Bold",
+      style = "Italic",
+    },
+  },
+}
+
+config.font_size = 16.0
 config.window_background_opacity = 0.85
 config.macos_window_background_blur = 25
 

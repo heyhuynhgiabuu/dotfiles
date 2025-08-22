@@ -1,24 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": [
-    "opencode/protocols/context-rot-protocol.md",
-    "opencode/protocols/checkpoint-schema.md",
-    "opencode/protocols/protocol-examples.md",
-    "opencode/protocols/workflow-checkpoints-protocol.md",
-    "opencode/protocols/workflow-execution-protocol.md",
-    "opencode/protocols/control-flow-protocol.md",
-    "opencode/protocols/schema-protocol.md",
-    "opencode/protocols/orchestration-protocol.md",
-    "opencode/protocols/management-protocol.md",
-    "opencode/protocols/tooling-protocol.md",
-    "opencode/protocols/reasoning-protocol.md",
-    "opencode/protocols/xml-protocol.md",
-    "opencode/protocols/loop-protocol.md",
-    "opencode/protocols/optimization-protocol.md",
-    "opencode/protocols/security-protocol.md",
-    "opencode/protocols/handling-protocol.md",
-    "opencode/protocols/specialization-protocol.md",
-    "opencode/protocols/preservation-protocol.md"
+    "opencode/protocols/unified-context-protocol.md",
+    "opencode/protocols/workflow-protocol.md",
+    "opencode/protocols/shared-schemas-protocol.md",
+    "opencode/protocols/security-handling-protocol.md",
+    "opencode/protocols/agent-specialization-enhanced.md",
+    "opencode/protocols/core-foundations-protocol.md",
+    "opencode/protocols/intelligence-protocols.md"
   ],
   "permission": {
     "edit": "ask",
@@ -52,15 +41,44 @@
   },
   "agent": {
     "delta": {
-      "description": "Delta agent for testing new features",
+      "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
       "mode": "primary",
       "model": "opencode/sonic",
       "temperature": 0.15,
       "thinking": {
         "type": "enabled",
-        "budget_tokens": 2048
+        "budget_tokens": 4000
       },
-      "prompt": "{file:./prompts/delta-prompt.md}"
+      "prompt": "{file:./prompts/delta-prompt.md}",
+      "capabilities": {
+        "context_optimization": true,
+        "workflow_orchestration": true,
+        "security_analysis": true,
+        "advanced_reasoning": true,
+        "agent_collaboration": true,
+        "chrome_mcp_integration": true,
+        "context_rot_management": true
+      },
+      "specialization": {
+        "primary_domains": [
+          "architecture",
+          "analysis",
+          "workflow_management",
+          "context_optimization"
+        ],
+        "cognitive_capabilities": {
+          "problem_solving": "expert",
+          "creativity": "high",
+          "learning_ability": "expert",
+          "communication": "expert"
+        },
+        "operational_capabilities": {
+          "task_management": "expert",
+          "error_handling": "expert",
+          "performance_optimization": "high",
+          "quality_assurance": "expert"
+        }
+      }
     },
     "beta": {
       "description": "Beta agent for testing new features",
@@ -69,7 +87,7 @@
       "temperature": 0.15,
       "thinking": {
         "type": "enabled",
-        "budget_tokens": 2048
+        "budget_tokens": 4000
       },
       "prompt": "{file:./prompts/beta-prompt.md}"
     },
@@ -121,7 +139,7 @@
         "npx",
         "-y",
         "figma-developer-mcp",
-        "{env: FIGMA_API_KEY}",
+        "{env:FIGMA_API_KEY}",
         "--stdio"
       ],
       "enabled": true
@@ -174,7 +192,10 @@
     "input_newline": "shift+enter,ctrl+j"
   },
   "theme": "kanagawa",
-  "model": "opencode/sonic",
+  "model": "github-copilot/claude-sonnet-4",
   "share": "disabled",
-  "autoupdate": true
+  "autoupdate": true,
+  "tui": {
+    "scroll_speed": 3
+  }
 }
