@@ -9,10 +9,10 @@ Successfully implemented strategic modularization of the OpenCode agent system p
 ## Files Created/Modified
 
 ### New Protocol Files:
-- `opencode/protocols/orchestration-protocol.md` - Multi-agent coordination and BMAD protocols
-- `opencode/protocols/management-protocol.md` - Token budgeting and parallelization policies
+- `opencode/protocols/core-foundations-protocol.md` - Multi-agent coordination and BMAD protocols  
+- `opencode/protocols/unified-context-protocol.md` - Token budgeting and parallelization policies
 - `opencode/protocols/workflows-protocol.md` - 13-step workflow and failure recovery
-- `opencode/protocols/tooling-protocol.md` - Quality standards and tooling hierarchy
+- `opencode/protocols/core-foundations-protocol.md` - Quality standards and tooling hierarchy
 
 ### Modified Files:
 - `opencode/AGENTS.md` - Streamlined to ~1,200 tokens (from ~3,700 tokens)
@@ -55,13 +55,13 @@ Agent processing: Faster with focused guidance
 
 ## Protocol File Organization
 
-### `orchestration-protocol.md` (Multi-Agent Coordination)
+### `core-foundations-protocol.md` (Multi-Agent Coordination)
 - Subagent role matrix and escalation paths
 - Multi-context orchestration guidelines
 - Luigi planning sentinel protocols
 - BMAD workflow patterns
 
-### `management-protocol.md` (Token Budget Policy)
+### `unified-context-protocol.md` (Token Budget Policy)
 - Shared Context Slice (SCS) management
 - Parallelization criteria and thresholds
 - Summarization triggers and compression strategies
@@ -73,7 +73,7 @@ Agent processing: Faster with focused guidance
 - Failure recovery playbooks
 - State management for multi-step tasks
 
-### `tooling-protocol.md` (Standards & Tools)
+### `core-foundations-protocol.md` (Standards & Tools)
 - Quality standards and verification protocols
 - Modern tooling hierarchy (rg, fd, bat, etc.)
 - Anchor robustness and safety protocols
@@ -86,10 +86,10 @@ Added `instructions` field to enable modular protocol loading:
 ```json
 {
   "instructions": [
-    "opencode/protocols/orchestration-protocol.md",
-    "opencode/protocols/management-protocol.md",
-    "opencode/protocols/workflows-protocol.md",
-    "opencode/protocols/tooling-protocol.md"
+    "opencode/protocols/core-foundations-protocol.md",
+    "opencode/protocols/unified-context-protocol.md",
+    "opencode/protocols/workflow-protocol.md",
+    "opencode/protocols/shared-schemas-protocol.md"
   ]
 }
 ```

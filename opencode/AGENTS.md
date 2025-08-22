@@ -183,18 +183,18 @@ Always check for project-level overrides in `AGENTS.md` before applying these ru
 
 This file references specialized protocols loaded via `opencode.json` instructions:
 
-- **orchestration-protocol.md**: Multi-agent coordination, BMAD protocols, luigi planning
-- **management-protocol.md**: Token budgeting, parallelization criteria, compression strategies
-- **workflow-execution-protocol.md**: 13-step workflow, checklist protocols, failure recovery
-- **workflow-checkpoints-protocol.md**: Checkpoint architecture, pause/resume, state persistence
-- **control-flow-protocol.md**: Control flow ownership, async operations, human-in-the-loop
-- **tooling-protocol.md**: Quality standards, tooling hierarchy, anchor robustness
-- **security-protocol.md**: Security-first design, automated validation, threat modeling
-- **handling-protocol.md**: Error classification, recovery strategies, resilience patterns
-- **optimization-protocol.md**: Dynamic monitoring, resource-aware processing, intelligent caching
-- **loop-protocol.md**: Sentiment analysis, pattern recognition, automated optimization
-- **specialization-protocol.md**: Capability mapping, intelligent routing, skill development
-- **preservation-protocol.md**: Versioning, compression, selective restoration, integrity validation
+- **core-foundations-protocol.md**: Multi-agent coordination, BMAD protocols, luigi planning
+- **unified-context-protocol.md**: Token budgeting, parallelization criteria, compression strategies
+- **workflow-protocol.md**: 13-step workflow, checklist protocols, failure recovery
+- **workflow-protocol.md**: Checkpoint architecture, pause/resume, state persistence
+- **core-foundations-protocol.md**: Control flow ownership, async operations, human-in-the-loop
+- **core-foundations-protocol.md**: Quality standards, tooling hierarchy, anchor robustness
+- **security-handling-protocol.md**: Security-first design, automated validation, threat modeling
+- **security-handling-protocol.md**: Error classification, recovery strategies, resilience patterns
+- **agent-specialization-enhanced.md**: Dynamic monitoring, resource-aware processing, intelligent caching
+- **intelligence-protocols.md**: Sentiment analysis, pattern recognition, automated optimization
+- **agent-specialization-enhanced.md**: Capability mapping, intelligent routing, skill development
+- **intelligence-protocols.md**: Versioning, compression, selective restoration, integrity validation
 
 These protocols are loaded on-demand based on task complexity and requirements.
 

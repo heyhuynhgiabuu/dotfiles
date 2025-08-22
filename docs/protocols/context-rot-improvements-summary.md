@@ -18,7 +18,7 @@ This document summarizes the comprehensive integration of Context Rot research f
 ### ✅ **Phase 1: Core Context Optimization (COMPLETED)**
 
 #### 1. Context Management Protocol Enhancement
-**File:** `opencode/protocols/management-protocol.md`
+**File:** `opencode/protocols/unified-context-protocol.md`
 **Improvements:**
 - Added Context Rot Optimization Principles section
 - Implemented Relevance-Based Filtering guidelines
@@ -41,7 +41,7 @@ This document summarizes the comprehensive integration of Context Rot research f
 **Impact:** Better workflow efficiency and reduced context-related errors
 
 #### 3. Orchestration Protocol Enhancement
-**File:** `opencode/protocols/orchestration-protocol.md`
+**File:** `opencode/protocols/core-foundations-protocol.md`
 **Improvements:**
 - Added Context Rot Information Structure Guidelines
 - Implemented Critical Information Placement strategies
@@ -54,7 +54,7 @@ This document summarizes the comprehensive integration of Context Rot research f
 ### ✅ **Phase 2: Quality & Testing (COMPLETED)**
 
 #### 4. Quality Tooling Integration
-**File:** `opencode/protocols/tooling-protocol.md`
+**File:** `opencode/protocols/core-foundations-protocol.md`
 **Improvements:**
 - Added Context Rot Quality Metrics & Testing Framework
 - Created Context Quality Assessment Metrics
