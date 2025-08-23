@@ -16,7 +16,7 @@ unset GOROOT
 #export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt) 2>/dev/null || '')"
 export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt 2>/dev/null || echo '')"
 export FIGMA_API_KEY="$(pass dev/figma-tung-pat 2>/dev/null || echo '')"
-export JAVA_HOME=/Users/killerkidbo/Library/Java/JavaVirtualMachines/corretto-17.0.15/Contents/Home
+export JAVA_HOME=/Users/killerkidbo/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home
 
 # security
 export DNS_OVER_HTTPS=1
