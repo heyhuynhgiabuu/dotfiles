@@ -20,6 +20,8 @@ local function get_java_executable()
   -- First try SDKMAN current Java
   local sdkman_java = vim.fn.expand("~/.sdkman/candidates/java/current/bin/java")
   if vim.fn.executable(sdkman_java) == 1 then
+    -- Also set JAVA_HOME if using SDKMAN
+    vim.env.JAVA_HOME = vim.fn.expand("~/.sdkman/candidates/java/current")
     return sdkman_java
   end
   
@@ -179,7 +181,7 @@ local config = {
         updateBuildConfiguration = "interactive",
         runtimes = {
           {
-            name = "JavaSE-17",
+            name = "JavaSE-21",
             path = vim.env.JAVA_HOME,
             default = true,
           },
@@ -191,9 +193,6 @@ local config = {
       references = { includeDecompiledSources = true },
       format = {
         enabled = true,
-        settings = {
-          url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml",
-        },
       },
       completion = {
         favoriteStaticMembers = {
