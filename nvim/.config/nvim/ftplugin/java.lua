@@ -17,7 +17,13 @@ vim.b.jdtls_attached = true
 -- 🔧 JAVA EXECUTABLE DETECTION
 -- ===============================================
 local function get_java_executable()
-  -- Try JAVA_HOME first
+  -- First try SDKMAN current Java
+  local sdkman_java = vim.fn.expand("~/.sdkman/candidates/java/current/bin/java")
+  if vim.fn.executable(sdkman_java) == 1 then
+    return sdkman_java
+  end
+  
+  -- Try JAVA_HOME
   local java_home = vim.env.JAVA_HOME
   if java_home and java_home ~= "" then
     local java_bin = java_home .. "/bin/java"
@@ -31,11 +37,10 @@ local function get_java_executable()
     return "java"
   end
   
-  -- macOS specific paths
+  -- macOS specific paths (as last resort)
   local macos_paths = {
     "/opt/homebrew/opt/openjdk/bin/java",
     "/usr/local/opt/openjdk/bin/java",
-    "/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/bin/java",
   }
   
   for _, path in ipairs(macos_paths) do
@@ -130,12 +135,16 @@ if vim.fn.isdirectory(java_debug_path) == 1 then
   end
 end
 
--- Java test extension
+-- Java test extension (filter out problematic JARs)
 local java_test_path = mason_packages .. "/java-test"
 if vim.fn.isdirectory(java_test_path) == 1 then
   local java_test_jars = vim.fn.glob(java_test_path .. "/extension/server/*.jar", false, true)
   for _, jar in ipairs(java_test_jars) do
-    table.insert(bundles, jar)
+    -- Skip problematic JARs that cause bundle loading issues
+    local jar_name = vim.fn.fnamemodify(jar, ":t")
+    if not (jar_name:match("jacocoagent") or jar_name:match("with%-dependencies")) then
+      table.insert(bundles, jar)
+    end
   end
 end
 
@@ -171,7 +180,7 @@ local config = {
         runtimes = {
           {
             name = "JavaSE-17",
-            path = vim.env.JAVA_HOME or "/opt/homebrew/opt/openjdk",
+            path = vim.env.JAVA_HOME,
             default = true,
           },
         },
@@ -184,7 +193,6 @@ local config = {
         enabled = true,
         settings = {
           url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml",
-          profile = "GoogleStyle",
         },
       },
       completion = {
