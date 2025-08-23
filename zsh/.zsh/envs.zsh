@@ -20,3 +20,6 @@ export JAVA_HOME=/Users/killerkidbo/Library/Java/JavaVirtualMachines/corretto-17
 
 # security
 export DNS_OVER_HTTPS=1
+
+# OpenCode MCP Configuration
+export MCP_CHROME_PATH="/Users/killerkidbo/.nvm/versions/node/v22.14.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"

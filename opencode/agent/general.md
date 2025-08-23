@@ -1,4 +1,5 @@
 ---
+name: general
 description: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks autonomously with integrated protocol support
 mode: subagent
 model: github-copilot/gpt-5-mini

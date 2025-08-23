@@ -148,7 +148,7 @@
       "type": "local",
       "command": [
         "node",
-        "/Users/killerkidbo/.nvm/versions/node/v22.14.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
+        "{env:MCP_CHROME_PATH}"
       ],
       "enabled": true
     }
