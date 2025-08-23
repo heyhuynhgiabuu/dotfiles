@@ -16,7 +16,7 @@ unset GOROOT
 #export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt) 2>/dev/null || '')"
 export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt 2>/dev/null || echo '')"
 export FIGMA_API_KEY="$(pass dev/figma-tung-pat 2>/dev/null || echo '')"
-export JAVA_HOME=/Users/killerkidbo/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home
+# JAVA_HOME is now managed by SDKMAN - removed hardcoded path
 
 # security
 export DNS_OVER_HTTPS=1

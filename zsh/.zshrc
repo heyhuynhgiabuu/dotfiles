@@ -44,7 +44,7 @@ path_add "$HOME/.krew/bin"
 path_add "$HOME/apache-maven-3.8.8/bin"
 
 if [[ "$PLATFORM" == "macos" ]]; then
-    path_add "$HOME/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin"
+    # Java managed by SDKMAN - removed hardcoded path
     path_add "/opt/homebrew/opt/postgresql@16/bin"
     path_add "/opt/homebrew/opt/mysql-client/bin"
     
@@ -58,7 +58,8 @@ if [[ "$PLATFORM" == "macos" ]]; then
     # OpenCode
     path_add "$HOME/.opencode/bin"
 elif [[ "$PLATFORM" == "linux" ]]; then
-    [[ -d "/usr/lib/jvm/java-21-openjdk/bin" ]] && path_add "/usr/lib/jvm/java-21-openjdk/bin"
+    # Java managed by SDKMAN - removed hardcoded path
+    # [[ -d "/usr/lib/jvm/java-21-openjdk/bin" ]] && path_add "/usr/lib/jvm/java-21-openjdk/bin"
     [[ -d "/usr/share/code/bin" ]] && path_add "/usr/share/code/bin"
     [[ -d "$HOME/.local/share/JetBrains/Toolbox/scripts" ]] && path_add "$HOME/.local/share/JetBrains/Toolbox/scripts"
     
@@ -240,13 +241,9 @@ nvm() {
 # Set default Node version without loading nvm initially
 export PATH="$NVM_DIR/versions/node/v22.14.0/bin:$PATH"
 
-## sdkman
+## sdkman (immediate initialization for proper Java management)
 export SDKMAN_DIR="$HOME/.sdkman"
-sdk() {
-  unset -f sdk
-  [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
-  sdk "$@"
-}
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
 ## Zoxide
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
