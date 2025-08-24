@@ -1,14 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": [
-    "opencode/protocols/unified-context-protocol.md",
-    "opencode/protocols/workflow-protocol.md",
-    "opencode/protocols/shared-schemas-protocol.md",
-    "opencode/protocols/security-handling-protocol.md",
-    "opencode/protocols/agent-specialization-enhanced.md",
-    "opencode/protocols/core-foundations-protocol.md",
-    "opencode/protocols/intelligence-protocols.md"
-  ],
   "permission": {
     "edit": "ask",
     "bash": {
@@ -49,36 +40,7 @@
         "type": "enabled",
         "budget_tokens": 4000
       },
-      "prompt": "{file:./prompts/delta-prompt.md}",
-      "capabilities": {
-        "context_optimization": true,
-        "workflow_orchestration": true,
-        "security_analysis": true,
-        "advanced_reasoning": true,
-        "agent_collaboration": true,
-        "chrome_mcp_integration": true,
-        "context_rot_management": true
-      },
-      "specialization": {
-        "primary_domains": [
-          "architecture",
-          "analysis",
-          "workflow_management",
-          "context_optimization"
-        ],
-        "cognitive_capabilities": {
-          "problem_solving": "expert",
-          "creativity": "high",
-          "learning_ability": "expert",
-          "communication": "expert"
-        },
-        "operational_capabilities": {
-          "task_management": "expert",
-          "error_handling": "expert",
-          "performance_optimization": "high",
-          "quality_assurance": "expert"
-        }
-      }
+      "prompt": "{file:./prompts/delta.md}"
     },
     "beta": {
       "description": "Beta agent for testing new features",
@@ -89,7 +51,7 @@
         "type": "enabled",
         "budget_tokens": 4000
       },
-      "prompt": "{file:./prompts/beta-prompt.md}"
+      "prompt": "{file:./prompts/beta.md}"
     },
     "build": {
       "description": "Build agent for compiling and packaging code",
@@ -97,15 +59,14 @@
       "model": "github-copilot/gpt-5",
       "temperature": 0.1,
       "max_tokens": 3200,
-      "prompt": "{file:./prompts/build-prompt.md}"
+      "prompt": "{file:./prompts/build.md}"
     },
     "plan": {
       "description": "Plan agent for project planning and task management",
-      "model": "opencode/sonic",
+      "model": "github-copilot/gpt-4.1",
       "mode": "primary",
       "temperature": 0.2,
-      "max_tokens": 1400,
-      "prompt": "{file:./prompts/plan-prompt.md}",
+      "prompt": "{file:./prompts/plan.md}",
       "tools": {
         "write": false,
         "edit": false,
@@ -146,10 +107,7 @@
     },
     "chrome": {
       "type": "local",
-      "command": [
-        "node",
-        "{env:MCP_CHROME_PATH}"
-      ],
+      "command": ["node", "{env:MCP_CHROME_PATH}"],
       "enabled": true
     }
   },
@@ -193,6 +151,7 @@
   },
   "theme": "kanagawa",
   "model": "github-copilot/claude-sonnet-4",
+  "small_model": "github-copilot/gpt-4.1",
   "share": "disabled",
   "autoupdate": true,
   "tui": {

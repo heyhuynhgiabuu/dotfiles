@@ -7,18 +7,21 @@ This protocol defines advanced agent specialization, capability mapping, intelli
 ## Core Specialization Principles
 
 ### 1. Capability-Based Routing
+
 - **Dynamic Agent Selection**: Route tasks to the most suitable agent based on capabilities
 - **Capability Mapping**: Maintain detailed capability maps for each agent type
 - **Skill Assessment**: Continuously assess and update agent capabilities
 - **Performance-Based Routing**: Route based on historical performance data
 
 ### 2. Intelligent Task Assignment
+
 - **Task Analysis**: Analyze tasks to determine requirements and constraints
 - **Agent Matching**: Match task requirements with agent capabilities
 - **Load Balancing**: Distribute tasks to prevent agent overload
 - **Fallback Routing**: Define fallback strategies when primary agents are unavailable
 
 ### 3. Specialization Strategy
+
 - **Role Definition**: Clear definition of each agent's specialized role
 - **Expertise Areas**: Well-defined areas of expertise for each agent
 - **Collaboration Patterns**: Defined patterns for multi-agent collaboration
@@ -29,18 +32,21 @@ This protocol defines advanced agent specialization, capability mapping, intelli
 ### 1. Capability Categories
 
 #### Technical Capabilities
+
 - **Language Expertise**: Programming languages, frameworks, libraries
 - **Architecture Knowledge**: System design, patterns, best practices
 - **Tool Proficiency**: Development tools, platforms, services
 - **Domain Knowledge**: Industry-specific knowledge and standards
 
 #### Cognitive Capabilities
+
 - **Problem Solving**: Analytical thinking, debugging, optimization
 - **Creativity**: Innovation, design thinking, solution generation
 - **Learning Ability**: Adaptability, knowledge acquisition, skill development
 - **Communication**: Explanation clarity, user interaction, documentation
 
 #### Operational Capabilities
+
 - **Task Management**: Planning, execution, monitoring, completion
 - **Error Handling**: Problem diagnosis, recovery, prevention
 - **Performance Optimization**: Efficiency, resource management, scalability
@@ -52,79 +58,79 @@ This protocol defines advanced agent specialization, capability mapping, intelli
 const agentCapabilityMap = {
   general: {
     technical: {
-      languages: ['javascript', 'python', 'bash'],
-      frameworks: ['node.js', 'express', 'react'],
-      tools: ['git', 'docker', 'npm']
+      languages: ["javascript", "python", "bash"],
+      frameworks: ["node.js", "express", "react"],
+      tools: ["git", "docker", "npm"],
     },
     cognitive: {
-      problemSolving: 'intermediate',
-      creativity: 'basic',
-      learningAbility: 'high',
-      communication: 'high'
+      problemSolving: "intermediate",
+      creativity: "basic",
+      learningAbility: "high",
+      communication: "high",
     },
     operational: {
-      taskManagement: 'high',
-      errorHandling: 'intermediate',
-      performanceOptimization: 'basic',
-      qualityAssurance: 'intermediate'
+      taskManagement: "high",
+      errorHandling: "intermediate",
+      performanceOptimization: "basic",
+      qualityAssurance: "intermediate",
     },
     performanceProfile: {
       optimalLoad: 5,
       maxConcurrency: 3,
       avgResponseTime: 2.5,
-      specialtyBonus: 1.0
-    }
+      specialtyBonus: 1.0,
+    },
   },
   language: {
     technical: {
-      languages: ['javascript', 'typescript', 'python', 'java', 'go', 'rust'],
-      frameworks: ['react', 'vue', 'angular', 'spring', 'django', 'fastapi'],
-      tools: ['webpack', 'babel', 'eslint', 'prettier', 'jest']
+      languages: ["javascript", "typescript", "python", "java", "go", "rust"],
+      frameworks: ["react", "vue", "angular", "spring", "django", "fastapi"],
+      tools: ["webpack", "babel", "eslint", "prettier", "jest"],
     },
     cognitive: {
-      problemSolving: 'expert',
-      creativity: 'high',
-      learningAbility: 'expert',
-      communication: 'expert'
+      problemSolving: "expert",
+      creativity: "high",
+      learningAbility: "expert",
+      communication: "expert",
     },
     operational: {
-      taskManagement: 'expert',
-      errorHandling: 'expert',
-      performanceOptimization: 'expert',
-      qualityAssurance: 'expert'
+      taskManagement: "expert",
+      errorHandling: "expert",
+      performanceOptimization: "expert",
+      qualityAssurance: "expert",
     },
     performanceProfile: {
       optimalLoad: 8,
       maxConcurrency: 5,
       avgResponseTime: 3.2,
-      specialtyBonus: 2.5
-    }
+      specialtyBonus: 2.5,
+    },
   },
   security: {
     technical: {
-      languages: ['python', 'bash', 'go'],
-      frameworks: ['owasp', 'sast', 'dast'],
-      tools: ['nmap', 'metasploit', 'burpsuite', 'owasp-zap']
+      languages: ["python", "bash", "go"],
+      frameworks: ["owasp", "sast", "dast"],
+      tools: ["nmap", "metasploit", "burpsuite", "owasp-zap"],
     },
     cognitive: {
-      problemSolving: 'expert',
-      creativity: 'expert',
-      learningAbility: 'expert',
-      communication: 'expert'
+      problemSolving: "expert",
+      creativity: "expert",
+      learningAbility: "expert",
+      communication: "expert",
     },
     operational: {
-      taskManagement: 'expert',
-      errorHandling: 'expert',
-      performanceOptimization: 'intermediate',
-      qualityAssurance: 'expert'
+      taskManagement: "expert",
+      errorHandling: "expert",
+      performanceOptimization: "intermediate",
+      qualityAssurance: "expert",
     },
     performanceProfile: {
       optimalLoad: 6,
       maxConcurrency: 4,
       avgResponseTime: 4.1,
-      specialtyBonus: 3.0
-    }
-  }
+      specialtyBonus: 3.0,
+    },
+  },
 };
 ```
 
@@ -144,7 +150,7 @@ function analyzeTaskRequirements(task) {
     constraints: extractConstraints(task),
     dependencies: extractDependencies(task),
     urgency: assessUrgency(task),
-    resourceRequirements: estimateResourceRequirements(task)
+    resourceRequirements: estimateResourceRequirements(task),
   };
 
   // Calculate capability requirements
@@ -152,7 +158,7 @@ function analyzeTaskRequirements(task) {
     technical: calculateTechnicalRequirements(characteristics),
     cognitive: calculateCognitiveRequirements(characteristics),
     operational: calculateOperationalRequirements(characteristics),
-    performance: calculatePerformanceRequirements(characteristics)
+    performance: calculatePerformanceRequirements(characteristics),
   };
 
   return { characteristics, requirements };
@@ -167,8 +173,11 @@ function findOptimalAgentMatch(taskRequirements, availableAgents) {
 
   for (const agent of availableAgents) {
     // Calculate capability match
-    const matchScore = calculateMatchScore(taskRequirements, agent.capabilities);
-    
+    const matchScore = calculateMatchScore(
+      taskRequirements,
+      agent.capabilities,
+    );
+
     // Calculate performance factors
     const performanceScore = calculatePerformanceScore(agent, taskRequirements);
     const availabilityScore = calculateAvailabilityScore(agent);
@@ -176,13 +185,12 @@ function findOptimalAgentMatch(taskRequirements, availableAgents) {
     const specialtyBonus = calculateSpecialtyBonus(agent, taskRequirements);
 
     // Calculate optimal routing score
-    const totalScore = (
+    const totalScore =
       matchScore * 0.35 +
       performanceScore * 0.25 +
-      availabilityScore * 0.20 +
+      availabilityScore * 0.2 +
       loadScore * 0.15 +
-      specialtyBonus * 0.05
-    );
+      specialtyBonus * 0.05;
 
     matches.push({
       agent: agent.name,
@@ -192,10 +200,10 @@ function findOptimalAgentMatch(taskRequirements, availableAgents) {
         performanceScore,
         availabilityScore,
         loadScore,
-        specialtyBonus
+        specialtyBonus,
       },
       estimatedCompletion: estimateCompletionTime(agent, taskRequirements),
-      resourceImpact: assessResourceImpact(agent, taskRequirements)
+      resourceImpact: assessResourceImpact(agent, taskRequirements),
     });
   }
 
@@ -210,36 +218,41 @@ function findOptimalAgentMatch(taskRequirements, availableAgents) {
 function makePerformanceAwareRoutingDecision(task, agentMatches) {
   // Check if top match meets performance thresholds
   const topMatch = agentMatches[0];
-  
-  if (topMatch.totalScore >= MINIMUM_MATCH_THRESHOLD && 
-      topMatch.estimatedCompletion <= task.deadline) {
+
+  if (
+    topMatch.totalScore >= MINIMUM_MATCH_THRESHOLD &&
+    topMatch.estimatedCompletion <= task.deadline
+  ) {
     return {
-      decision: 'route_to_optimal_agent',
+      decision: "route_to_optimal_agent",
       agent: topMatch.agent,
       confidence: topMatch.totalScore,
       expectedPerformance: topMatch.breakdown,
-      reasoning: generateRoutingReasoning(task, topMatch)
+      reasoning: generateRoutingReasoning(task, topMatch),
     };
   }
 
   // Check for performance-optimized collaboration
-  const collaborationOption = assessPerformanceCollaboration(task, agentMatches);
+  const collaborationOption = assessPerformanceCollaboration(
+    task,
+    agentMatches,
+  );
   if (collaborationOption.score > COLLABORATION_THRESHOLD) {
     return {
-      decision: 'route_to_performance_collaboration',
+      decision: "route_to_performance_collaboration",
       agents: collaborationOption.agents,
       confidence: collaborationOption.score,
       expectedSpeedup: collaborationOption.speedup,
-      reasoning: generateCollaborationReasoning(task, collaborationOption)
+      reasoning: generateCollaborationReasoning(task, collaborationOption),
     };
   }
 
   // Use performance-optimized fallback
   return {
-    decision: 'route_to_performance_fallback',
+    decision: "route_to_performance_fallback",
     agent: selectPerformanceFallbackAgent(task),
     confidence: 0.6,
-    reasoning: generatePerformanceFallbackReasoning(task)
+    reasoning: generatePerformanceFallbackReasoning(task),
   };
 }
 ```
@@ -266,7 +279,10 @@ function monitorPerformance(operation) {
     resourceDelta: calculateResourceDelta(startResources, endResources),
     success: result.success,
     quality: assessResultQuality(result),
-    efficiency: calculateEfficiencyScore(endTime - startTime, endTokens - startTokens)
+    efficiency: calculateEfficiencyScore(
+      endTime - startTime,
+      endTokens - startTokens,
+    ),
   };
 
   // Update agent performance profile
@@ -337,7 +353,7 @@ function getCachedOrOptimizedResult(operation) {
     result: result,
     timestamp: Date.now(),
     performance: result.performanceMetrics,
-    conditions: operation.conditions
+    conditions: operation.conditions,
   };
 
   performanceCache.set(cacheKey, cacheEntry);
@@ -356,22 +372,30 @@ function optimizeAgentLoadDistribution(tasks, agents) {
   const performanceProfiles = getAgentPerformanceProfiles(agents);
 
   // Calculate optimal task distribution
-  const distributionPlan = calculateOptimalDistribution(tasks, agentLoads, performanceProfiles);
+  const distributionPlan = calculateOptimalDistribution(
+    tasks,
+    agentLoads,
+    performanceProfiles,
+  );
 
   // Apply performance-based load balancing
   const balancedDistribution = applyPerformanceLoadBalancing(distributionPlan);
 
   // Validate performance expectations
-  const performanceValidation = validateDistributionPerformance(balancedDistribution);
+  const performanceValidation =
+    validateDistributionPerformance(balancedDistribution);
 
   // Execute optimized distribution
-  const executionPlan = generateExecutionPlan(balancedDistribution, performanceValidation);
+  const executionPlan = generateExecutionPlan(
+    balancedDistribution,
+    performanceValidation,
+  );
 
   return {
     distributionPlan: balancedDistribution,
     performanceValidation: performanceValidation,
     executionPlan: executionPlan,
-    expectedMetrics: calculateExpectedPerformanceMetrics(executionPlan)
+    expectedMetrics: calculateExpectedPerformanceMetrics(executionPlan),
   };
 }
 ```
@@ -383,22 +407,29 @@ function optimizeAgentLoadDistribution(tasks, agents) {
 ```javascript
 function optimizeCollaborationPerformance(tasks, agents) {
   // Identify collaboration opportunities with performance benefits
-  const collaborationOpportunities = identifyPerformanceCollaborations(tasks, agents);
+  const collaborationOpportunities = identifyPerformanceCollaborations(
+    tasks,
+    agents,
+  );
 
   // Calculate expected performance gains
-  const performanceGains = calculateCollaborationPerformanceGains(collaborationOpportunities);
+  const performanceGains = calculateCollaborationPerformanceGains(
+    collaborationOpportunities,
+  );
 
   // Select optimal collaboration strategies
   const optimalCollaborations = selectOptimalCollaborations(performanceGains);
 
   // Implement performance-optimized workflows
-  const optimizedWorkflows = implementPerformanceWorkflows(optimalCollaborations);
+  const optimizedWorkflows = implementPerformanceWorkflows(
+    optimalCollaborations,
+  );
 
   return {
     collaborationOpportunities: collaborationOpportunities,
     performanceGains: performanceGains,
     optimalCollaborations: optimalCollaborations,
-    optimizedWorkflows: optimizedWorkflows
+    optimizedWorkflows: optimizedWorkflows,
   };
 }
 ```
@@ -426,7 +457,7 @@ function adjustPerformanceInRealTime(operationId, currentMetrics) {
     performanceAnalysis: performanceAnalysis,
     optimizations: optimizations,
     adjustments: adjustments,
-    results: adjustmentResults
+    results: adjustmentResults,
   };
 }
 ```
@@ -440,10 +471,13 @@ function generatePerformanceOptimizedDashboard(agents, timePeriod) {
   const dashboard = {
     overview: generatePerformanceOverview(agents, timePeriod),
     agentPerformance: generateAgentPerformanceAnalysis(agents, timePeriod),
-    optimizationOpportunities: identifyOptimizationOpportunities(agents, timePeriod),
+    optimizationOpportunities: identifyOptimizationOpportunities(
+      agents,
+      timePeriod,
+    ),
     resourceUtilization: analyzeResourceUtilization(agents, timePeriod),
     performanceTrends: analyzePerformanceTrends(agents, timePeriod),
-    recommendations: generatePerformanceRecommendations(agents, timePeriod)
+    recommendations: generatePerformanceRecommendations(agents, timePeriod),
   };
 
   // Add real-time performance metrics
@@ -490,7 +524,7 @@ function implementContinuousPerformanceLearning(agents) {
     improvements: improvements,
     strategies: strategies,
     implementations: implementations,
-    validation: validation
+    validation: validation,
   };
 }
 ```
@@ -498,18 +532,21 @@ function implementContinuousPerformanceLearning(agents) {
 ## Integration Guidelines
 
 ### 1. Context Management Integration
+
 - Apply performance metrics to context optimization decisions
 - Use agent performance profiles for context format selection
 - Monitor context management overhead across agents
 - Optimize context handoffs based on agent capabilities
 
 ### 2. Workflow Integration
+
 - Route workflow steps to performance-optimized agents
 - Use performance data for workflow scheduling
 - Implement performance-aware checkpoint generation
 - Monitor workflow performance across agent boundaries
 
 ### 3. Security Integration
+
 - Balance security controls with performance requirements
 - Optimize security validation for high-performance agents
 - Monitor security impact on agent performance
@@ -526,6 +563,7 @@ function implementContinuousPerformanceLearning(agents) {
 ## Implementation Checklist
 
 ### Agent Specialization
+
 - [ ] Agent capability framework implemented
 - [ ] Capability maps comprehensive and current
 - [ ] Intelligent routing system functional
@@ -533,6 +571,7 @@ function implementContinuousPerformanceLearning(agents) {
 - [ ] Performance-aware agent matching active
 
 ### Performance Optimization
+
 - [ ] Dynamic performance monitoring enabled
 - [ ] Resource-aware processing implemented
 - [ ] Intelligent caching strategies active
@@ -540,6 +579,7 @@ function implementContinuousPerformanceLearning(agents) {
 - [ ] Real-time performance adjustment working
 
 ### Collaboration and Analytics
+
 - [ ] Multi-agent collaboration patterns optimized
 - [ ] Performance analytics dashboard operational
 - [ ] Continuous learning system active
@@ -547,3 +587,4 @@ function implementContinuousPerformanceLearning(agents) {
 - [ ] Performance improvement tracking enabled
 
 This consolidated protocol provides comprehensive agent specialization and performance optimization capabilities, ensuring optimal task assignment, resource utilization, and continuous system performance enhancement.
+
