@@ -1,126 +1,102 @@
-# OpenCode Unified Protocol (KISS-Optimized)
+# OpenCode Protocol: One Main Loop (CLAUDE.md Optimized)
 
-## 1. CRITICAL CONSTRAINTS (ANCHOR FIRST)
-- **Front-load:** Objectives, constraints, and security warnings at the top.
-- **KISS:** Keep workflows simple, direct, and reversible.
-- **Cross-Platform:** All scripts/configs must run on macOS & Linux.
-- **Manual Verification:** Always provide simple manual verification steps.
-- **Minimal Complexity:** Avoid multi-agent frameworks unless strictly required.
+## 1. RULE HIERARCHY & CRITICAL CONSTRAINTS (ANCHOR FIRST)
+
+1. **Global rules** (config.json, rules docs) - Safety, permissions, KISS
+2. **Project overrides** (dotfiles) - Cross-platform, no AI commits  
+3. **Explicit user instructions** (non-conflicting)
+4. **Efficiency preferences** (secondary)
+
+**Core Maxims:**
+- Keep it simple, direct, and reversible
+- Always verify facts before acting (EmpiricalRigor)
+- Safety and permissions first (never bypass)
+- Stateless, modular workflows with clear handoffs
+- Escalate complexity only when required
 
 <system-reminder>
 Security error: escalate immediately (NO RETRY)
 </system-reminder>
 
----
+## 2. PROJECT-SPECIFIC REQUIREMENTS
 
-## 2. AGENT ORCHESTRATION & CONTROL FLOW
+- **Project Type**: Personal configuration files (dotfiles) - no build/test commands
+- **Primary Requirement**: All configurations MUST be cross-platform (macOS & Linux)
+- **Commit Message Rule**: NO AI attribution in commit messages
+- **Verification**: Provide simple manual verification steps to user
+- **Dependencies**: Do not add new software without explicit permission
 
-### Agent Role Matrix (7 Agents)
-| Agent        | Purpose                  | Trigger                   | Escalates To         |
-|--------------|--------------------------|---------------------------|----------------------|
-| general      | Simple tasks (≤2 steps)  | Low ambiguity             | orchestrator         |
-| orchestrator | Multi-phase workflows    | Complex, phased tasks     | reviewer/security    |
-| language     | Coding, refactoring      | Advanced code/prompt      | reviewer             |
-| devops       | Infra, DX, deployment    | Infra changes, pipelines  | security/reviewer    |
-| security     | Security audits          | Backend/config changes    | reviewer/orchestrator|
-| researcher   | Deep research/navigation | Unknown tech/discovery    | orchestrator         |
-| reviewer     | Quality/security review  | Post-implementation       | security (if needed) |
-| specialist   | Domain expertise         | DB, frontend, legacy      | reviewer/security    |
+## 3. AGENT ROUTING
 
-**Routing:** Start simple; escalate only for complexity, ambiguity, or risk.
+**Default Route**: general (≤2 steps, clear tasks)
 
-### Control Flow Categories
-- **Immediate:** Safe reads, analysis, info gathering (continue loop)
-- **Approval Required:** Writes, edits, API calls, config changes (break loop)
-- **Human Review:** Security/architecture decisions, destructive ops (break + validation)
+**Escalation Routes**:
+- **orchestrator** → Multi-phase workflows (≥3 steps)
+- **security** → Backend/config changes, vulnerabilities
+- **researcher** → Unknown tech, deep discovery
+- **language** → Code/prompt engineering, refactoring
+- **devops** → Infrastructure, deployment, DX
+- **specialist** → Database, frontend, legacy systems
+- **reviewer** → Quality assurance, post-implementation
 
----
+**Rule**: Start simple; escalate only for complexity, ambiguity, or risk.
 
-## 3. QUALITY & SECURITY STANDARDS
+### Workflow Decision
+- **Simple tasks** (≤2 steps): Execute immediately, return results + summary
+- **Complex tasks** (≥3 steps): Use 13-step workflow with checkpoints
 
-### Quality
-- **Security:** No plaintext secrets; least privilege; validate/sanitize inputs; log conservatively; escalate on exposure.
-- **Cross-Platform:** POSIX sh preferred; avoid platform-specific flags; guard code paths.
-- **Minimal Complexity:** Smallest stable solution; defer abstraction until duplication (≥3).
-- **Verification:** Manual verification steps; re-read after edit; confirm anchor uniqueness.
-- **Cleanup:** Remove dead code/docs; resolve TODOs.
-- **Consistency:** Match naming, tool choices, formatting.
-- **Performance:** Avoid large reads; compress context; anticipate failure modes.
-
-### Security
-- **Defense in Depth:** Multiple layers of controls.
-- **Explicit Authorization:** All ops require permission.
-- **Input Validation:** Sanitize all external inputs.
-- **Runtime Monitoring:** Detect anomalies, sensitive data exposure.
-- **Error Classification:** Security errors never auto-retry; escalate immediately.
-- **Secure Recovery:** Circuit breaker for repeated failures; audit trail for all security events.
-
----
-
-## 4. TOOLING POLICY
-
-- **Preferred CLI Tools:** `rg`, `fd`, `bat`, `sd`, `jq`, `delta`, `fzf`
-- **Scope Discipline:** Only operate on user-referenced files/paths; avoid repo-wide search by default.
-- **Anchor Robustness:** Always verify anchor uniqueness; expand context or use symbol-based edits if needed.
-
----
-
-## 5. WORKFLOW EXECUTION & CHECKPOINTS
+## 4. WORKFLOW EXECUTION
 
 ### Simple Tasks (≤2 steps)
 - Execute directly; skip scaffold/checklist.
 
-### Complex Tasks (≥3 steps)
-- Use 13-step workflow:
-  1. Mission understanding
-  2. Mission decomposition
-  3. Pre-existing tech analysis
-  4. Research & verification
-  5. Tech to introduce
-  6. Pre-implementation synthesis
-  7. Impact analysis
-  8. Implementation trajectory
-  9. Implementation
-  10. Cleanup actions
-  11. Formal verification
-  12. Suggestions
-  13. Summary
+### Complex Tasks (≥3 steps) - 13-Step Framework
+1. Mission understanding → 2. Mission decomposition → 3. Pre-existing tech analysis
+4. Research & verification → 5. Tech to introduce → 6. Pre-implementation synthesis  
+7. Impact analysis → 8. Implementation trajectory → 9. Implementation
+10. Cleanup actions → 11. Formal verification → 12. Suggestions → 13. Summary
 
-- **Checkpoints:** After each major phase; use XML/markdown for checkpoint structure.
-- **Error Recovery:** On stall, ambiguity, or denial, create error checkpoint and recovery plan.
+**Checkpoints:** After each major phase; use XML/markdown for structure
 
----
+## 5. QUALITY & SECURITY STANDARDS
 
-## 6. CONTEXT MANAGEMENT & ROT MITIGATION
+### Quality
+- **Security:** No plaintext secrets; least privilege; validate inputs; escalate exposure
+- **Cross-Platform:** POSIX sh preferred; avoid platform-specific flags; guard code paths
+- **Minimal Complexity:** Smallest stable solution; defer abstraction until duplication (≥3)
+- **Verification:** Manual verification steps; re-read after edit; confirm anchor uniqueness
 
-- **Early Critical Placement:** Most important info at the top.
-- **Compression Triggers:** Compress context as token usage grows.
-- **Format Selection:** Use YAML for micro (<500 tokens), XML for standard (500-2000), ultra-compressed for large (>2000).
-- **Relevance Filtering:** Only include info directly relevant to the task.
-- **Performance Monitoring:** Track response quality, latency, error rate; optimize context accordingly.
+### Security  
+- **Defense in Depth:** Multiple layers of controls
+- **Explicit Authorization:** All ops require permission
+- **Error Classification:** Security errors never auto-retry; escalate immediately
+- **Secure Recovery:** Circuit breaker for repeated failures; audit trail
 
----
+## 6. TOOLING POLICY & SCOPE
 
-## 7. INTEGRATION & IMPLEMENTATION CHECKLIST
+**Preferred CLI tools**: `rg`, `fd`, `bat`, `sd`, `jq`, `delta`, `fzf`  
+**OpenCode tools**: Read/Edit/Write/Grep/Glob for code operations  
+**Scope discipline**: Only user-referenced files/paths, no repo enumeration by default
+**Anchor Robustness**: Always verify anchor uniqueness; expand context or use symbols
 
-- [ ] Agent orchestration rules implemented
-- [ ] Control flow categories enforced
-- [ ] Quality/security standards active
-- [ ] Preferred tooling policy enforced
-- [ ] 13-step workflow structure used for complex tasks
-- [ ] Context rot mitigation and compression active
-- [ ] Manual verification steps provided for all changes
+## 7. CONTEXT MANAGEMENT & ERROR RECOVERY
 
----
+**Context Management:**
+- **Early Critical Placement:** Most important info at the top
+- **Compression Triggers:** Compress context as token usage grows
+- **Format Selection:** YAML for micro (<500 tokens), XML for standard (500-2000)
 
-## 8. EXAMPLES & HEURISTICS
+**Error Recovery:**
+- **Permission denied:** narrow scope, retry once
+- **Anchor ambiguity:** expand context, use symbols
+- **Security error:** escalate immediately (NO RETRY)
+- **Tool failure:** fallback to legacy tools if modern tools unavailable
 
-- **Good Example:** Objective, constraints, and security warnings at the top; clear headings; compressed context; explicit checklists.
-- **Bad Example:** Critical info buried; excessive verbosity; redundant content; ambiguous anchors.
+## 8. INTEGRATION PROCEDURES
 
----
-
-## 9. CHROME MCP AUTO-START
+**Chrome MCP Auto-Start**: Before using Chrome tools, run cross-platform startup check  
+**Permissions**: Platform enforces `opencode.json` settings; treat as implicit background logic  
+**Serena MCP**: Use checkpoints for multi-phase tasks (collected_info, task_adherence, completion)
 
 ```bash
 # Cross-platform Chrome startup check
@@ -133,17 +109,31 @@ if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
 fi
 ```
 
+## 9. IMPLEMENTATION CHECKLIST
+
+- [ ] Agent orchestration rules implemented
+- [ ] Quality/security standards active
+- [ ] 13-step workflow used for complex tasks
+- [ ] Context rot mitigation active
+- [ ] Manual verification steps provided for all changes
+
+### Summary Format (Plugin Integration)
+**For task completion notifications, end responses with:**
+```
+Summary: [specific action completed and outcome in ≤140 chars]
+```
+**Examples:**
+- `Summary: Refactored 7 agent files, reduced verbosity 50%, KISS-optimized routing`
+- `Summary: Fixed authentication bug in JWT validation, updated secret config`
+- `Summary: Created unified protocol, consolidated 15 files into definitive guide`
+
+**Plugin Requirements:**
+- Place summary on its own line at the end of responses
+- Use exact format: `Summary: [content]` (case-sensitive)
+- Avoid asterisks, markdown formatting in summary content
+- Keep content specific and actionable (avoid generic phrases)
+- Summary triggers cross-platform notifications (macOS: say + osascript, Linux: notify-send)
+
 ---
 
-## 10. ERROR RECOVERY PATTERNS
-
-- **Permission denied:** narrow scope, retry once
-- **Anchor ambiguity:** expand context, use symbols
-- **Context overflow:** compress via unified-context
-- **Security error:** escalate immediately (NO RETRY)
-- **Tool failure:** fallback to legacy tools if modern tools unavailable
-- **Context rot:** aggressive compression, relevance filtering
-
----
-
-# END OF UNIFIED PROTOCOL
+> **Definitive Protocol**: This consolidated AGENTS.md is the single source of truth for all OpenCode operations, combining governance, routing, execution, and implementation guidance in one KISS-optimized file.
