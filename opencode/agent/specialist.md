@@ -2,8 +2,9 @@
 name: specialist
 description: ALWAYS use this agent for domain-specific technical expertise including database operations, frontend/UI development, network infrastructure, legacy system modernization, and performance troubleshooting. Intelligent routing to appropriate specialty based on task requirements.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.2
+max_tokens: 3000
 tools:
   bash: false
   edit: false

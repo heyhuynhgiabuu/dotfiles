@@ -8,8 +8,9 @@ description: >-
   practices. Trigger this agent after backend code or configuration changes, before deployment, or
   when onboarding new backend components.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.1
+max_tokens: 3000
 tools:
   bash: false
   edit: false

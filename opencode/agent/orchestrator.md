@@ -2,8 +2,9 @@
 name: orchestrator
 description: ALWAYS use this agent to orchestrate and delegate tasks to specialized subagents using advanced planning and BMAD protocols. Manages context across multi-agent workflows and analyzes system performance. Use for all complex workflows requiring multi-phase or multi-agent coordination.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.2
+max_tokens: 3000
 tools:
   bash: false
   edit: false

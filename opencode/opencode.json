@@ -36,10 +36,6 @@
       "mode": "primary",
       "model": "opencode/sonic",
       "temperature": 0.15,
-      "thinking": {
-        "type": "enabled",
-        "budget_tokens": 4000
-      },
       "prompt": "{file:./prompts/delta.md}"
     },
     "beta": {
@@ -63,9 +59,10 @@
     },
     "plan": {
       "description": "Plan agent for project planning and task management",
-      "model": "github-copilot/gpt-4.1",
+      "model": "github-copilot/gpt-5.1-mini",
       "mode": "primary",
       "temperature": 0.2,
+      "max_tokens": 3000,
       "prompt": "{file:./prompts/plan.md}",
       "tools": {
         "write": false,
@@ -151,7 +148,7 @@
   },
   "theme": "kanagawa",
   "model": "github-copilot/claude-sonnet-4",
-  "small_model": "github-copilot/gpt-4.1",
+  "small_model": "github-copilot/gpt-5.1-mini",
   "share": "disabled",
   "autoupdate": true,
   "tui": {

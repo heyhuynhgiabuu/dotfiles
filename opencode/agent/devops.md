@@ -2,8 +2,9 @@
 name: devops
 description: Expert guidance on Docker containerization, deployment workflows, infrastructure configuration, and developer experience optimization. Emphasizes minimal, secure, and maintainable setups while improving developer productivity.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.2
+max_tokens: 2000
 tools:
   bash: false
   edit: false
