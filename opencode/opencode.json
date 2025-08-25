@@ -108,6 +108,25 @@
       "enabled": true
     }
   },
+  "provider": {
+    "z.ai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Z.AI (GLM-4.5 FREE)",
+      "options": {
+        "baseURL": "https://api.z.ai/v1"
+      },
+      "models": {
+        "glm-4.5-chat": {
+          "name": "GLM-4.5 Chat (FREE)",
+          "description": "General purpose coding and analysis - completely free"
+        },
+        "glm-z1-9b": {
+          "name": "GLM-Z1-9B Reasoning (FREE)", 
+          "description": "Advanced reasoning and mathematics - completely free"
+        }
+      }
+    }
+  },
   "keybinds": {
     "leader": "ctrl+x",
     "app_help": "<leader>h",
