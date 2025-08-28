@@ -13,14 +13,13 @@ This file provides essential, supplementary context for the `dotfiles` repositor
 ```bash
 # No build/lint commands - this is a dotfiles repository
 # Testing: Manual verification only
-./scripts/verify/all.sh                    # Run all verification checks
-./scripts/verify/verify-dev-environment.sh # Verify development environment
-./scripts/test/test-augmentcode.sh         # Test augment configuration
+./scripts/verify.sh                     # Run all verification checks
+./scripts/verify.sh --nvim-only         # Check only NvChad configuration
 
 # Setup and maintenance
-./scripts/setup/bootstrap.sh               # Initial setup
-./scripts/setup/brew-apply-layer.sh min    # Apply minimal packages
-./scripts/verify/check-brewfile-duplicates.sh # Check for duplicates
+./scripts/setup.sh                      # Initial setup
+./scripts/brew-apply-layer.sh min       # Apply minimal packages
+./scripts/brew-apply-layer.sh dev       # Apply development packages
 ```
 
 ## Code Style Guidelines

@@ -11,7 +11,8 @@
 
 - Keep it simple, direct, and reversible
 - Always verify facts before acting (EmpiricalRigor)
-- Safety and permissions first (never bypass)
+- Safety and permissions first (never bypass platform permission system)
+- Task-scoped authorization: "Allow Always" applies only to current conversation
 - Stateless, modular workflows with clear handoffs
 - Escalate complexity only when required
 
@@ -75,7 +76,8 @@ Security error: escalate immediately (NO RETRY)
 ### Security
 
 - **Defense in Depth:** Multiple layers of controls
-- **Explicit Authorization:** All ops require permission
+- **Task-Scoped Authorization:** When user grants "A - allow always", permission applies only to current task/conversation
+- **Permission Reset:** Each new task/conversation requires fresh authorization
 - **Error Classification:** Security errors never auto-retry; escalate immediately
 - **Secure Recovery:** Circuit breaker for repeated failures; audit trail
 
@@ -101,11 +103,35 @@ Security error: escalate immediately (NO RETRY)
 - **Security error:** escalate immediately (NO RETRY)
 - **Tool failure:** fallback to legacy tools if modern tools unavailable
 
+### Permission Behavior Expectations
+
+**Task-Scoped Model**: OpenCode's permission system with `"edit": "ask"` will:
+1. **First restricted tool call**: Show permission dialog with "A - Allow Always" option
+2. **User selects "A"**: Platform grants permission for remainder of current task/conversation
+3. **Subsequent tool calls**: Execute without permission prompts (within same conversation)
+4. **New conversation/task**: Reset permission state; ask again on first restricted operation
+
+**Agent Responsibility**: Agents should not attempt to work around permission system or assume permissions. Let platform handle all authorization flows naturally.
+
 ## 8. INTEGRATION PROCEDURES
 
 **Chrome MCP Auto-Start**: Before using Chrome tools, run cross-platform startup check  
 **Permissions**: Platform enforces `opencode.json` settings; treat as implicit background logic  
 **Serena MCP**: Use checkpoints for multi-phase tasks (collected_info, task_adherence, completion)
+
+### Permission Flow Protocol
+
+**Task-Scoped Authorization Model:**
+1. **First tool requiring permission**: Platform shows standard permission dialog with "A - Allow Always" option
+2. **If user selects "A"**: All subsequent tool calls in SAME task/conversation proceed without prompting
+3. **New task/conversation**: Permission grants reset; user must authorize again for first restricted tool
+4. **Security tools always ask**: Critical operations (webfetch, chrome, dangerous bash) ask each time regardless
+
+**Implementation Notes:**
+- Permission grants are conversation-scoped, not global
+- Each new user interaction/task starts fresh permission state
+- "Allow Always" means "allow for this task" not "allow forever"
+- Security-sensitive operations may override task-scoped permissions
 
 ```bash
 # Cross-platform Chrome startup check

@@ -120,77 +120,9 @@ zinit wait'1' lucid for \
     atload"!_zsh_autosuggest_start" \
         zsh-users/zsh-autosuggestions
 
-zstyle ':completion:*' menu select=2
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format '%F{blue}-- %d --%f'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' use-cache true
-zstyle ':completion:*' cache-path "$HOME/.zsh/cache"
+# Completion styling - see advanced-completions.zsh for enhanced styles
 
-zstyle ':completion:*:descriptions' format '%F{cyan}%B-- %d --%b%f'
-zstyle ':completion:*:messages' format '%F{purple}-- %d --%f'
-zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
-zstyle ':completion:*:corrections' format '%F{yellow}-- %d (errors: %e) --%f'
-
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:matches' group 'yes'
-zstyle ':completion:*:options' description 'yes'
-zstyle ':completion:*:options' auto-description '%d'
-
-zstyle ':completion:*:*:go:*' format '%F{green}%B[Go Commands]%b%f'
-zstyle ':completion:*:*:docker:*' format '%F{blue}%B[Docker Commands]%b%f'
-zstyle ':completion:*:*:git:*' format '%F{magenta}%B[Git Commands]%b%f'
-
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' special-dirs true
-zstyle ':completion:*' squeeze-slashes true
-zstyle ':completion:*' cache-path "$HOME/.zsh/cache"
-
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':completion:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
-zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-
-zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
-zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
-zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
-
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:kill:*' menu yes select
-zstyle ':completion:*:*:kill:*' force-list always
-zstyle ':completion:*:*:kill:*' insert-ids single
-
-if command -v go >/dev/null; then
-    compdef _go go
-    # Custom go commands completion
-    _go_custom() {
-        local -a subcmds
-        subcmds=(
-            'run:run Go program'
-            'build:build Go program'
-            'test:test packages'
-            'mod:module maintenance'
-            'get:download and install packages'
-            'install:compile and install packages'
-            'clean:remove object files'
-            'fmt:format Go source files'
-            'vet:examine Go source code'
-            'version:print Go version'
-        )
-        _describe 'go commands' subcmds
-    }
-    compdef _go_custom go
-fi
+# Go completion is handled by advanced-completions.zsh
 
 # Autocompletions (streamlined)
 
@@ -370,19 +302,3 @@ fi
 
 # FZF - Fuzzy finder integration (load LAST to avoid key binding conflicts)
 [[ -f "$ZSH_CONFIG_DIR/fzf.zsh" ]] && source "$ZSH_CONFIG_DIR/fzf.zsh"
-
-
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/84/"
-
-
-# Herd injected PHP 8.3 configuration.
-export HERD_PHP_83_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/83/"
-
-
-# Herd injected PHP 8.2 configuration.
-export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/82/"
-
-
-# Herd injected PHP 7.4 configuration.
-export HERD_PHP_74_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/74/"

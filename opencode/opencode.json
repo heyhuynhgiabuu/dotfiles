@@ -1,7 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": ["opencode/prompts/protocol.md"],
   "permission": {
-    "edit": "ask",
+    //"edit": "ask",
     "bash": {
       "ls": "allow",
       "ls -l": "allow",
@@ -31,30 +32,23 @@
     }
   },
   "agent": {
-    "delta": {
+    "beta": {
       "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
       "mode": "primary",
-      "model": "opencode/sonic",
-      "temperature": 0.15,
-      "prompt": "{file:./prompts/delta.md}"
-    },
-    "beta": {
-      "description": "Beta agent for testing new features",
-      "mode": "primary",
       "model": "github-copilot/claude-sonnet-4",
-      "temperature": 0.15,
+      "temperature": 0.1,
       "thinking": {
         "type": "enabled",
-        "budget_tokens": 4000
+        "budget_tokens": 16000
       },
       "prompt": "{file:./prompts/beta.md}"
     },
     "build": {
-      "description": "Build agent for compiling and packaging code",
+      "description": "Autonomous daily development tasks with cross-platform compatibility",
       "mode": "primary",
       "model": "github-copilot/gpt-5",
       "temperature": 0.1,
-      "max_tokens": 3200,
+      "max_tokens": 2048,
       "prompt": "{file:./prompts/build.md}"
     },
     "plan": {
@@ -109,12 +103,35 @@
     }
   },
   "provider": {
+    "github-copilot": {
+      "models": {
+        "gpt-5": {
+          "options": {
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-5-mini": {
+          "options": {
+            "reasoningEffort": "medium",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "claude-sonnet-4": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budget_tokens": 16000
+            }
+          }
+        }
+      }
+    },
     "zai": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Z.AI (GLM Models)",
-      "options": {
-        "baseURL": "https://api.z.ai/v1"
-      },
       "models": {
         "glm-4.5-flash": {
           "name": "GLM-4.5 Flash (FREE)",
@@ -127,6 +144,335 @@
         "glm-4.5-air": {
           "name": "GLM-4.5 Air (Lightweight)",
           "description": "Cost-effective option - $0.20/1M input, $1.10/1M output"
+        }
+      }
+    }
+  },
+  "lsp": {
+    "typescript": {
+      "command": ["typescript-language-server", "--stdio"],
+      "extensions": [
+        ".ts",
+        ".tsx",
+        ".js",
+        ".jsx",
+        ".mjs",
+        ".cjs",
+        ".mts",
+        ".cts"
+      ],
+      "initialization": {
+        "preferences": {
+          "includeInlayParameterNameHints": "all",
+          "includeInlayVariableTypeHints": true,
+          "includeInlayFunctionParameterTypeHints": true,
+          "includeInlayPropertyDeclarationTypeHints": true
+        }
+      }
+    },
+    "eslint": {
+      "disabled": true
+    },
+    "lua": {
+      "command": ["lua-language-server"],
+      "extensions": [".lua"],
+      "initialization": {
+        "Lua": {
+          "diagnostics": {
+            "globals": [
+              "vim",
+              "use",
+              "describe",
+              "it",
+              "assert",
+              "before_each",
+              "after_each"
+            ]
+          },
+          "workspace": {
+            "library": ["${3rd}/luv/library", "${3rd}/busted/library"],
+            "checkThirdParty": false
+          },
+          "telemetry": {
+            "enable": false
+          },
+          "hint": {
+            "enable": true,
+            "paramType": true,
+            "setType": true
+          }
+        }
+      }
+    },
+    "gopls": {
+      "command": ["gopls", "serve"],
+      "extensions": [".go", ".mod", ".sum"],
+      "initialization": {
+        "gofumpt": true,
+        "staticcheck": true,
+        "vulncheck": "Imports",
+        "analyses": {
+          "unusedparams": true,
+          "shadow": true,
+          "fieldalignment": true
+        },
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true
+        }
+      }
+    },
+
+    "bash": {
+      "command": ["bash-language-server", "start"],
+      "extensions": [".sh", ".bash", ".zsh"],
+      "initialization": {
+        "bashIde": {
+          "globPattern": "**/*@(.sh|.inc|.bash|.command|.zsh)"
+        }
+      }
+    },
+    "marksman": {
+      "command": ["marksman", "server"],
+      "extensions": [".md", ".markdown"],
+      "initialization": {
+        "marksman": {
+          "toc": {
+            "enable": true
+          }
+        }
+      }
+    },
+    "json": {
+      "command": ["vscode-json-language-server", "--stdio"],
+      "extensions": [".json", ".jsonc"],
+      "initialization": {
+        "json": {
+          "validate": {
+            "enable": true
+          },
+          "format": {
+            "enable": true
+          }
+        }
+      }
+    },
+    "yaml": {
+      "command": ["yaml-language-server", "--stdio"],
+      "extensions": [".yaml", ".yml"],
+      "initialization": {
+        "yaml": {
+          "validate": true,
+          "hover": true,
+          "completion": true,
+          "format": {
+            "enable": true,
+            "singleQuote": false,
+            "bracketSpacing": true
+          },
+          "schemas": {
+            "https://json.schemastore.org/github-workflow.json": "/.github/workflows/*",
+            "https://json.schemastore.org/pre-commit-config.json": "/.pre-commit-config.yaml",
+            "https://json.schemastore.org/docker-compose.json": [
+              "/docker-compose*.yml",
+              "/docker-compose*.yaml"
+            ]
+          }
+        }
+      }
+    },
+    "jdtls": {
+      "command": [
+        "jdtls",
+        "--jvm-arg=-javaagent:/opt/homebrew/share/lombok/lombok.jar"
+      ],
+      "extensions": [".java", ".class", ".jar", ".properties", ".yml", ".yaml"],
+      "initialization": {
+        "java": {
+          "configuration": {
+            "updateBuildConfiguration": "automatic",
+            "maven": {
+              "downloadSources": true,
+              "downloadJavadoc": true,
+              "userSettings": null
+            },
+            "gradle": {
+              "downloadSources": true,
+              "downloadJavadoc": true,
+              "wrapper": {
+                "enabled": true
+              }
+            },
+            "workspaceFolders": [],
+            "runtimes": []
+          },
+          "trace": {
+            "server": "verbose"
+          },
+          "import": {
+            "maven": {
+              "enabled": true,
+              "offline": false
+            },
+            "gradle": {
+              "enabled": true,
+              "wrapper": {
+                "enabled": true
+              },
+              "version": null,
+              "home": null,
+              "java": {
+                "home": null
+              },
+              "offline": false,
+              "arguments": null,
+              "jvmArguments": null,
+              "user": {
+                "home": null
+              }
+            },
+            "exclusions": [
+              "**/node_modules/**",
+              "**/.metadata/**",
+              "**/archetype-resources/**",
+              "**/META-INF/maven/**",
+              "**/target/**",
+              "**/build/**"
+            ]
+          },
+          "project": {
+            "referencedLibraries": ["lib/**/*.jar"]
+          },
+          "compile": {
+            "nullAnalysis": {
+              "mode": "automatic"
+            }
+          },
+          "completion": {
+            "enabled": true,
+            "overwrite": true,
+            "guessMethodArguments": true,
+            "favoriteStaticMembers": [
+              "org.junit.jupiter.api.Assertions.*",
+              "org.junit.Assert.*",
+              "org.mockito.Mockito.*",
+              "org.mockito.ArgumentMatchers.*",
+              "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
+              "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
+              "org.springframework.test.web.servlet.result.MockMvcResultHandlers.*",
+              "org.hamcrest.Matchers.*",
+              "org.hamcrest.CoreMatchers.*",
+              "java.util.Objects.requireNonNull",
+              "java.util.Objects.requireNonNullElse",
+              "java.util.Objects.requireNonNullElseGet",
+              "java.util.Collections.*",
+              "java.util.stream.Collectors.*"
+            ],
+            "filteredTypes": [
+              "java.awt.*",
+              "com.sun.*",
+              "sun.*",
+              "jdk.*",
+              "org.graalvm.*",
+              "io.micrometer.shaded.*"
+            ],
+            "importOrder": [
+              "java",
+              "javax",
+              "org.springframework",
+              "org.junit",
+              "org.mockito",
+              "org",
+              "com",
+              ""
+            ],
+            "postfix": {
+              "enabled": true
+            }
+          },
+          "contentProvider": {
+            "preferred": "fernflower"
+          },
+          "autobuild": {
+            "enabled": true
+          },
+          "maxConcurrentBuilds": 1,
+          "recommendations": {
+            "dependency": {
+              "analytics": {
+                "enabled": true
+              }
+            }
+          },
+          "references": {
+            "includeAccessors": true,
+            "includeDecompiledSources": true
+          },
+          "typeHierarchy": {
+            "lazyLoad": false
+          },
+          "settings": {
+            "url": null
+          },
+          "symbols": {
+            "includeSourceMethodDeclarations": false
+          },
+          "implementationsCodeLens": {
+            "enabled": true
+          },
+          "inlayHints": {
+            "parameterNames": {
+              "enabled": "all"
+            }
+          },
+          "referencesCodeLens": {
+            "enabled": true
+          },
+          "signatureHelp": {
+            "enabled": true,
+            "description": {
+              "enabled": true
+            }
+          },
+          "saveActions": {
+            "organizeImports": true,
+            "generateFinalParameters": false
+          },
+          "sources": {
+            "organizeImports": {
+              "starThreshold": 99,
+              "staticStarThreshold": 99
+            }
+          },
+          "codeGeneration": {
+            "hashCodeEquals": {
+              "useJava7Objects": true,
+              "useInstanceof": true
+            },
+            "useBlocks": true,
+            "generateComments": true,
+            "toString": {
+              "template": "${object.className} [${member.name()}=${member.value}, ${otherMembers}]",
+              "codeStyle": "STRING_CONCATENATION",
+              "skipNullValues": false,
+              "listArrayContents": true,
+              "limitElements": 0
+            }
+          },
+          "selectionRange": {
+            "enabled": true
+          },
+          "showBuildStatusOnStart": {
+            "enabled": "notification"
+          },
+          "server": {
+            "launchMode": "Standard"
+          }
         }
       }
     }
@@ -171,7 +517,7 @@
   },
   "theme": "kanagawa",
   "model": "github-copilot/claude-sonnet-4",
-  "small_model": "github-copilot/gpt-5.1-mini",
+  "small_model": "opencode/grok-code",
   "share": "disabled",
   "autoupdate": true,
   "tui": {

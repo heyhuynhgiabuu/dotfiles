@@ -1,11 +1,24 @@
 #!/usr/bin/env sh
 # 
 # Common utilities and functions for dotfiles shell scripts
-# Source this file in other scripts: source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
-# Cross-platform compatible (macOS & Linux)
+# Source this file in other scripts: . "$(dirname "$0")/common.sh"
+# Cross-platform compatible (macOS & Linux) - POSIX compliant
 
 # Exit on error for scripts that source this
 set -e
+
+# Critical security check - do not run as root
+check_not_root() {
+    if [ "$(id -u)" -eq 0 ]; then
+        log_error "Security Error: This script should not be run as root"
+        log_error "Running dotfiles setup as root can create security vulnerabilities"
+        log_error "Please run as a regular user instead"
+        exit 1
+    fi
+}
+
+# Call root check immediately when common.sh is sourced
+check_not_root
 
 # Color definitions - standardized across all scripts
 readonly COLOR_RED='\033[0;31m'
@@ -94,10 +107,46 @@ detect_package_manager() {
     fi
 }
 
+# Security: Validate package names to prevent command injection
+# Allows: alphanumeric, hyphens, underscores, dots, @, + (common in package names)
+# Blocks: spaces, semicolons, pipes, redirects, backticks, and other shell metacharacters
+validate_package_name() {
+    local package="$1"
+    
+    # Check for empty package name
+    if [ -z "$package" ]; then
+        log_error "Package name cannot be empty"
+        return 1
+    fi
+    
+    # Allow only safe characters in package names
+    # Pattern allows: letters, numbers, hyphen, underscore, dot, @, plus, forward slash
+    if echo "$package" | grep -q '^[a-zA-Z0-9@+._/-]\+$'; then
+        return 0
+    else
+        log_error "Package name contains unsafe characters: $package"
+        log_error "Allowed: letters, numbers, -, _, ., @, +, /"
+        return 1
+    fi
+}
+
 # Cross-platform package installation (refactored to use detect_package_manager)
 install_package() {
     local package="$1"
     local alt_name="${2:-$package}"
+
+    # Security: Validate package names to prevent command injection
+    validate_package_name "$package" || {
+        log_error "Invalid package name: $package"
+        return 1
+    }
+    
+    if [ -n "${alt_name}" ] && [ "$alt_name" != "$package" ]; then
+        validate_package_name "$alt_name" || {
+            log_error "Invalid alternative package name: $alt_name"
+            return 1
+        }
+    fi
 
     local manager
     manager=$(detect_package_manager)
@@ -234,16 +283,116 @@ backup_file() {
     fi
 }
 
+# Security: Validate and sanitize paths to prevent directory traversal
+validate_path() {
+    local path="$1"
+    local description="$2"
+    
+    # Check for empty path
+    if [ -z "$path" ]; then
+        log_error "$description cannot be empty"
+        return 1
+    fi
+    
+    # Check for directory traversal attempts
+    case "$path" in
+        */../*|*/..*|../*|*/..)
+            log_error "Path contains directory traversal: $path"
+            return 1
+            ;;
+    esac
+    
+    # Check for null bytes (security concern)
+    if echo "$path" | grep -q '\0'; then
+        log_error "Path contains null bytes: $description"
+        return 1
+    fi
+    
+    # Resolve to absolute path and validate it's within safe boundaries
+    local resolved_path
+    resolved_path=$(cd "$(dirname "$path")" 2>/dev/null && pwd)/$(basename "$path") || {
+        # If directory doesn't exist, validate parent exists or is within dotfiles
+        local parent_dir
+        parent_dir=$(dirname "$path")
+        
+        # Check if it's within HOME or DOTFILES_DIR
+        case "$parent_dir" in
+            "$HOME"*|"$DOTFILES_DIR"*|/tmp/*|/var/tmp/*)
+                return 0  # Safe paths
+                ;;
+            *)
+                if [ ! -d "$parent_dir" ]; then
+                    log_error "Parent directory does not exist: $parent_dir"
+                    return 1
+                fi
+                ;;
+        esac
+        return 0
+    }
+    
+    # Ensure resolved path is within safe boundaries
+    case "$resolved_path" in
+        "$HOME"*|"$DOTFILES_DIR"*|/tmp/*|/var/tmp/*)
+            return 0  # Safe paths
+            ;;
+        *)
+            log_error "Path outside safe boundaries: $resolved_path"
+            return 1
+            ;;
+    esac
+}
+
 create_symlink() {
     local source="$1"
     local target="$2"
     
-    if [[ -e "$target" || -L "$target" ]]; then
-        rm -f "$target"
+    # Security: Validate both source and target paths
+    validate_path "$source" "Source path" || {
+        log_error "Invalid source path for symlink: $source"
+        return 1
+    }
+    
+    validate_path "$target" "Target path" || {
+        log_error "Invalid target path for symlink: $target"
+        return 1
+    }
+    
+    # Additional security: Ensure source exists and is readable
+    if [ ! -e "$source" ]; then
+        log_error "Source path does not exist: $source"
+        return 1
     fi
     
-    mkdir -p "$(dirname "$target")"
-    ln -sf "$source" "$target"
+    if [ ! -r "$source" ]; then
+        log_error "Source path is not readable: $source"
+        return 1
+    fi
+    
+    # Remove existing target if it exists
+    if [[ -e "$target" || -L "$target" ]]; then
+        rm -f "$target" || {
+            log_error "Failed to remove existing target: $target"
+            return 1
+        }
+    fi
+    
+    # Create parent directory if it doesn't exist
+    local target_dir
+    target_dir=$(dirname "$target")
+    if [ ! -d "$target_dir" ]; then
+        mkdir -p "$target_dir" || {
+            log_error "Failed to create target directory: $target_dir"
+            return 1
+        }
+    fi
+    
+    # Create the symlink
+    ln -sf "$source" "$target" || {
+        log_error "Failed to create symlink: $source -> $target"
+        return 1
+    }
+    
+    log_success "Created symlink: $target -> $source"
 }
 
 # Java utilities
