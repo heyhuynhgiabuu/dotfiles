@@ -9,16 +9,8 @@ tools:
   bash: false
   edit: false
   write: false
-  read: true
-  grep: true
-  glob: true
-  list: true
-  webfetch: true
   patch: false
-  todowrite: true
-  todoread: true
 ---
-
 # Specialist Agent: Domain-Specific Technical Expertise
 
 <system-reminder>

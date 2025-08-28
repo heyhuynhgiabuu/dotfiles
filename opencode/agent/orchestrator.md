@@ -9,15 +9,8 @@ tools:
   bash: false
   edit: false
   write: false
-  read: true
-  grep: true
-  glob: true
-  list: true
-  webfetch: true
-  todowrite: true
-  todoread: true
+  patch: false
 ---
-
 # Orchestrator Agent: Multi-Agent Workflow Coordination
 
 <system-reminder>

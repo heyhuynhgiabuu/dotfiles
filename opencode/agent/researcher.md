@@ -9,14 +9,7 @@ tools:
   bash: true
   edit: false
   write: false
-  read: true
-  grep: true
-  glob: true
-  list: true
-  webfetch: true
   patch: false
-  todowrite: true
-  todoread: true
 ---
 
 # Researcher Agent: Information Discovery & Synthesis

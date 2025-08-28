@@ -9,16 +9,8 @@ tools:
   bash: false
   edit: false
   write: false
-  read: true
-  grep: true
-  glob: true
-  list: true
-  webfetch: true
   patch: false
-  todowrite: true
-  todoread: true
 ---
-
 # Language Agent: Code Excellence & Optimization
 
 <system-reminder>

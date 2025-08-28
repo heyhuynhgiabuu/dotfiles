@@ -15,16 +15,11 @@ tools:
   bash: false
   edit: false
   write: false
-  read: true
-  grep: true
-  glob: true
-  list: true
-  webfetch: true
   patch: false
-  todowrite: true
-  todoread: true
+  serena_find_symbol: true
+  serena_search_for_pattern: true
+  chrome_chrome_get_web_content: true
 ---
-
 # Security Agent: Rapid Vulnerability Assessment
 
 <system-reminder>
