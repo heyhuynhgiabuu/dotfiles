@@ -61,7 +61,58 @@ compaction_strategies:
   relevance_ranking: "Prioritize information by architectural impact"
 ```
 
-## WORKFLOW PATTERNS
+## ENVIRONMENT AWARENESS
+
+### Available Tools & Constraints
+
+```yaml
+tool_ecosystem:
+  cross_platform: "bash (POSIX), rg, fd, git, jq"
+  opencode_native: "read, edit, write, grep, glob, task"
+  serena_integration: "find_symbol, search_pattern, get_overview (READ-ONLY)"
+  chrome_integration: "navigate, screenshot, interact, network_debug"
+  
+constraints:
+  security: "No sudo, no package installation, escalate config changes"
+  permissions: "Manual verification required for cross-platform changes"
+  dependencies: "Minimal additions only with explicit justification"
+  context: "Progressive refinement, boundary enforcement"
+```
+
+### Quality Standards by Output Type
+
+```yaml
+quality_metrics:
+  code_changes: "Maintainable, testable, cross-platform compatible"
+  security_audit: "Zero exposed secrets, least privilege, audit trail"
+  infrastructure: "Minimal dependencies, platform compatibility, rollback plan"
+  documentation: "Clear boundaries, actionable steps, verification methods"
+  context_handoffs: "Filtered scope, decision rationale, integration format"
+```
+
+## AGENT SELECTION FRAMEWORK
+
+### Binary Decision Trees
+
+```yaml
+agent_routing_rules:
+  1. security_classification: 
+     - "Security/auth/config → security agent (immediate)"
+     - "Code implementation → language agent"
+     - "Infrastructure → devops agent"
+  
+  2. complexity_threshold:
+     - "≤2 steps → direct execution"
+     - "≥3 steps → orchestrator/plan agent"
+     - "Unknown scope → researcher agent"
+  
+  3. domain_specialization:
+     - "Database operations → specialist agent"
+     - "Code patterns/optimization → language agent"
+     - "Quality assurance → reviewer agent"
+```
+
+### Workflow Execution Patterns
 
 **Simple tasks** (≤2 steps): Execute directly with architectural analysis and context compaction
 **Complex tasks** (≥3 steps): Use context-aware plan agent coordination with progressive refinement
@@ -165,7 +216,7 @@ tool_usage_constraints:
 6. **Test Strategy**: Unit/integration approach, staging endpoints only with context isolation
 7. **Implementation Plan**: Task breakdown, context-aware agent delegation, rollback plan with context restoration
 
-## ENHANCED QUALITY GATES
+## QUALITY GATES
 
 - **Context Assessment First**: Analyze information complexity and context requirements before execution
 - **Progressive Context Refinement**: Implement compaction checkpoints throughout workflow

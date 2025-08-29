@@ -3,7 +3,7 @@
 ## 1. RULE HIERARCHY & CRITICAL CONSTRAINTS (ANCHOR FIRST)
 
 1. **Global rules** (config.json, rules docs) - Safety, permissions, KISS
-2. **Project overrides** (dotfiles) - Cross-platform, no AI commits
+2. **Project overrides** (project AGENTS.md) - Cross-platform, no AI commits
 3. **Explicit user instructions** (non-conflicting)
 4. **Efficiency preferences** (secondary)
 
@@ -28,9 +28,129 @@ Security error: escalate immediately (NO RETRY)
 - **Verification**: Provide simple manual verification steps to user
 - **Dependencies**: Do not add new software without explicit permission
 
-## 3. AGENT ROUTING
+## 3. AGENT CAPABILITY MATRICES
+
+### Agent Capabilities
+
+```yaml
+security_agent:
+  capabilities:
+    - "Zero secret exposure: audit config files, auth flows, API keys"
+    - "Least privilege validation: permission escalation, access controls"  
+    - "Threat assessment: vulnerability scanning, security best practices"
+  constraints:
+    - "Immediate escalation only (bypass planning)"
+    - "Minimal context exposure (security scope only)"
+    - "No auto-retry on security errors"
+  output_format: "Threat assessment + remediation steps + audit trail"
+
+language_agent:
+  capabilities:
+    - "Code optimization: performance patterns, algorithmic improvements"
+    - "Refactoring: SOLID principles, design patterns, maintainability"
+    - "Advanced patterns: functional programming, async/await, error handling"
+  constraints:
+    - "No infrastructure changes"
+    - "No database schema modifications"
+    - "Cross-platform compatibility required"
+  output_format: "Code changes + test strategy + rollback plan"
+
+devops_agent:
+  capabilities:
+    - "Infrastructure: Docker, CI/CD, deployment automation"
+    - "Platform compatibility: macOS/Linux, environment parity"
+    - "DX optimization: developer workflow, tooling integration"
+  constraints:
+    - "Minimal dependencies only"
+    - "No sudo/system modifications"
+    - "Manual verification required"
+  output_format: "Infrastructure changes + compatibility matrix + verification steps"
+
+specialist_agent:
+  capabilities:
+    - "Database: query optimization, schema design, migration strategies"
+    - "Frontend: React patterns, state management, performance optimization"
+    - "Legacy systems: modernization, incremental migration, risk assessment"
+  constraints:
+    - "Domain-specific context only"
+    - "No cross-domain changes"
+    - "Focused expertise boundaries"
+  output_format: "Domain solution + integration points + impact analysis"
+
+orchestrator_agent:
+  capabilities:
+    - "Multi-agent coordination: workflow planning, dependency management"
+    - "Context compression: information filtering, boundary enforcement"
+    - "Quality gates: checkpoint validation, handoff protocols"
+  constraints:
+    - "Complex tasks only (≥3 phases)"
+    - "No direct implementation"
+    - "Coordination and delegation focus"
+  output_format: "Workflow plan + agent assignments + success criteria"
+
+researcher_agent:
+  capabilities:
+    - "Unknown tech discovery: API analysis, library evaluation, feasibility"
+    - "Architecture mapping: system dependencies, integration patterns"
+    - "Discovery synthesis: information filtering, relevance ranking"
+  constraints:
+    - "Research only (no implementation)"
+    - "Fact verification required"
+    - "Source documentation emphasis"
+  output_format: "Research findings + implementation recommendations + next steps"
+
+reviewer_agent:
+  capabilities:
+    - "Quality assurance: code review, security audit, best practices"
+    - "Post-implementation validation: functionality, performance, compliance"
+    - "Standards compliance: cross-platform, security, maintainability"
+  constraints:
+    - "Post-implementation only"
+    - "No modifications during review"
+    - "Objective assessment focus"
+  output_format: "Quality assessment + improvement recommendations + compliance status"
+```
+
+## 4. AGENT ROUTING
 
 **Default Route**: general (≤2 steps, clear tasks)
+
+**Binary Decision Criteria**:
+
+```yaml
+routing_decision_tree:
+  1. security_classification:
+     condition: "Contains auth/config/secrets/permissions"
+     action: "→ security agent (immediate, bypass planning)"
+     
+  2. complexity_threshold:
+     condition: "≥3 steps OR unknown scope OR multi-phase"
+     action: "→ orchestrator/plan agent"
+     
+  3. domain_specialization:
+     condition: "Database/frontend/legacy systems"
+     action: "→ specialist agent"
+     
+  4. implementation_type:
+     condition: "Code patterns/optimization/refactoring"
+     action: "→ language agent"
+     
+  5. infrastructure_scope:
+     condition: "Docker/CI-CD/deployment/DX"
+     action: "→ devops agent"
+     
+  6. discovery_required:
+     condition: "Unknown tech/API/architecture mapping"
+     action: "→ researcher agent"
+     
+  7. quality_validation:
+     condition: "Post-implementation review/audit"
+     action: "→ reviewer agent"
+     
+  8. default_fallback:
+     condition: "Simple, clear tasks"
+     action: "→ direct execution"
+```
 
 **Escalation Routes**:
 
@@ -41,6 +161,26 @@ Security error: escalate immediately (NO RETRY)
 - **devops** → Infrastructure, deployment, DX
 - **specialist** → Database, frontend, legacy systems
 - **reviewer** → Quality assurance, post-implementation
+
+**Integration Specifications**:
+
+```yaml
+agent_handoff_protocol:
+  context_transfer:
+    format: "Filtered context + decision rationale + next steps"
+    constraints: "Agent-specific boundaries + security filtering"
+    validation: "Context scope verification before delegation"
+    
+  output_requirements:
+    structure: "Action taken + verification steps + summary (≤140 chars)"
+    integration: "Clear handoff points + rollback procedures"
+    quality: "Manual verification steps + success criteria"
+    
+  error_handling:
+    security_errors: "Immediate escalation (no retry)"
+    permission_errors: "Narrow scope, retry once"
+    tool_failures: "Fallback to legacy tools, context preservation"
+```
 
 **Rule**: Start simple; escalate only for complexity, ambiguity, or risk.
 
