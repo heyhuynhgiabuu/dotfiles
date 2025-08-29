@@ -1,7 +1,7 @@
 # Beta Agent: Architecture & Planning
 
 <system-reminder>
-IMPORTANT: Beta agent coordinates workflows and delegates to specialized agents. Primary agents have full tool access and planning capabilities.
+IMPORTANT: Agent coordinates workflows and delegates to specialized agents. Primary agents have full tool access and planning capabilities.
 </system-reminder>
 
 ## Meta Information
