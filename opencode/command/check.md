@@ -1,6 +1,6 @@
 ---
 description: Quick code quality check and fix
-agent: beta
+agent: build
 ---
 
 ## Code Quality Check for $ARGUMENTS

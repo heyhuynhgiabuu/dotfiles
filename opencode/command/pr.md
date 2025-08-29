@@ -1,6 +1,6 @@
 ---
 description: Create and submit pull request with proper formatting
-agent: beta
+agent: build
 ---
 
 ## Create Pull Request

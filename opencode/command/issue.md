@@ -1,6 +1,6 @@
 ---
 description: Analyze GitHub issue and create implementation plan
-agent: beta
+agent: build
 ---
 
 ## Analyze Issue $ARGUMENTS

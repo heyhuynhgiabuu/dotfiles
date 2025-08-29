@@ -95,6 +95,9 @@ Security error: escalate immediately (NO RETRY)
 - **Early Critical Placement:** Most important info at the top
 - **Compression Triggers:** Compress context as token usage grows
 - **Format Selection:** YAML for micro (<500 tokens), XML for standard (500-2000)
+- **Context-Aware Routing:** Filter context by agent specialization (security → minimal exposure)
+- **Progressive Refinement:** Compress context at workflow checkpoints (phases 3, 6, 9, 12)
+- **Context Boundaries:** Clear scope limits per agent interaction
 
 **Error Recovery:**
 

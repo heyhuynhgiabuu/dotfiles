@@ -1,6 +1,6 @@
 ---
 description: Autonomous debug analysis with approval gates
-agent: beta
+agent: build
 ---
 
 ## Debug Analysis for $ARGUMENTS

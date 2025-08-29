@@ -1,6 +1,6 @@
 ---
 description: Production planning command for enforcing pre-implementation artifacts
-agent: beta
+agent: build
 ---
 
 # /opencode-plan - Production Planning Command

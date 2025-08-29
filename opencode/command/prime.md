@@ -1,6 +1,6 @@
 ---
 description: Load project context and prime for development
-agent: beta
+agent: build
 ---
 
 ## Load Project Context

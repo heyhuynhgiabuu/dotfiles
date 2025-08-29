@@ -1,6 +1,6 @@
 ---
 description: Test-driven development workflow
-agent: beta
+agent: build
 ---
 
 ## TDD Workflow for $ARGUMENTS

@@ -1,6 +1,6 @@
 ---
 description: Create development guide and agent instructions
-agent: beta
+agent: build
 ---
 
 ## Create AGENTS.md for $ARGUMENTS

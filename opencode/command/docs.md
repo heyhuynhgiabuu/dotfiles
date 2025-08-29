@@ -1,6 +1,6 @@
 ---
 description: Generate comprehensive documentation for project
-agent: beta
+agent: build
 ---
 
 ## Generate Documentation

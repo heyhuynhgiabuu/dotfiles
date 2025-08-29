@@ -58,6 +58,19 @@ workflow_discovery_pattern:
   3. read: "Context boundaries analysis (minimal tokens) - phase understanding"
   4. webfetch: "Coordination best practices and patterns - authoritative guidance"
 
+structured_coordination_analysis:
+  sequential_thinking: "Multi-step workflow analysis with revision capability for complex orchestration"
+  coordination_use_cases:
+    - multi_agent_workflow_design: "Structure agent coordination with iterative refinement"
+    - dependency_orchestration: "Systematic dependency mapping with branching paths"
+    - quality_gate_optimization: "Define validation checkpoints with alternative strategies"
+    - performance_analysis: "Analyze workflow bottlenecks with course correction"
+  orchestration_implementation:
+    - assess_workflow_complexity: "Initial coordination analysis, expand as dependencies emerge"
+    - revise_coordination: "Mark orchestration revisions when conflicts become apparent"
+    - explore_workflow_alternatives: "Branch coordination approaches for optimal execution"
+    - validate_orchestration: "Generate and verify workflow hypotheses before execution"
+
 coordination_workflows:
   complexity_assessment: "glob project structure → grep dependencies → read scope → webfetch patterns"
   agent_routing: "analyze task requirements → match specialized capabilities → context handoff"

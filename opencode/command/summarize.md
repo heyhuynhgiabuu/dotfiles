@@ -1,6 +1,6 @@
 ---
 description: Summarize conversations for easy continuation
-agent: beta
+agent: build
 ---
 
 ## Conversation Summary

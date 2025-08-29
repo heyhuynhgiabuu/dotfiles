@@ -69,6 +69,19 @@ information_discovery_pattern:
   3. webfetch: "Authoritative external sources (documentation, CVEs, specs) - validation"
   4. read: "Deep context analysis (minimal tokens) - synthesis preparation"
 
+structured_research_analysis:
+  sequential_thinking: "Multi-step research with revision capability for complex information synthesis"
+  research_use_cases:
+    - architecture_discovery: "Systematic architecture mapping with iterative refinement"
+    - technology_evaluation: "Structure tech assessment with course correction"
+    - security_analysis: "Systematic vulnerability research with branching investigation"
+    - pattern_synthesis: "Combine multiple sources with validation checkpoints"
+  research_implementation:
+    - scope_assessment: "Initial information boundary analysis, expand as patterns emerge"
+    - revise_findings: "Mark research revisions when contradictory sources found"
+    - explore_alternatives: "Branch research paths for comprehensive coverage"
+    - validate_synthesis: "Generate and verify research hypotheses with multi-source validation"
+
 research_workflows:
   architecture_mapping: "glob structure → grep patterns → read key components → webfetch standards"
   dependency_analysis: "grep imports → glob related files → webfetch vulnerability data"

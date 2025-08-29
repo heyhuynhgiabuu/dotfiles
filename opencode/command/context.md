@@ -1,6 +1,6 @@
 ---
 description: Context analysis and optimization
-agent: beta
+agent: build
 ---
 
 ## Context Analysis for $ARGUMENTS

@@ -1,6 +1,6 @@
 ---
 description: Generate conventional commit message and create commit
-agent: beta
+agent: build
 ---
 
 ## Generate Conventional Commit Message

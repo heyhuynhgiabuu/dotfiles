@@ -76,6 +76,19 @@ threat_discovery_pattern:
   3. read: "Context-bounded analysis (minimal tokens) - vulnerability verification"
   4. webfetch: "CVE/CWE research for unknown threats - authoritative validation"
 
+structured_security_analysis:
+  sequential_thinking: "Multi-step security analysis with revision capability for complex threat assessment"
+  security_use_cases:
+    - vulnerability_assessment: "Systematic threat analysis with iterative security refinement"
+    - attack_surface_analysis: "Structure security boundary assessment with revision checkpoints"
+    - compliance_verification: "Systematic compliance checking with branching validation paths"
+    - incident_response_planning: "Security incident analysis with alternative response strategies"
+  security_implementation:
+    - assess_threat_landscape: "Initial security scope assessment, expand as vulnerabilities emerge"
+    - revise_security_model: "Mark security revisions when new threats identified"
+    - explore_mitigation_alternatives: "Branch security approaches for comprehensive protection"
+    - validate_security_measures: "Generate and verify security hypotheses with threat modeling"
+
 security_analysis_workflows:
   secrets_audit: "glob config → grep secret patterns → read verification context"
   injection_scan: "grep SQL/command patterns → read input validation → verify escape methods"

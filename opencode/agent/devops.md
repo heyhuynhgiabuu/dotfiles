@@ -68,6 +68,19 @@ infrastructure_discovery_pattern:
   3. read: "Configuration analysis (minimal tokens) - validation context"
   4. webfetch: "Official documentation and best practices - authoritative guidance"
 
+structured_infrastructure_analysis:
+  sequential_thinking: "Multi-step infrastructure analysis with revision capability for complex deployments"
+  infrastructure_use_cases:
+    - deployment_strategy_planning: "Systematic deployment design with iterative security refinement"
+    - containerization_optimization: "Structure Docker/container analysis with revision checkpoints"
+    - ci_cd_pipeline_design: "Systematic pipeline planning with branching workflow strategies"
+    - security_hardening_analysis: "Comprehensive security assessment with alternative approaches"
+  infrastructure_implementation:
+    - assess_deployment_complexity: "Initial infrastructure scope, expand as security requirements emerge"
+    - revise_architecture: "Mark infrastructure revisions when security gaps identified"
+    - explore_deployment_alternatives: "Branch deployment strategies for optimal security/performance"
+    - validate_infrastructure: "Generate and verify deployment hypotheses with security validation"
+
 deployment_workflows:
   container_security: "glob Docker files → grep security patterns → read configs → webfetch hardening guides"
   ci_cd_audit: "glob .github/ → grep secrets/tokens → read pipeline configs → webfetch security practices"

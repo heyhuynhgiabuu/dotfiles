@@ -1,6 +1,6 @@
 ---
 description: Project setup workflow
-agent: beta
+agent: build
 ---
 
 Configure development environment for $ARGUMENTS project.

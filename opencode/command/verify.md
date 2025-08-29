@@ -1,6 +1,6 @@
 ---
 description: Run verification tests
-agent: beta
+agent: build
 ---
 
 ## Verify $ARGUMENTS

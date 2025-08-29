@@ -1,6 +1,6 @@
 ---
 description: Review recent changes
-agent: beta
+agent: build
 ---
 
 Review recent git changes for $ARGUMENTS:
