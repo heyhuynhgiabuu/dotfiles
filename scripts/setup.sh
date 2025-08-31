@@ -49,7 +49,12 @@ install_stow() {
 
 stow_configurations() {
     log_info "Stowing configurations..."
-    
+
+    if [ -z "$DOTFILES_DIR" ]; then
+        log_error "DOTFILES_DIR is not set"
+        return 1
+    fi
+
     if [ ! -d "$DOTFILES_DIR" ]; then
         log_error "Dotfiles directory not found: $DOTFILES_DIR"
         return 1
@@ -63,12 +68,10 @@ stow_configurations() {
     for config in $STOW_CONFIGS; do
         if [ -d "$config" ]; then
             log_step "Stowing $config..."
-            if ! stow -v "$config" 2>/dev/null; then
-                log_warning "Failed to stow $config, checking for conflicts..."
-                if ! stow -R -v "$config"; then
-                    log_error "Failed to restow $config"
-                    return 1
-                fi
+            if ! stow -v "$config"; then
+                log_warning "Failed to stow $config due to conflicts. Skipping to avoid overwriting existing files."
+                log_info "Run 'stow -D $config && stow $config' manually if you want to resolve conflicts."
+                continue
             fi
         else
             log_warning "Configuration directory '$config' not found, skipping..."
@@ -81,7 +84,7 @@ setup_tpm() {
     
     if [ ! -d "$TPM_DIR" ]; then
         log_step "Cloning TPM..."
-        if ! git clone "$TPM_REPO" "$TPM_DIR"; then
+        if ! git clone --depth 1 "$TPM_REPO" "$TPM_DIR"; then
             log_error "Failed to clone TPM repository"
             return 1
         fi
@@ -94,16 +97,21 @@ setup_tpm() {
 reload_tmux_config() {
     if cmd_exists tmux; then
         log_info "Reloading tmux configuration..."
-        
-        # Start tmux server if not running
-        tmux start-server 2>/dev/null || true
-        
-        # Create temporary session, reload config, then cleanup
-        tmux new-session -d -s "bootstrap_reload" 2>/dev/null || true
-        tmux send-keys -t "bootstrap_reload" "tmux source-file ~/.tmux.conf" C-m 2>/dev/null || true
-        tmux kill-session -t "bootstrap_reload" 2>/dev/null || true
-        
-        log_success "Tmux configuration reloaded"
+
+        # Check if tmux server is already running
+        if tmux has-session 2>/dev/null; then
+            log_warning "Tmux server is running. Skipping auto-reload for security. Run 'tmux source-file ~/.tmux.conf' manually."
+        else
+            # Start tmux server if not running
+            tmux start-server 2>/dev/null || true
+
+            # Create temporary session, reload config, then cleanup
+            tmux new-session -d -s "bootstrap_reload" 2>/dev/null || true
+            tmux send-keys -t "bootstrap_reload" "tmux source-file ~/.tmux.conf" C-m 2>/dev/null || true
+            tmux kill-session -t "bootstrap_reload" 2>/dev/null || true
+
+            log_success "Tmux configuration reloaded"
+        fi
     else
         log_warning "Tmux not found - configuration will be loaded on first run"
     fi
