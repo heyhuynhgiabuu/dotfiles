@@ -15,7 +15,7 @@
 
 ## 📁 Main Plugin: `unified.js`
 
-### **GPT-5 Reasoning Optimization**
+### **Reasoning Optimization**
 Automatically tunes reasoning parameters based on agent characteristics:
 
 **High Precision Agents** (focused, minimal reasoning):
@@ -53,7 +53,7 @@ vc-index                   # Index current directory
 ## 🚀 Usage
 
 **Automatic features** (no commands needed):
-- GPT-5 reasoning optimization per agent
+- Reasoning optimization per agent
 - Session completion notifications with summaries
 - Sensitive file protection
 

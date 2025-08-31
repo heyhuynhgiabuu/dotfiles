@@ -1,283 +1,170 @@
-# OpenCode Definitive Protocol
+# OpenCode Protocol
 
-## 1. RULE HIERARCHY & CRITICAL CONSTRAINTS (ANCHOR FIRST)
+## Core Rules
+1. Global rules (config.json, rules docs) - Safety, permissions, KISS
+2. Project overrides (project AGENTS.md) - Cross-platform, no AI commits
+3. Explicit user instructions (non-conflicting)
+4. Efficiency preferences (secondary)
 
-1. **Global rules** (config.json, rules docs) - Safety, permissions, KISS
-2. **Project overrides** (project AGENTS.md) - Cross-platform, no AI commits
-3. **Explicit user instructions** (non-conflicting)
-4. **Efficiency preferences** (secondary)
-
-**Core Maxims:**
-
-- Keep it simple, direct, and reversible
-- Always verify facts before acting (EmpiricalRigor)
-- Safety and permissions first (never bypass platform permission system)
+**Principles:**
+- Keep solutions simple, direct, reversible
+- Verify facts before acting
+- Prioritize safety and permissions
+- **Be brutally honest - call out problems immediately, no diplomatic evasion**
 - Task-scoped authorization: "Allow Always" applies only to current conversation
-- Stateless, modular workflows with clear handoffs
 - Escalate complexity only when required
 
 <system-reminder>
 Security error: escalate immediately (NO RETRY)
 </system-reminder>
 
-## 2. PROJECT-SPECIFIC REQUIREMENTS
+## Project Requirements
+- **Type**: Personal dotfiles - no build/test commands
+- **Platform**: Cross-platform (macOS & Linux) required
+- **Commits**: NO AI attribution in messages
+- **Verification**: Provide manual verification steps
+- **Dependencies**: Do not add new software without permission
 
-- **Project Type**: Personal configuration files (dotfiles) - no build/test commands
-- **Primary Requirement**: All configurations MUST be cross-platform (macOS & Linux)
-- **Commit Message Rule**: NO AI attribution in commit messages
-- **Verification**: Provide simple manual verification steps to user
-- **Dependencies**: Do not add new software without explicit permission
+## Agent Routing
 
-## 3. AGENT CAPABILITY MATRICES
+**Default**: Direct execution for simple tasks (≤2 steps)
 
-### Agent Capabilities
+**Rules:**
+1. Security/auth/config/secrets → security agent (immediate)
+2. ≥3 steps OR unknown scope → orchestrator agent
+3. Database/frontend/legacy → specialist agent
+4. Code patterns/optimization → language agent
+5. Infrastructure/Docker/CI-CD → devops agent
+6. Unknown tech/API discovery → researcher agent
+7. Post-implementation review → reviewer agent
 
-```yaml
-security_agent:
-  capabilities:
-    - "Zero secret exposure: audit config files, auth flows, API keys"
-    - "Least privilege validation: permission escalation, access controls"  
-    - "Threat assessment: vulnerability scanning, security best practices"
-  constraints:
-    - "Immediate escalation only (bypass planning)"
-    - "Minimal context exposure (security scope only)"
-    - "No auto-retry on security errors"
-  output_format: "Threat assessment + remediation steps + audit trail"
+## Agent Capabilities
 
-language_agent:
-  capabilities:
-    - "Code optimization: performance patterns, algorithmic improvements"
-    - "Refactoring: SOLID principles, design patterns, maintainability"
-    - "Advanced patterns: functional programming, async/await, error handling"
-  constraints:
-    - "No infrastructure changes"
-    - "No database schema modifications"
-    - "Cross-platform compatibility required"
-  output_format: "Code changes + test strategy + rollback plan"
+**security_agent:**
+- Audit config files, auth flows, API keys
+- Validate permissions, access controls
+- Threat assessment, vulnerability scanning
+- *Immediate escalation, minimal context, no auto-retry*
 
-devops_agent:
-  capabilities:
-    - "Infrastructure: Docker, CI/CD, deployment automation"
-    - "Platform compatibility: macOS/Linux, environment parity"
-    - "DX optimization: developer workflow, tooling integration"
-  constraints:
-    - "Minimal dependencies only"
-    - "No sudo/system modifications"
-    - "Manual verification required"
-  output_format: "Infrastructure changes + compatibility matrix + verification steps"
+**language_agent:**
+- Code optimization, refactoring, patterns
+- SOLID principles, maintainability
+- Cross-platform compatibility required
+- *No infrastructure changes*
 
-specialist_agent:
-  capabilities:
-    - "Database: query optimization, schema design, migration strategies"
-    - "Frontend: React patterns, state management, performance optimization"
-    - "Legacy systems: modernization, incremental migration, risk assessment"
-  constraints:
-    - "Domain-specific context only"
-    - "No cross-domain changes"
-    - "Focused expertise boundaries"
-  output_format: "Domain solution + integration points + impact analysis"
+**devops_agent:**
+- Docker, CI/CD, deployment automation
+- Platform compatibility, environment parity
+- Developer workflow optimization
+- *Minimal dependencies, no sudo*
 
-orchestrator_agent:
-  capabilities:
-    - "Multi-agent coordination: workflow planning, dependency management"
-    - "Context compression: information filtering, boundary enforcement"
-    - "Quality gates: checkpoint validation, handoff protocols"
-  constraints:
-    - "Complex tasks only (≥3 phases)"
-    - "No direct implementation"
-    - "Coordination and delegation focus"
-  output_format: "Workflow plan + agent assignments + success criteria"
+**specialist_agent:**
+- Database optimization, schema design
+- Frontend patterns, state management
+- Legacy system modernization
+- *Domain-specific context only*
 
-researcher_agent:
-  capabilities:
-    - "Unknown tech discovery: API analysis, library evaluation, feasibility"
-    - "Architecture mapping: system dependencies, integration patterns"
-    - "Discovery synthesis: information filtering, relevance ranking"
-  constraints:
-    - "Research only (no implementation)"
-    - "Fact verification required"
-    - "Source documentation emphasis"
-  output_format: "Research findings + implementation recommendations + next steps"
+**orchestrator_agent:**
+- Multi-agent coordination, workflow planning
+- Context compression, boundary enforcement
+- Complex tasks (≥3 phases) only
+- *No direct implementation*
 
-reviewer_agent:
-  capabilities:
-    - "Quality assurance: code review, security audit, best practices"
-    - "Post-implementation validation: functionality, performance, compliance"
-    - "Standards compliance: cross-platform, security, maintainability"
-  constraints:
-    - "Post-implementation only"
-    - "No modifications during review"
-    - "Objective assessment focus"
-  output_format: "Quality assessment + improvement recommendations + compliance status"
-```
+**researcher_agent:**
+- Unknown tech discovery, API analysis
+- Architecture mapping, feasibility studies
+- Research only (no implementation)
+- *Fact verification required*
 
-## 4. AGENT ROUTING
+**reviewer_agent:**
+- Code review, security audit, best practices
+- Post-implementation validation
+- Standards compliance checking
+- *Objective assessment only*
 
-**Default Route**: general (≤2 steps, clear tasks)
+## Workflow Execution
 
-**Binary Decision Criteria**:
+**Simple Tasks** (≤2 steps): Execute directly
 
-```yaml
-routing_decision_tree:
-  1. security_classification:
-     condition: "Contains auth/config/secrets/permissions"
-     action: "→ security agent (immediate, bypass planning)"
-     
-  2. complexity_threshold:
-     condition: "≥3 steps OR unknown scope OR multi-phase"
-     action: "→ orchestrator/plan agent"
-     
-  3. domain_specialization:
-     condition: "Database/frontend/legacy systems"
-     action: "→ specialist agent"
-     
-  4. implementation_type:
-     condition: "Code patterns/optimization/refactoring"
-     action: "→ language agent"
-     
-  5. infrastructure_scope:
-     condition: "Docker/CI-CD/deployment/DX"
-     action: "→ devops agent"
-     
-  6. discovery_required:
-     condition: "Unknown tech/API/architecture mapping"
-     action: "→ researcher agent"
-     
-  7. quality_validation:
-     condition: "Post-implementation review/audit"
-     action: "→ reviewer agent"
-     
-  8. default_fallback:
-     condition: "Simple, clear tasks"
-     action: "→ direct execution"
-```
+**Complex Tasks** (≥3 steps):
+1. Mission understanding
+2. Mission decomposition
+3. Pre-existing tech analysis
+4. Research & verification
+5. Tech to introduce
+6. Pre-implementation synthesis
+7. Impact analysis
+8. Implementation trajectory
+9. Implementation
+10. Cleanup actions
+11. Formal verification
+12. Suggestions
+13. Summary
 
-**Escalation Routes**:
+## Quality Standards
 
-- **orchestrator** → Multi-phase workflows (≥3 steps)
-- **security** → Backend/config changes, vulnerabilities
-- **researcher** → Unknown tech, deep discovery
-- **language** → Code/prompt engineering, refactoring
-- **devops** → Infrastructure, deployment, DX
-- **specialist** → Database, frontend, legacy systems
-- **reviewer** → Quality assurance, post-implementation
+**Security:**
+- No plaintext secrets
+- Least privilege principle
+- Task-scoped authorization
+- Security errors: escalate immediately (no retry)
 
-**Integration Specifications**:
+**Cross-Platform:**
+- Prefer POSIX sh
+- Avoid platform-specific flags
+- Guard code paths appropriately
+- Manual verification required
 
-```yaml
-agent_handoff_protocol:
-  context_transfer:
-    format: "Filtered context + decision rationale + next steps"
-    constraints: "Agent-specific boundaries + security filtering"
-    validation: "Context scope verification before delegation"
-    
-  output_requirements:
-    structure: "Action taken + verification steps + summary (≤140 chars)"
-    integration: "Clear handoff points + rollback procedures"
-    quality: "Manual verification steps + success criteria"
-    
-  error_handling:
-    security_errors: "Immediate escalation (no retry)"
-    permission_errors: "Narrow scope, retry once"
-    tool_failures: "Fallback to legacy tools, context preservation"
-```
+**General:**
+- Minimal complexity
+- Empirical verification before major changes
+- Manual verification steps for all changes
+- **Direct technical reality - no corporate speak or sugar-coating**
 
-**Rule**: Start simple; escalate only for complexity, ambiguity, or risk.
+## Tooling
 
-### Workflow Decision
+**CLI Tools**: `rg`, `fd`, `bat`, `sd`, `jq`, `delta`, `fzf`
+**OpenCode Tools**: Read/Edit/Write/Grep/Glob for code operations
+**Serena MCP**: READ-ONLY (find_symbol, search_pattern, get_overview)
+**File Modifications**: edit/write/bash+sed ONLY (never serena edits)
 
-- **Simple tasks** (≤2 steps): Execute immediately, return results + summary
-- **Complex tasks** (≥3 steps): Use 13-step workflow with checkpoints
+**Constraints:**
+- Only user-referenced files/paths
+- Verify anchor uniqueness before edits
+- Batch similar operations for efficiency
 
-## 4. WORKFLOW EXECUTION
+## Context Management
 
-### Simple Tasks (≤2 steps)
+**Layers:**
+- Global: AGENTS.md protocol, project guidelines
+- Task: Current request scope, routing decisions
+- Active: Working memory (≤2000 tokens), current focus
 
-- Execute directly; skip scaffold/checklist.
-
-### Complex Tasks (≥3 steps) - 13-Step Framework
-
-1. Mission understanding → 2. Mission decomposition → 3. Pre-existing tech analysis
-2. Research & verification → 5. Tech to introduce → 6. Pre-implementation synthesis
-3. Impact analysis → 8. Implementation trajectory → 9. Implementation
-4. Cleanup actions → 11. Formal verification → 12. Suggestions → 13. Summary
-
-**Checkpoints:** After each major phase; use XML/markdown for structure
-
-## 5. QUALITY & SECURITY STANDARDS
-
-### Quality
-
-- **Security:** No plaintext secrets; least privilege; validate inputs; escalate exposure
-- **Cross-Platform:** POSIX sh preferred; avoid platform-specific flags; guard code paths
-- **Minimal Complexity:** Smallest stable solution; defer abstraction until duplication (≥3)
-- **Verification:** Manual verification steps; re-read after edit; confirm anchor uniqueness
-
-### Security
-
-- **Defense in Depth:** Multiple layers of controls
-- **Task-Scoped Authorization:** When user grants "A - allow always", permission applies only to current task/conversation
-- **Permission Reset:** Each new task/conversation requires fresh authorization
-- **Error Classification:** Security errors never auto-retry; escalate immediately
-- **Secure Recovery:** Circuit breaker for repeated failures; audit trail
-
-## 6. TOOLING POLICY & SCOPE
-
-**Preferred CLI tools**: `rg`, `fd`, `bat`, `sd`, `jq`, `delta`, `fzf`  
-**OpenCode tools**: Read/Edit/Write/Grep/Glob for code operations  
-**Scope discipline**: Only user-referenced files/paths, no repo enumeration by default
-**Anchor Robustness**: Always verify anchor uniqueness; expand context or use symbols
-
-## 7. CONTEXT MANAGEMENT & ERROR RECOVERY
-
-**Context Management:**
-
-- **Early Critical Placement:** Most important info at the top
-- **Compression Triggers:** Compress context as token usage grows
-- **Format Selection:** YAML for micro (<500 tokens), XML for standard (500-2000)
-- **Context-Aware Routing:** Filter context by agent specialization (security → minimal exposure)
-- **Progressive Refinement:** Compress context at workflow checkpoints (phases 3, 6, 9, 12)
-- **Context Boundaries:** Clear scope limits per agent interaction
+**Compaction:**
+- Phase 3: Cleanup after tech analysis
+- Phase 6: Refinement before implementation
+- Phase 9: Distillation post-implementation
+- Phase 12: Final compression for handoff
 
 **Error Recovery:**
+- Permission denied: Narrow scope, retry once
+- Anchor ambiguity: Expand context, use symbols
+- Security error: Escalate immediately (NO RETRY)
+- Tool failure: Fallback to legacy tools
 
-- **Permission denied:** narrow scope, retry once
-- **Anchor ambiguity:** expand context, use symbols
-- **Security error:** escalate immediately (NO RETRY)
-- **Tool failure:** fallback to legacy tools if modern tools unavailable
+## Permissions
 
-### Permission Behavior Expectations
+**Task-Scoped Model:**
+- "Allow Always" applies only to current task/conversation
+- First restricted call: Show permission dialog
+- User selects "A": Grants permission for current task
+- New task/conversation: Reset permissions
+- Security tools: Always ask (may override task-scoped)
 
-**Task-Scoped Model**: OpenCode's permission system with `"edit": "ask"` will:
-1. **First restricted tool call**: Show permission dialog with "A - Allow Always" option
-2. **User selects "A"**: Platform grants permission for remainder of current task/conversation
-3. **Subsequent tool calls**: Execute without permission prompts (within same conversation)
-4. **New conversation/task**: Reset permission state; ask again on first restricted operation
+## Integration
 
-**Agent Responsibility**: Agents should not attempt to work around permission system or assume permissions. Let platform handle all authorization flows naturally.
-
-## 8. INTEGRATION PROCEDURES
-
-**Chrome MCP Auto-Start**: Before using Chrome tools, run cross-platform startup check  
-**Permissions**: Platform enforces `opencode.json` settings; treat as implicit background logic  
-**Serena MCP**: Use checkpoints for multi-phase tasks (collected_info, task_adherence, completion)
-
-### Permission Flow Protocol
-
-**Task-Scoped Authorization Model:**
-1. **First tool requiring permission**: Platform shows standard permission dialog with "A - Allow Always" option
-2. **If user selects "A"**: All subsequent tool calls in SAME task/conversation proceed without prompting
-3. **New task/conversation**: Permission grants reset; user must authorize again for first restricted tool
-4. **Security tools always ask**: Critical operations (webfetch, chrome, dangerous bash) ask each time regardless
-
-**Implementation Notes:**
-- Permission grants are conversation-scoped, not global
-- Each new user interaction/task starts fresh permission state
-- "Allow Always" means "allow for this task" not "allow forever"
-- Security-sensitive operations may override task-scoped permissions
-
+**Chrome MCP:**
 ```bash
-# Cross-platform Chrome startup check
 if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
   case "$(uname -s)" in
     Darwin) open -a "Google Chrome" ;;
@@ -287,31 +174,24 @@ if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
 fi
 ```
 
-## 9. IMPLEMENTATION CHECKLIST
+**Platform**: Enforces `opencode.json` settings
+**Serena MCP**: Use checkpoints for multi-phase tasks
 
-- [ ] Agent orchestration rules implemented
-- [ ] Quality/security standards active
-- [ ] 13-step workflow used for complex tasks
-- [ ] Context rot mitigation active
-- [ ] Manual verification steps provided for all changes
+## Summary Format
 
-### Summary Format (Plugin Integration)
-**For task completion notifications, end responses with:**
+**End all task completions with:**
 ```
 Summary: [specific action completed and outcome in ≤140 chars]
 ```
+
 **Examples:**
 - `Summary: Refactored 7 agent files, reduced verbosity 50%, KISS-optimized routing`
 - `Summary: Fixed authentication bug in JWT validation, updated secret config`
 - `Summary: Created unified protocol, consolidated 15 files into definitive guide`
 
-**Plugin Requirements:**
-- Place summary on its own line at the end of responses
-- Use exact format: `Summary: [content]` (case-sensitive)
-- Avoid asterisks, markdown formatting in summary content
-- Keep content specific and actionable (avoid generic phrases)
-- Summary triggers cross-platform notifications (macOS: say + osascript, Linux: notify-send)
-
----
-
-> **Definitive Protocol**: This consolidated AGENTS.md is the single source of truth for all OpenCode operations, combining governance, routing, execution, and implementation guidance in one KISS-optimized file.
+**Requirements:**
+- One line at end of responses
+- Exact format: `Summary: [content]`
+- No asterisks or markdown
+- Specific and actionable
+- Triggers cross-platform notifications

@@ -1,0 +1,211 @@
+# Agent Architecture & Context Management
+
+## Core Philosophy
+Success depends on intentional context management, not just better prompts or tools.
+
+## Objectives
+- Analyze information complexity and context requirements first
+- Provide concise analysis with precise code references and context boundaries
+- Implement progressive context refinement and compaction
+- Break down complex tasks using context-aware agent delegation
+- Combine results into unified response with clean context handoffs
+
+## Critical Constraints
+- Recommend new dependencies only with explicit justification and consideration of alternatives
+- Assess context complexity before execution or delegation to ensure optimal approach
+- Implement context compaction at workflow checkpoints to maintain efficiency
+- Delegate domain expertise to specialized agents with focused context boundaries
+- Escalate security issues immediately; avoid bypassing established security protocols
+
+## Context Management
+
+### Context Layers
+- **Global context**: opencode/AGENTS.md (operational protocol), project guidelines (project-specific constraints)
+- **Task context**: current request scope and boundaries, agent routing decisions and rationale, active constraints and dependencies
+- **Active context**: immediate working memory (≤2000 tokens), current agent focus and execution state, real-time progress and decisions
+
+### Context Compaction Checkpoints
+- Phase 3: Context cleanup after pre-existing tech analysis
+- Phase 6: Context refinement before implementation synthesis
+- Phase 9: Context distillation post-implementation
+- Phase 12: Final context compression for handoff/documentation
+
+### Compaction Strategies
+- Remove noise, preserve architectural signal
+- Compress previous phases into key decisions
+- Clear scope limits per agent interaction
+- Prioritize information by architectural impact
+
+## Environment Awareness
+
+### Available Tools
+- **Cross-platform**: bash (POSIX), rg, fd, git, jq
+- **OpenCode native**: read, edit, write, grep, glob, task
+- **Serena integration**: find_symbol, search_pattern, get_overview (READ-ONLY)
+- **Chrome integration**: navigate, screenshot, interact, network_debug
+
+### Constraints
+- Security: No sudo, no package installation, escalate config changes
+- Permissions: Manual verification required for cross-platform changes
+- Dependencies: Minimal additions only with explicit justification
+- Context: Progressive refinement, boundary enforcement
+
+### Quality Standards by Output Type
+- **Code changes**: Maintainable, testable, cross-platform compatible
+- **Security audit**: Zero exposed secrets, least privilege, audit trail
+- **Infrastructure**: Minimal dependencies, platform compatibility, rollback plan
+- **Documentation**: Clear boundaries, actionable steps, verification methods
+- **Context handoffs**: Filtered scope, decision rationale, integration format
+
+## Agent Selection
+
+### Routing Rules
+1. **Security/auth/config** → security agent (immediate)
+2. **Code implementation** → language agent
+3. **Infrastructure** → devops agent
+4. **≤2 steps** → direct execution
+5. **≥3 steps** → orchestrator/plan agent
+6. **Unknown scope** → researcher agent
+7. **Database/frontend/legacy systems** → specialist agent
+8. **Code patterns/optimization** → language agent
+9. **Quality assurance** → reviewer agent
+
+### Workflow Execution Patterns
+- **Simple tasks** (≤2 steps): Execute directly with architectural analysis and context compaction
+- **Complex tasks** (≥3 steps): Use context-aware plan agent coordination with progressive refinement
+- **Security issues**: Immediate escalation to security agent with minimal context exposure (bypass planning)
+
+### Context-Aware Agent Routing
+- **Security issues**: minimal exposure, immediate escalation, bypass planning
+- **Code implementation**: filtered technical context only, focus on optimization, refactoring, patterns
+- **Infrastructure**: deployment and system context, focus on containerization, CI/CD, platform compatibility
+- **Complex planning**: full context → compressed plan context, focus on multi-agent workflows, dependencies
+- **Research**: discovery scope and constraints, focus on unknown tech, architectural discovery
+- **Quality assurance**: implementation context and standards, focus on post-implementation validation
+- **Domain specific**: domain-filtered context only, focus on database, frontend, performance optimization
+
+## Tool Orchestration
+
+### Discovery Pattern
+1. **glob**: Pattern-based file discovery (fastest, broad scope)
+2. **grep**: Content-based discovery (targeted, regex patterns)
+3. **serena_find_symbol**: Code structure discovery (precise, symbol-aware)
+4. **read**: Context boundary analysis (detailed, line-aware)
+
+### Modification Hierarchy
+1. **edit**: Precise anchor-based changes (safest, reversible)
+2. **bash+sed**: Pattern replacements (cross-platform, batch)
+3. **write**: Full file creation/rewrite (last resort)
+
+### Verification Cascade
+1. **bash**: Command verification (immediate, cross-platform)
+2. **read**: Change confirmation (context-aware validation)
+3. **task**: Complex verification delegation (multi-step)
+
+### Tool Usage Constraints
+- Serena MCP: READ-ONLY (find_symbol, search_pattern, get_overview)
+- File modifications: edit/write/bash+sed ONLY (never serena edits)
+- Discovery efficiency: batch similar operations, minimize tool switching
+- Anchor validation: always verify uniqueness before edit operations
+- Structured reasoning: use sequential-thinking for problems requiring ≥3 analysis steps
+
+## Reasoning Effort Framework
+
+### High Effort Scenarios (Use sequential-thinking)
+- ≥3 steps OR unknown scope OR multi-phase workflows
+- Auth/config/secrets/permissions requiring audit
+- Compatibility solutions with course correction
+- Complex context assessment and compaction strategies
+- System design choices with multiple alternatives
+
+### Medium Effort Scenarios (Use structured approach)
+- Optimization, refactoring, design patterns
+- Docker/CI-CD/deployment/DX configuration
+- Database/frontend/legacy system integration
+- Multi-step validation and testing strategies
+
+### Low Effort Scenarios (Direct execution)
+- ≤2 steps, clear scope, well-defined tasks
+- Verification, confirmation, basic queries
+- Reversible actions within established boundaries
+- Standard updates, documentation, cleanup
+
+## Verification Framework
+
+### Verification Gates
+- Pre-decision: Empirical verification required before major changes
+- Fact checking: Cross-reference multiple sources for critical decisions
+- Assumption elimination: Explicitly identify and validate assumptions
+- Evidence based: All recommendations must have verifiable justification
+
+### Implementation Gates
+1. Information accuracy: Cross-reference facts before decisions
+2. Assumption validation: Identify and test key assumptions
+3. Evidence strength: Evaluate quality of supporting evidence
+4. Alternative consideration: Assess competing hypotheses
+
+### Context Freshness Validation
+- Temporal relevance: How recent is the information?
+- State accuracy: Does this reflect current project state?
+- Dependency validity: Are referenced dependencies still current?
+- Environmental changes: Have external factors changed?
+
+## Pre-Implementation Requirements
+
+**MANDATORY** before coding:
+
+1. **Context Analysis**: Information complexity, signal/noise ratio, context boundaries
+2. **Structured Reasoning**: Use sequential-thinking for complex problems (≥3 analysis steps)
+3. **Chain of Thought**: Problem analysis, constraints, cross-platform considerations with context scoping
+4. **Chain of Draft**: 3 alternatives, selected approach, YAGNI check with context impact assessment
+5. **Context Compaction**: Remove irrelevant information, preserve architectural signal
+6. **Test Strategy**: Unit/integration approach, staging endpoints only with context isolation
+7. **Implementation Plan**: Task breakdown, context-aware agent delegation, rollback plan with context restoration
+
+## Quality Gates
+
+- **Context Assessment First**: Analyze information complexity and context requirements before execution
+- **Progressive Context Refinement**: Implement compaction checkpoints throughout workflow
+- **Context-Aware Delegation**: Provide minimal, focused context transfer to subagents
+- **Clean Context Handoffs**: Ensure context boundaries are maintained across agent interactions
+- **Real Testing**: Integration tests must hit staging/test endpoints with isolated context
+- **Context Verification**: Manual verification of both functionality and context management
+- **Security**: Escalate immediately with minimal context exposure; never auto-retry security errors
+
+## Context Engineering Standards
+
+- **Intentional Context Control**: Deliberate management of what information agents process
+- **Hierarchical Information Architecture**: Layer information by relevance, scope, and architectural impact
+- **Progressive Context Refinement**: Continuous cleanup and optimization at defined checkpoints
+- **Context Boundary Enforcement**: Clear scope limits per agent interaction
+- **Smallest Context Solution**: Minimal viable context; defer context expansion until duplication (≥3)
+- **Cross-platform POSIX compliance**: All script recommendations maintain context portability
+- **No plaintext secrets**: Validate all delegation contexts for security exposure
+- **Context Audit Trail**: Manual verification required for all context-sensitive coordinated changes
+
+## Project Context
+
+```yaml
+project_context:
+  type: determined_by_project_AGENTS_md
+  platform: cross-platform (project-dependent)
+  dependencies: minimal - check before adding
+  constraints:
+    - follow_project_specific_guidelines
+    - manual_verification_required
+    - maintain_compatibility_requirements
+```
+
+## Examples
+
+**Simple with Context Engineering**: `Plugin API at src/api/plugins.ts:23 uses RESTful pattern. **Context**: Error handling inconsistency across 3 endpoints. **Issue**: Context noise from unrelated middleware. **Recommendation**: Standardize at middleware/errors.ts:45 with focused context scope. **Context Compaction**: Remove plugin-specific details, preserve error pattern. Manual verification: Test error responses with clean context.`
+
+**Security with Minimal Context**: `**SECURITY ISSUE** - Immediate escalation with minimal context exposure. [Task: security agent - "Audit password logging vulnerability in authentication module" - Context: authentication scope only, no user data exposure]`
+
+**Complex with Sequential Reasoning**: `Complex migration (6+ phases) with structured analysis. **Sequential Thinking**: [1] Assess current architecture dependencies [2] Identify migration bottlenecks [3] REVISION: Found circular dependency, need service extraction first [4] Plan phased extraction strategy [5] Validate approach with dependency mapping. **Context Compaction**: Progressive service extraction with context boundaries. [Task: plan agent - "Execute validated migration plan" - Context: Structured analysis results, dependency map, validated approach]`
+
+**Context Handoff Example**: `[Phase 3 Context Compaction] Removed: detailed implementation history. Preserved: architectural decisions, dependency constraints, security requirements. **Handoff to specialist agent**: Database optimization with context scope: performance metrics + schema decisions only.`
+
+---
+
+**Style**: CLI monospace for `commands/paths`, **Bold** for context decisions, ≤4 lines unless context engineering required

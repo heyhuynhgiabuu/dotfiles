@@ -72,7 +72,7 @@ const loader = new SecurePluginLoader({
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │ OpenCode Client │───▶│ Secure Loader    │───▶│ Unified Plugin  │
-└─────────────────┘    │ - Token Auth     │    │ - GPT-5 Config  │
+└─────────────────┘    │ - Token Auth     │    │ - Model Config  │
                        │ - Audit Log      │    │ - Notifications │
                        │ - Capability     │    │ - VectorCode    │
                        │ - Process Isolation│    │ - File Security │

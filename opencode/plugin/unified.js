@@ -6,10 +6,10 @@ export const UnifiedDotfilesPlugin = async ({ app, client, $ }) => {
   let lastMessage = { messageID: null, text: null };
 
   return {
-    // GPT-5 reasoning optimization for all actual subagents
+    // Reasoning optimization for all actual subagents
     "chat.params": async ({ model, provider, message }, output) => {
       const agent = message?.agent;
-      
+
       if (model.id.includes("gpt-5") && agent?.name) {
         switch (agent.name) {
           // High precision agents - minimal reasoning, focused output
@@ -18,23 +18,23 @@ export const UnifiedDotfilesPlugin = async ({ app, client, $ }) => {
             output.reasoningEffort = "low";
             output.textVerbosity = "low";
             break;
-            
+
           // Low temperature agents - structured reasoning
           case "devops":
-          case "language": 
+          case "language":
           case "orchestrator":
           case "specialist":
             output.reasoningEffort = "medium";
             output.textVerbosity = "low";
             break;
-            
-          // Research agents - comprehensive reasoning  
+
+          // Research agents - comprehensive reasoning
           case "general":
           case "researcher":
             output.reasoningEffort = "high";
             output.textVerbosity = "medium";
             break;
-            
+
           default:
             // Fallback for any unrecognized agents
             output.reasoningEffort = "medium";
@@ -46,17 +46,21 @@ export const UnifiedDotfilesPlugin = async ({ app, client, $ }) => {
     // Event handling: notifications + message tracking
     event: async ({ event }) => {
       // Track last message for notifications
-      if (event.type === "message.part.updated" && event.properties.part.type === "text") {
+      if (
+        event.type === "message.part.updated" &&
+        event.properties.part.type === "text"
+      ) {
         const { messageID, text } = event.properties.part;
         lastMessage = { messageID, text };
       }
 
       // Cross-platform session completion notifications
       if (event.type === "session.idle") {
-        const summary = extractSummary(lastMessage?.text) ?? "Session completed";
+        const summary =
+          extractSummary(lastMessage?.text) ?? "Session completed";
         try {
           if (process.platform === "darwin") {
-            await $`say "Hey man, done!"`;
+            // await $`say "Hey man, done!"`;
             await $`osascript -e 'display notification ${JSON.stringify(summary)} with title "opencode"'`;
             await $`afplay /System/Library/Sounds/Glass.aiff`;
           } else {
@@ -74,7 +78,11 @@ export const UnifiedDotfilesPlugin = async ({ app, client, $ }) => {
       // Security: Block sensitive file reads
       if (input.tool === "read" && output.args.filePath) {
         const filePath = output.args.filePath.toLowerCase();
-        if (filePath.includes(".env") || filePath.includes("secret") || filePath.includes("private")) {
+        if (
+          filePath.includes(".env") ||
+          filePath.includes("secret") ||
+          filePath.includes("private")
+        ) {
           console.warn(`🔒 Blocked: ${output.args.filePath}`);
           throw new Error("Blocked: Attempted to read sensitive file");
         }
@@ -116,8 +124,8 @@ export const UnifiedDotfilesPlugin = async ({ app, client, $ }) => {
  */
 function extractSummary(text) {
   if (!text) return null;
-  
-  const lines = text.split(/\r?\n/).filter(l => l.trim());
+
+  const lines = text.split(/\r?\n/).filter((l) => l.trim());
   if (!lines.length) return null;
 
   // Look for "Summary:" pattern in last few lines
@@ -134,3 +142,4 @@ function extractSummary(text) {
   const lastLine = lines[lines.length - 1].trim();
   return lastLine.length > 80 ? lastLine.slice(0, 77) + "..." : lastLine;
 }
+
