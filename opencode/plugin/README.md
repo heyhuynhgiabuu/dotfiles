@@ -1,88 +1,119 @@
-# OpenCode Plugins - Official Pattern
+# OpenCode Unified Dotfiles Plugin
 
-**Following the [official OpenCode documentation](https://opencode.ai/docs/plugins/) exactly.**
+**Working plugin following KISS principles and proven patterns**
 
-## 🎯 Official Plugin Structure
+## 🎯 Plugin Structure
 
-✅ **Correct Setup:**
+✅ **Simple Unified Architecture:**
 ```bash
-~/.config/opencode/plugin/     # ← OpenCode loads from here (via symlink)
-├── unified.js                 # All features combined - RECOMMENDED
-├── notification.js            # Session completion notifications
-├── env-protection.js          # Security file blocking
-└── README.md                  # This file
+opencode/plugin/               # Dotfiles integration directory
+├── unified.js                 # Single file with async function export
+└── README.md                  # This documentation
 ```
 
-## 📁 Main Plugin: `unified.js`
+## 📦 UnifiedDotfilesPlugin Function
 
-### **Reasoning Optimization**
-Automatically tunes reasoning parameters based on agent characteristics:
+### **Core Architecture**
+- **Function Export**: Simple `async ({ $ }) =>` pattern that OpenCode SDK expects
+- **Single File**: All functionality in 160 lines (KISS principle)
+- **SDK Hooks**: Uses `chat.params`, `tool.execute.before`, `event` hooks
+- **Cross-Platform**: Works on macOS and Linux without modification
 
-**High Precision Agents** (focused, minimal reasoning):
-- `reviewer` - Code quality analysis
+### **🔧 Agent Optimization** 
+Automatically reduces GPT-5 verbosity based on agent type:
+
+**Low Effort Agents** (low reasoning, low verbosity):
+- `reviewer` - Code quality analysis  
 - `security` - Security auditing
 
-**Structured Reasoning Agents** (medium reasoning, concise output):
+**Medium Effort Agents** (medium reasoning, low verbosity):
 - `devops` - Infrastructure & deployment
 - `language` - Code patterns & optimization  
 - `orchestrator` - Multi-agent coordination
 - `specialist` - Domain expertise
 
-**Research Agents** (comprehensive reasoning):
+**High Effort Agents** (high reasoning, medium verbosity):
 - `general` - Multi-step tasks
 - `researcher` - Information synthesis
 
-### **Cross-Platform Notifications**
-- **macOS**: `say` + `osascript` + system sounds
-- **Linux**: `notify-send` + `canberra-gtk-play`
-- **Auto-summary**: Extracts "Summary:" lines from responses
+### **🔔 Cross-Platform Notifications**
+Desktop alerts on session completion with smart summary extraction:
+- **macOS**: `osascript` visual notifications
+- **Linux**: `notify-send` desktop notifications
+- **Summary Pattern**: Extracts "Summary:" lines from responses (≤100 chars)
+- **Fallback**: Uses last line if no summary found
+- **Silent Fail**: Notification errors don't break workflow
 
-### **Security Protection**
-Blocks reading of sensitive files:
-- `.env` files
-- Files containing "secret", "private"
-- Custom security patterns
+### **🔒 Security Protection**
+Blocks sensitive file reads with pattern matching:
+- **Patterns**: `.env`, `secret`, `private`, `password`, `token`, `key`, `credential`
+- **Immediate Block**: Throws error on sensitive file access attempts
+- **No Retry**: Security errors escalate immediately (per AGENTS.md)
+- **Console Warning**: Clear feedback on blocked access
 
-### **VectorCode Integration**
-Custom commands for codebase analysis:
+### **🔍 VectorCode Integration**
+Intercepts and executes semantic search commands:
 ```bash
-vc-query "search terms"    # Search codebase context
+vc-query "search terms"    # Semantic codebase search
 vc-index                   # Index current directory
 ```
+- **Command Interception**: Catches bash commands containing `vc-query`/`vc-index`
+- **Direct Execution**: Runs `vectorcode` CLI with proper error handling
+- **Completion Signal**: Throws error to prevent double execution
+- **Install Guidance**: Shows npm install command on missing dependency
 
 ## 🚀 Usage
 
-**Automatic features** (no commands needed):
-- Reasoning optimization per agent
-- Session completion notifications with summaries
-- Sensitive file protection
+**Fully Automatic** - Zero configuration required:
+- ✅ **Agent Optimization**: Reduces GPT-5 verbosity automatically
+- ✅ **Desktop Notifications**: Session completion alerts with summaries
+- ✅ **Security Blocking**: Prevents access to sensitive files
+- ✅ **VectorCode Commands**: `vc-query` and `vc-index` semantic search
 
-**Manual commands**:
-- VectorCode integration (requires `npm i -g vectorcode`)
+**Plugin Integration**:
+- Auto-loads from dotfiles `opencode/plugin/unified.js`
+- Uses proven async function export pattern
+- Hooks into OpenCode SDK events seamlessly
 
-## ✅ KISS Principles Applied
+## ✅ Design Principles
 
-1. **Single responsibility** - One plugin file with clear sections
-2. **No external dependencies** - Uses built-in OpenCode APIs only
-3. **Official patterns** - Follows documented JavaScript examples exactly
-4. **Cross-platform** - Works on macOS and Linux
-5. **Defensive coding** - Graceful error handling
-6. **Agent-aware** - Maps to actual agents in `opencode/agent/`
+1. **KISS Principle** - Single file, simple function export
+2. **Working First** - Proven patterns over "official" architectures  
+3. **Cross-Platform** - macOS and Linux compatibility required
+4. **Security First** - Immediate escalation, no retry on security errors
+5. **Silent Fail** - Non-critical errors don't break workflow
+6. **AGENTS.md Compliant** - Follows established dotfiles protocols
+7. **Manual Verification** - All changes include testing steps
+8. **No Dependencies** - Uses only built-in OpenCode SDK features
 
-## 🔍 Verification
+## 🔍 Manual Verification Steps
 
 ```bash
-# Check plugin detection
-ls ~/.config/opencode/plugin/    # Should show: unified.js, notification.js, env-protection.js
+# 1. Check plugin loads without syntax errors
+node -c opencode/plugin/unified.js
 
-# Verify symlink works  
-readlink ~/.config/opencode      # Should show: /Users/killerkidbo/dotfiles/opencode
+# 2. Verify cross-platform notification commands exist
+# macOS:
+which osascript  # Should exist
+# Linux: 
+which notify-send  # Should exist
 
-# Test syntax
-node -c ~/.config/opencode/plugin/unified.js  # Should pass
+# 3. Test VectorCode integration (if installed)
+vectorcode --version  # Optional: npm i -g vectorcode
+
+# 4. Verify security patterns work
+echo "Contains: secret, token, .env" | grep -E "(secret|token|\.env)"
+
+# 5. Check agent optimization mappings
+node -e "
+const plugin = require('./opencode/plugin/unified.js');
+console.log('Plugin exports:', Object.keys(plugin));
+"
 ```
 
-## 📚 References
+## 📚 Related Documentation
 
-- [Official Plugin Docs](https://opencode.ai/docs/plugins/)
-- [Agent Definitions](../agent/) - Local subagent configurations
+- [AGENTS.md](../AGENTS.md) - OpenCode protocol and agent routing rules
+- [Agent Definitions](../agent/) - Individual agent configurations  
+- [Dotfiles README](../../README.md) - Project setup and verification
+- [OpenCode Documentation](../../docs/opencode/) - Additional architecture details

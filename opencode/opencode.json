@@ -294,191 +294,19 @@
       }
     },
     "jdtls": {
-      "command": [
-        "jdtls",
-        "--jvm-arg=-javaagent:/opt/homebrew/share/lombok/lombok.jar"
-      ],
-      "extensions": [".java", ".class", ".jar", ".properties", ".yml", ".yaml"],
+      "command": ["jdtls"],
+      "extensions": [".java"],
       "initialization": {
         "java": {
           "configuration": {
-            "updateBuildConfiguration": "automatic",
-            "maven": {
-              "downloadSources": true,
-              "downloadJavadoc": true,
-              "userSettings": null
-            },
-            "gradle": {
-              "downloadSources": true,
-              "downloadJavadoc": true,
-              "wrapper": {
-                "enabled": true
-              }
-            },
-            "workspaceFolders": [],
-            "runtimes": []
-          },
-          "trace": {
-            "server": "verbose"
-          },
-          "import": {
-            "maven": {
-              "enabled": true,
-              "offline": false
-            },
-            "gradle": {
-              "enabled": true,
-              "wrapper": {
-                "enabled": true
-              },
-              "version": null,
-              "home": null,
-              "java": {
-                "home": null
-              },
-              "offline": false,
-              "arguments": null,
-              "jvmArguments": null,
-              "user": {
-                "home": null
-              }
-            },
-            "exclusions": [
-              "**/node_modules/**",
-              "**/.metadata/**",
-              "**/archetype-resources/**",
-              "**/META-INF/maven/**",
-              "**/target/**",
-              "**/build/**"
-            ]
-          },
-          "project": {
-            "referencedLibraries": ["lib/**/*.jar"]
-          },
-          "compile": {
-            "nullAnalysis": {
-              "mode": "automatic"
-            }
+            "updateBuildConfiguration": "automatic"
           },
           "completion": {
             "enabled": true,
-            "overwrite": true,
-            "guessMethodArguments": true,
-            "favoriteStaticMembers": [
-              "org.junit.jupiter.api.Assertions.*",
-              "org.junit.Assert.*",
-              "org.mockito.Mockito.*",
-              "org.mockito.ArgumentMatchers.*",
-              "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
-              "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
-              "org.springframework.test.web.servlet.result.MockMvcResultHandlers.*",
-              "org.hamcrest.Matchers.*",
-              "org.hamcrest.CoreMatchers.*",
-              "java.util.Objects.requireNonNull",
-              "java.util.Objects.requireNonNullElse",
-              "java.util.Objects.requireNonNullElseGet",
-              "java.util.Collections.*",
-              "java.util.stream.Collectors.*"
-            ],
-            "filteredTypes": [
-              "java.awt.*",
-              "com.sun.*",
-              "sun.*",
-              "jdk.*",
-              "org.graalvm.*",
-              "io.micrometer.shaded.*"
-            ],
-            "importOrder": [
-              "java",
-              "javax",
-              "org.springframework",
-              "org.junit",
-              "org.mockito",
-              "org",
-              "com",
-              ""
-            ],
-            "postfix": {
-              "enabled": true
-            }
-          },
-          "contentProvider": {
-            "preferred": "fernflower"
-          },
-          "autobuild": {
-            "enabled": true
-          },
-          "maxConcurrentBuilds": 1,
-          "recommendations": {
-            "dependency": {
-              "analytics": {
-                "enabled": true
-              }
-            }
-          },
-          "references": {
-            "includeAccessors": true,
-            "includeDecompiledSources": true
-          },
-          "typeHierarchy": {
-            "lazyLoad": false
-          },
-          "settings": {
-            "url": null
-          },
-          "symbols": {
-            "includeSourceMethodDeclarations": false
-          },
-          "implementationsCodeLens": {
-            "enabled": true
-          },
-          "inlayHints": {
-            "parameterNames": {
-              "enabled": "all"
-            }
-          },
-          "referencesCodeLens": {
-            "enabled": true
-          },
-          "signatureHelp": {
-            "enabled": true,
-            "description": {
-              "enabled": true
-            }
+            "guessMethodArguments": true
           },
           "saveActions": {
-            "organizeImports": true,
-            "generateFinalParameters": false
-          },
-          "sources": {
-            "organizeImports": {
-              "starThreshold": 99,
-              "staticStarThreshold": 99
-            }
-          },
-          "codeGeneration": {
-            "hashCodeEquals": {
-              "useJava7Objects": true,
-              "useInstanceof": true
-            },
-            "useBlocks": true,
-            "generateComments": true,
-            "toString": {
-              "template": "${object.className} [${member.name()}=${member.value}, ${otherMembers}]",
-              "codeStyle": "STRING_CONCATENATION",
-              "skipNullValues": false,
-              "listArrayContents": true,
-              "limitElements": 0
-            }
-          },
-          "selectionRange": {
-            "enabled": true
-          },
-          "showBuildStatusOnStart": {
-            "enabled": "notification"
-          },
-          "server": {
-            "launchMode": "Standard"
+            "organizeImports": true
           }
         }
       }
