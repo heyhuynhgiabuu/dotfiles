@@ -1,24 +1,18 @@
-# Add custom ENV values here to export
+# Environment Variables
+# All custom environment exports in one place
+
+# Maven
 export M2_HOME="$HOME/apache-maven-3.8.8"
 
-# Add ~/.bin to PATH
-export PATH="$HOME/.bin:$PATH"
-
-# PHP Herd configurations moved to main .zshrc for centralization
-
-# Go development environment
+# Go development
 export GOPATH=$HOME/go
 export GOBIN="$HOME/go/bin"
-# Use Homebrew Go (no need to set GOROOT manually)
 export PATH="$PATH:$GOBIN"
-unset GOROOT
+unset GOROOT  # Use Homebrew Go
 
-#export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt) 2>/dev/null || '')"
+# Security & API keys (using pass for secure storage)
 export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt 2>/dev/null || echo '')"
 export FIGMA_API_KEY="$(pass dev/figma-tung-pat 2>/dev/null || echo '')"
-# JAVA_HOME is now managed by SDKMAN - removed hardcoded path
-
-# security
 export DNS_OVER_HTTPS=1
 
 # OpenCode MCP Configuration
