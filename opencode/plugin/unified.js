@@ -1,25 +1,28 @@
 /**
- * OpenCode Unified Dotfiles Plugin
+ * OpenCode Unified Dotfiles Plugin - v0.6.x Compatible
  * 
  * FEATURES:
  * - Security: Blocks reads of .env/secrets/keys/tokens/credentials files
  * - Notifications: Cross-platform desktop alerts on session completion
  * 
  * ARCHITECTURE:
- * - Simple async function export matching OpenCode plugin documentation
+ * - v0.6.x plugin API: project, client, $, directory, worktree
  * - Uses official plugin hooks: tool.execute.before, event
  * - Cross-platform compatible (macOS osascript, Linux notify-send)
  * - KISS principle: Essential functionality only
  * 
- * CONFIGURATION:
- * - Model optimization handled by opencode.json provider settings
- * - Agent-specific models configured in individual agent/*.md files
- * - Plugin focuses only on cross-cutting concerns
+ * BREAKING CHANGES v0.6.x:
+ * - Plugin now receives { project, client, $, directory, worktree }
+ * - "app" concept removed, replaced with "project"
+ * - Storage events removed (event tracking still works)
  */
 
-export const UnifiedDotfilesPlugin = async ({ $ }) => {
+export const UnifiedDotfilesPlugin = async ({ project, client: _client, $, directory }) => {
   let lastMessage = { text: null };
 
+  // Log plugin initialization with correct project info
+  console.log(`🚀 Unified Plugin loaded for project: ${project?.name || directory || 'unknown'}`);
+  
   // Sensitive file patterns
   const BLOCKED_PATTERNS = [
     '.env', 'secret', 'private', 'password', 'token', 'key', 'credential'
