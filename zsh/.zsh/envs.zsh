@@ -10,9 +10,15 @@ export GOBIN="$HOME/go/bin"
 export PATH="$PATH:$GOBIN"
 unset GOROOT  # Use Homebrew Go
 
+# invoice
+export BREVO_SMTP_USERNAME="$(pass dev/brevo-username 2>/dev/null || echo '')"
+export BREVO_SMTP_PASSWORD="$(pass dev/brevo-password 2>/dev/null || echo '')"
+
 # Security & API keys (using pass for secure storage)
 export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt 2>/dev/null || echo '')"
 export FIGMA_API_KEY="$(pass dev/figma-tung-pat 2>/dev/null || echo '')"
+export OPENROUTER_API_KEY="$(pass dev/openrouter-api-key 2>/dev/null || echo '')"
+export XAI_API_KEY="$(pass dev/xai-api-key 2>/dev/null || echo '')"
 export DNS_OVER_HTTPS=1
 
 # OpenCode MCP Configuration

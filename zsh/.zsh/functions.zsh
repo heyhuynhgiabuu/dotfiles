@@ -24,6 +24,32 @@ logocode() {
     fi
 }
 
+# OpenCode plugin log viewer - filters for plugin messages only
+logocode_plugins() {
+    local log_dir="$HOME/.local/share/opencode/log"
+    if [[ -d "$log_dir" ]]; then
+        local latest_file
+        latest_file=$(find "$log_dir" -type f -name "*.log" -exec ls -t {} + 2>/dev/null | head -n1)
+        if [[ -n "$latest_file" ]]; then
+            echo "📋 Plugin messages from: $latest_file"
+            echo "💡 Press Ctrl+C to stop following"
+            echo "🔍 Showing: Historical plugin messages + live plugin feed"
+            echo ""
+            # Show existing plugin messages first (both old and new service names)
+            grep -E "(service=context-engineering|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|Context Engineering|Landscape:|Context Metadata:|Enhanced.*tool|Information Architecture)" "$latest_file" 2>/dev/null || echo "No plugin messages found in history"
+            echo ""
+            echo "--- LIVE PLUGIN FEED ---"
+            # Follow new messages and filter for plugin-related content (both service names)
+            tail -f "$latest_file" | grep --line-buffered -E "(service=context-engineering|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|Context Engineering|Landscape:|Context Metadata:|Enhanced.*tool|Information Architecture)"
+        else
+            echo "❌ No log files found in $log_dir"
+        fi
+    else
+        echo "❌ Log directory not found: $log_dir"
+        echo "💡 Try running OpenCode first to create logs"
+    fi
+}
+
 # Git clean merged branches
 git_clean_merged() {
     echo "🧹 Cleaning merged branches..."

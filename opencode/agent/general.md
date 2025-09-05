@@ -2,7 +2,7 @@
 name: general
 description: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks autonomously
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: github-copilot/gpt-5
 temperature: 0.3
 max_tokens: 5500
 tools:
