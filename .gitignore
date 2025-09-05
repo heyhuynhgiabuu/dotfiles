@@ -40,3 +40,12 @@ review_artifacts/
 *.vtt
 # ZSH completion cache files
 .zcompdump*
+
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.webp
