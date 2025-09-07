@@ -2,7 +2,7 @@
 name: language
 description: ALWAYS use this agent for idiomatic multi-language coding, advanced code patterns, refactoring, optimization, and LLM prompt engineering. Specializes in language-specific best practices, performance optimization, comprehensive code development, and AI system prompt design across multiple programming languages.
 mode: subagent
-model: zai/glm-4.5-flash
+model: opencode/grok-code
 temperature: 0.1
 max_tokens: 6000
 tools:

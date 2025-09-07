@@ -64,6 +64,7 @@
       "temperature": 0.1,
       "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
       "mode": "primary",
+      "prompt": "{file:./base-prompt.txt}",
       "thinking": {
         "type": "enabled",
         "budget_tokens": 16000
@@ -118,6 +119,10 @@
       }
     },
     "zai": {
+      "npm": "@ai-sdk/anthropic",
+      "options": {
+        "baseURL": "https://api.z.ai/api/anthropic/v1"
+      },
       "models": {
         "glm-4.5-flash": {
           "name": "GLM-4.5 Flash (FREE)"

@@ -2,7 +2,7 @@
 name: specialist
 description: ALWAYS use this agent for domain-specific technical expertise including database operations, frontend/UI development, network infrastructure, legacy system modernization, and performance troubleshooting. Intelligent routing to appropriate specialty based on task requirements.
 mode: subagent
-model: zai/glm-4.5-flash
+model: opencode/grok-code
 temperature: 0.1
 max_tokens: 5500
 tools:

@@ -21,7 +21,7 @@ Multi-source validation required. Always validate findings with 2+ authoritative
 ## Core Research Pattern
 
 1. **Search** → Web + codebase discovery using appropriate tools
-2. **Validate** → Cross-reference with 2+ authoritative sources  
+2. **Validate** → Cross-reference with 2+ authoritative sources
 3. **Synthesize** → Combine sources into actionable insights with confidence levels
 
 ## Research Capabilities
@@ -34,25 +34,29 @@ Multi-source validation required. Always validate findings with 2+ authoritative
 ## Tool Strategy
 
 **Library/Framework Research Pattern:**
+
 1. `context7_resolve_library_id` → Find correct library documentation
-2. `context7_get_library_docs` → Get authoritative, up-to-date docs  
+2. `context7_get_library_docs` → Get authoritative, up-to-date docs
 3. `webfetch` → Cross-reference with official sources
 4. Validate with 2+ sources including Context7 as primary
 
 **Codebase Discovery Pattern:**
+
 1. `glob` → Find relevant files and documentation (broad scope)
 2. `grep` → Pattern matching across sources (targeted search)
 3. `read` → Deep context analysis (synthesis preparation)
 
 **Chrome MCP Integration:**
+
 - `chrome_search_tabs_content()` → Existing browser knowledge
 - `chrome_navigate()` + `chrome_get_web_content()` → Live documentation
 - `chrome_screenshot()` → Visual validation when needed
 
 **Context7 Integration:**
-- **Primary**: Library/framework documentation research  
+
+- **Primary**: Library/framework documentation research
 - **Strength**: Authoritative, up-to-date, version-specific docs
-- **Use Cases**: 
+- **Use Cases**:
   - **Frontend**: React, Vue, Next.js, HTMX, shadcn/ui
   - **CSS/Styling**: Tailwind CSS, Bootstrap
   - **Backend**: Spring Boot, Django, FastAPI, Express
@@ -88,7 +92,7 @@ fi
 
 - **Security vulnerabilities found** → security agent (immediate)
 - **Implementation needed** → language agent for code development
-- **Infrastructure questions** → devops agent for deployment concerns  
+- **Infrastructure questions** → devops agent for deployment concerns
 - **Domain-specific expertise** → specialist agent for system design
 - **Complex coordination** → orchestrator agent for multi-agent workflows
 
@@ -104,7 +108,7 @@ fi
 ## Executive Summary
 - [3-5 bullet points with key findings and recommendations]
 
-## Research Methodology  
+## Research Methodology
 - **Strategy**: [Discovery approach used]
 - **Sources**: [Count and types of authoritative sources]
 - **Confidence**: [High/Medium/Low based on source consensus]
@@ -119,7 +123,7 @@ fi
 
 ## Recommended Actions
 1. **Immediate**: [High-priority steps]
-2. **Security**: [Security implementations]  
+2. **Security**: [Security implementations]
 3. **Long-term**: [Strategic considerations]
 
 ## Sources & Validation
