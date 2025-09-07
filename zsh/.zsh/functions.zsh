@@ -1,46 +1,36 @@
 # Useful Shell Functions
 # Practical functions that improve daily workflow
 
-# OpenCode log viewer with colored output
+# OpenCode log viewer with filtering options
 logocode() {
     local log_dir="$HOME/.local/share/opencode/log"
+    local filter_plugins="$1"  # Pass 'plugins' to filter for plugins only
+    
     if [[ -d "$log_dir" ]]; then
         local latest_file
         latest_file=$(find "$log_dir" -type f -name "*.log" -exec ls -t {} + 2>/dev/null | head -n1)
         if [[ -n "$latest_file" ]]; then
-            echo "📋 Following OpenCode log: $latest_file"
-            echo "💡 Press Ctrl+C to stop following"
-            if command -v bat >/dev/null 2>&1; then
-                tail -f "$latest_file" | bat --style=plain --color=always --language=log
+            if [[ "$filter_plugins" == "plugins" ]]; then
+                echo "📋 Plugin messages from: $latest_file"
+                echo "💡 Press Ctrl+C to stop following"
+                echo "🔍 Showing: Historical plugin messages + live plugin feed"
+                echo ""
+                # Show existing plugin messages first
+                grep -E "(service=notification-plugin|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|🔔|🌍|Context Engineering|Landscape:|Enhanced.*tool)" "$latest_file" 2>/dev/null || echo "No plugin messages found in history"
+                echo ""
+                echo "--- LIVE PLUGIN FEED ---"
+                # Follow new messages and filter for plugin content
+                tail -f "$latest_file" | grep --line-buffered -E "(service=notification-plugin|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|🔔|🌍|Context Engineering|Landscape:|Enhanced.*tool)"
             else
-                tail -f "$latest_file"
+                echo "📋 Following OpenCode log: $latest_file"
+                echo "💡 Press Ctrl+C to stop following"
+                echo "💡 Use 'logocode plugins' to filter for plugin messages only"
+                if command -v bat >/dev/null 2>&1; then
+                    tail -f "$latest_file" | bat --style=plain --color=always --language=log
+                else
+                    tail -f "$latest_file"
+                fi
             fi
-        else
-            echo "❌ No log files found in $log_dir"
-        fi
-    else
-        echo "❌ Log directory not found: $log_dir"
-        echo "💡 Try running OpenCode first to create logs"
-    fi
-}
-
-# OpenCode plugin log viewer - filters for plugin messages only
-logocode_plugins() {
-    local log_dir="$HOME/.local/share/opencode/log"
-    if [[ -d "$log_dir" ]]; then
-        local latest_file
-        latest_file=$(find "$log_dir" -type f -name "*.log" -exec ls -t {} + 2>/dev/null | head -n1)
-        if [[ -n "$latest_file" ]]; then
-            echo "📋 Plugin messages from: $latest_file"
-            echo "💡 Press Ctrl+C to stop following"
-            echo "🔍 Showing: Historical plugin messages + live plugin feed"
-            echo ""
-            # Show existing plugin messages first (both old and new service names)
-            grep -E "(service=context-engineering|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|Context Engineering|Landscape:|Context Metadata:|Enhanced.*tool|Information Architecture)" "$latest_file" 2>/dev/null || echo "No plugin messages found in history"
-            echo ""
-            echo "--- LIVE PLUGIN FEED ---"
-            # Follow new messages and filter for plugin-related content (both service names)
-            tail -f "$latest_file" | grep --line-buffered -E "(service=context-engineering|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|Context Engineering|Landscape:|Context Metadata:|Enhanced.*tool|Information Architecture)"
         else
             echo "❌ No log files found in $log_dir"
         fi

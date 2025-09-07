@@ -6,7 +6,6 @@
 
 export const UniversalContextEngineering = async ({
   project,
-  $,
   directory,
   client,
 }) => {
@@ -312,9 +311,9 @@ export const UniversalContextEngineering = async ({
   };
 
   // Generate Enhanced Navigation Metadata
-  const generateNavigationMetadata = (toolName, landscape, output) => {
+  const generateNavigationMetadata = async (toolName, landscape, output) => {
     const { tech } = landscape;
-    const relatedPaths = generateRelatedPaths(landscape, tech);
+    const relatedPaths = await generateRelatedPaths(tech);
 
     const metadata = `
 
@@ -337,10 +336,11 @@ ${generateExpertGuidance(landscape, tech)}
     return metadata;
   };
 
-  // Generate tech-stack specific related paths
-  const generateRelatedPaths = (landscape, tech) => {
+  // Generate tech-stack specific related paths + SDK file discovery
+  const generateRelatedPaths = async (tech) => {
     const paths = [];
 
+    // Static patterns (existing logic)
     if (tech.language === "java") {
       paths.push(
         {
@@ -405,25 +405,25 @@ ${generateExpertGuidance(landscape, tech)}
           pattern: "*.config.{js,ts}",
         },
       );
-    } else {
-      paths.push(
-        {
-          type: "Related",
-          description: `Find files in ${landscape.type} category`,
-          pattern: `${landscape.type}/**/*`,
-        },
-        {
-          type: "Context",
-          description: `Explore ${landscape.name} patterns`,
-          pattern: `**/*.${tech.language}`,
-        },
-        {
-          type: "Cross_Refs",
-          description: `Search dependencies`,
-          pattern: "**/*",
-        },
-      );
     }
+
+    // Enhanced with SDK file discovery
+    try {
+      const discoveredFiles = await client.find.files({
+        query: {
+          query: `*.${tech.language === "javascript" || tech.language === "typescript" ? "{js,ts,jsx,tsx}" : tech.language}`,
+        },
+      });
+
+      if (discoveredFiles?.length > 0) {
+        paths.push({
+          type: "Discovered",
+          description: `Found ${discoveredFiles.length} ${tech.language} files`,
+          pattern: `${tech.language} files in project`,
+          count: discoveredFiles.length,
+        });
+      }
+    } catch {}
 
     return paths;
   };
@@ -501,16 +501,6 @@ ${generateExpertGuidance(landscape, tech)}
     return lines[lines.length - 1].slice(0, 80);
   };
 
-  const sendNotification = async (summary) => {
-    try {
-      if (process.platform === "darwin") {
-        await $`osascript -e 'display notification "${summary}" with title "opencode"'`;
-      } else {
-        await $`notify-send 'opencode' '${summary.replace(/'/g, "'\\''")}'`;
-      }
-    } catch {}
-  };
-
   // Event throttling (unchanged)
   let lastMessage = { text: null };
   let lastEventTime = 0;
@@ -546,6 +536,23 @@ ${generateExpertGuidance(landscape, tech)}
       if (!enhanceableTools.includes(input.tool)) return;
 
       try {
+        // Session-aware context
+        let sessionContext = "";
+        try {
+          const currentSession = await client.session.current();
+          if (currentSession?.title) {
+            sessionContext = currentSession.title
+              .toLowerCase()
+              .includes("debug")
+              ? "debug"
+              : currentSession.title.toLowerCase().includes("test")
+                ? "test"
+                : currentSession.title.toLowerCase().includes("refactor")
+                  ? "refactor"
+                  : "";
+          }
+        } catch {}
+
         // Extract filePath from output content
         let filePath = "";
 
@@ -569,7 +576,7 @@ ${generateExpertGuidance(landscape, tech)}
         }
 
         const landscape = detectInformationLandscape(filePath);
-        const metadata = generateNavigationMetadata(
+        const metadata = await generateNavigationMetadata(
           input.tool,
           landscape,
           output,
@@ -590,7 +597,7 @@ ${generateExpertGuidance(landscape, tech)}
           body: {
             service: "universal-context-engineering",
             level: "info",
-            message: `📍 Context: ${landscape.context} | Tech: ${landscape.tech.language}${landscape.tech.buildSystem ? ` (${landscape.tech.buildSystem})` : ""} | Density: ${output.content ? "high" : "low"}`,
+            message: `📍 Context: ${landscape.context} | Tech: ${landscape.tech.language}${landscape.tech.buildSystem ? ` (${landscape.tech.buildSystem})` : ""} | Session: ${sessionContext || "general"} | Density: ${output.content ? "high" : "low"}`,
           },
         });
 
@@ -601,6 +608,34 @@ ${generateExpertGuidance(landscape, tech)}
             message: `✨ Enhanced '${input.tool}' with ${landscape.name} context + ${landscape.tech.framework || landscape.tech.language} expertise`,
           },
         });
+
+        // Smart toast guidance for complex frameworks
+        if (landscape.tech.framework === "spring-boot") {
+          await client.tui.showToast({
+            body: {
+              message:
+                "Spring Boot detected - try searching @Controller or @Service",
+              variant: "info",
+            },
+          });
+        } else if (landscape.tech.framework === "nextjs") {
+          await client.tui.showToast({
+            body: {
+              message: "Next.js detected - check pages/ and components/",
+              variant: "info",
+            },
+          });
+        } else if (
+          landscape.tech.framework === "gin" ||
+          landscape.tech.framework === "fiber"
+        ) {
+          await client.tui.showToast({
+            body: {
+              message: `${landscape.tech.framework} detected - look for handlers and middleware`,
+              variant: "info",
+            },
+          });
+        }
 
         // Append metadata to output
         if (output.content && typeof output.content === "string") {
@@ -645,7 +680,6 @@ ${generateExpertGuidance(landscape, tech)}
             message: `🎯 Session completed: ${summary}`,
           },
         });
-        await sendNotification(summary);
 
         if (processedEvents.size > 10) {
           processedEvents.clear();

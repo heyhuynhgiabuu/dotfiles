@@ -1,124 +1,72 @@
 /**
- * OpenCode Notification Plugin
- * Sends notifications on session completion with summary detection
+ * OpenCode Notification Plugin - v0.6.5 SDK Enhanced
+ * Uses new toast API + proper event handling
  */
 
-export const NotificationPlugin = async ({ project, client, $, directory }) => {
-  await client.app.log({
-    body: {
-      service: "notification-plugin",
-      level: "info",
-      message: `🔔 Notification Plugin loaded for: ${project?.name || directory}`,
-    },
-  });
-
-  // EXACT summary extraction - no fancy logic
+export const NotificationPlugin = async ({ client, $ }) => {
   const extractSummary = (text) => {
-    if (!text) return "Session completed";
-
+    if (!text) return null;
     const lines = text.split(/\r?\n/);
-
-    // Get the very last non-empty line
     for (let i = lines.length - 1; i >= 0; i--) {
       const line = lines[i].trim();
       if (line.length === 0) continue;
-
-      // ONLY match if the line starts EXACTLY with "Summary:"
       if (line.startsWith("Summary: ")) {
-        const summary = line.substring(9).trim(); // Remove "Summary: "
-        return summary || "Session completed";
+        return line.substring(9).trim().slice(0, 100) || null;
       }
-
-      // If we hit a non-empty line that's not a summary, stop looking
       break;
     }
-
-    return "Session completed";
+    return null;
   };
 
-  const sendNotification = async (summary) => {
+  const notify = async (summary) => {
+    if (!summary || summary.length < 3) return;
+
     try {
-      // Validate summary
-      if (!summary || summary.trim().length < 3) {
-        summary = "Session completed";
-      }
-
-      // Simple truncation at word boundary
-      if (summary.length > 80) {
-        summary = summary.substring(0, 77) + "...";
-      }
-
-      await client.app.log({
-        body: {
-          service: "notification-plugin",
-          level: "debug",
-          message: `📤 Sending notification: "${summary}"`,
-        },
+      // Toast + sound
+      await client.tui.showToast({
+        body: { message: summary, variant: "success" },
       });
 
-      // Use the official pattern from docs
+      // Just play sound
       if (process.platform === "darwin") {
-        await $`osascript -e 'display notification "${summary}" with title "opencode"'`;
+        await $`afplay /System/Library/Sounds/Glass.aiff`;
       } else {
-        await $`notify-send 'opencode' '${summary.replace(/'/g, "'\\''")}'`;
+        await $`paplay /usr/share/sounds/alsa/Front_Right.wav 2>/dev/null || true`;
       }
-    } catch (error) {
-      await client.app.log({
-        body: {
-          service: "notification-plugin",
-          level: "error",
-          message: `❌ Notification failed: ${error.message}`,
-        },
-      });
-    }
+    } catch {}
   };
 
-  // Store last message for summary extraction
-  let lastMessage = null;
+  // Event throttling + deduplication
+  let lastMessage = { text: null, time: 0 };
+  let processedEvents = new Set();
 
   return {
     event: async ({ event }) => {
-      // Capture message updates
+      const now = Date.now();
+
       if (
         event.type === "message.part.updated" &&
         event.properties?.part?.type === "text"
       ) {
-        lastMessage = event.properties.part.text;
+        // Throttle updates to every 5 seconds
+        if (now - lastMessage.time > 5000) {
+          lastMessage = { text: event.properties.part.text, time: now };
+        }
         return;
       }
 
-      // Send notification on session idle
       if (event.type === "session.idle") {
-        await client.app.log({
-          body: {
-            service: "notification-plugin",
-            level: "debug",
-            message: `📄 Raw message text: "${lastMessage?.substring(0, 200) || "empty"}"`,
-          },
-        });
+        const eventId = `${event.type}-${now}`;
+        if (processedEvents.has(eventId)) return;
+        processedEvents.add(eventId);
 
-        // Show last few lines for debugging
-        const lines = lastMessage?.split(/\r?\n/) || [];
-        const lastLines = lines.slice(-3).filter((l) => l.trim());
-        await client.app.log({
-          body: {
-            service: "notification-plugin",
-            level: "debug",
-            message: `📝 Last lines: ${lastLines.map((l) => `"${l.substring(0, 50)}"`).join(" | ")}`,
-          },
-        });
+        const summary = extractSummary(lastMessage.text) || "Session completed";
+        await notify(summary);
 
-        const summary = extractSummary(lastMessage);
-
-        await client.app.log({
-          body: {
-            service: "notification-plugin",
-            level: "info",
-            message: `🎯 Session completed: ${summary}`,
-          },
-        });
-
-        await sendNotification(summary);
+        // Cleanup processed events to prevent memory leak
+        if (processedEvents.size > 10) {
+          processedEvents.clear();
+        }
       }
     },
   };
