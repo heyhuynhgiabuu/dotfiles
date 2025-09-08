@@ -10,6 +10,12 @@ tools:
   edit: false
   write: false
   patch: false
+  glob: true
+  grep: true
+  read: true
+  serena_find_symbol: true
+  serena_search_for_pattern: true
+  webfetch: true
 ---
 
 # Reviewer Agent: Code Quality & Security Review

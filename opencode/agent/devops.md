@@ -6,10 +6,13 @@ model: github-copilot/gpt-5-mini
 temperature: 0.2
 max_tokens: 4500
 tools:
-  bash: false
+  bash: true
   edit: false
   write: false
   patch: false
+  webfetch: true
+  context7_resolve_library_id: true
+  context7_get_library_docs: true
 ---
 
 # DevOps Agent: Infrastructure & Deployment

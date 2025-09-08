@@ -2,7 +2,7 @@
 name: researcher
 description: ALWAYS use this agent to find and synthesize information from the web and codebase, locate files and patterns, and perform comprehensive architecture mapping. Combines deep research capabilities with codebase navigation and discovery.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: github-copilot/gpt-5
 temperature: 0.3
 max_tokens: 5000
 tools:
@@ -10,6 +10,11 @@ tools:
   edit: false
   write: false
   patch: false
+  webfetch: true
+  chrome_chrome_navigate: true
+  chrome_get_web_content: true
+  context7_resolve_library_id: true
+  context7_get_library_docs: true
 ---
 
 # Researcher Agent: Information Discovery & Synthesis

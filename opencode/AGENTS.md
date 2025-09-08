@@ -20,56 +20,30 @@ Security error: escalate immediately (NO RETRY)
 
 ## Context Management
 
-**Information Architecture:**
+**Core Principles:**
 
-- **Landscapes**: Structured exploration spaces with navigational metadata
-- **Facets**: Multi-dimensional context organization (temporal, structural, functional)
-- **Peripheral Vision**: Tool responses include related information discovery paths
-- **Agent Learning Framework**: Tool responses actively teach agents how to use tools better in future calls
-- **Faceted Search Strategy**: When to expose metadata aggregations vs raw results
-- **Context Engineering Levels**: Raw → Source → Multi-Modal → Faceted (each adds peripheral vision)
-- **Context Pollution Prevention**: Bad context is cheap but toxic - optimize signal-to-noise ruthlessly
-
-**Dynamic Context Layers:**
-
-- Global: Protocol frameworks, exploration patterns, navigation strategies
-- Landscape: Current information space topology, exploration state
-- Active: Working memory (≤2000 tokens), focused context with expansion paths
-- Peripheral: Adjacent information spaces, related context opportunities
-
-**Agent Navigation Protocol:**
-
-- **Exploration Phase**: Map information landscape, identify navigation paths
-- **Focus Phase**: Deep dive with maintained peripheral awareness
-- **Synthesis Phase**: Integrate discoveries across information spaces
-- **Compaction Phase**: Distill insights while preserving navigation context
-
-**Context Engineering Patterns:**
-
-- Tool responses MUST include navigational metadata
-- Information discovery over information consumption
-- Structured exploration over linear search
-- Context expansion paths over static chunks
-
-**Tool Response Engineering:**
-
-- XML structure teaches agents how to think about data
-- Include `<system-instruction>` blocks in tool outputs to guide future calls
-- Expose metadata facets (counts, categories, filters) alongside results
-- Format: `<results>content</results><facets>aggregations</facets><system-instruction>guidance</system-instruction>`
+- **Information Discovery**: Prioritize finding information over consuming it
+- **Signal-to-Noise**: Bad context destroys reasoning - optimize ruthlessly
+- **Context Boundaries**: Clean handoffs between agents with minimal, focused transfer
+- **Navigation Metadata**: Tool responses include discovery paths for future exploration
 
 **Context Engineering Levels:**
 
-1. **Raw Data**: Basic tool responses without metadata (avoid this)
-2. **Source Metadata**: Enables citations and strategic document loading
-3. **Multi-Modal**: Optimized tables, images, structured content for reasoning
-4. **Faceted Search**: Exposes complete data landscape for strategic exploration
+1. **Raw Data**: Basic tool responses (avoid)
+2. **Source Metadata**: Citations and strategic document loading
+3. **Faceted Search**: Complete data landscape for systematic exploration
 
-**Anti-Patterns (Critical Warnings):**
+**Anti-Patterns (Critical):**
 
-- **Context Pollution**: Bad context is cheap but toxic - 100k logs cost nothing computationally but destroy reasoning
-- **Similarity Bias**: High-ranking results hide critical low-ranking data (signed contracts hide unsigned ones)
-- **Metadata Bloat**: Metadata that doesn't change agent behavior is expensive noise
+- **Context Pollution**: Irrelevant data destroys reasoning capability
+- **Similarity Bias**: High-ranking results hide critical information
+- **Metadata Bloat**: Useless metadata wastes resources
+
+**Context Compaction Protocol:**
+
+- **Preserve**: Navigation paths, architectural signals, error recovery
+- **Compress**: Redundant data, verbose logs, repeated patterns
+- **Strategy**: Maintain learning trajectory while reducing noise
 
 **Error Recovery:**
 
@@ -115,9 +89,9 @@ Security error: escalate immediately (NO RETRY)
 
 ## Reasoning Guidelines
 
-**High Effort** (Use sequential-thinking):
+**High Effort** (Use sequential-thinking OR delegate):
 
-- ≥3 steps OR unknown scope OR multi-phase workflows
+- ≥2 steps OR unknown scope OR multi-phase workflows
 - Auth/config/secrets/permissions requiring audit
 - System design choices with multiple alternatives
 
@@ -129,18 +103,19 @@ Security error: escalate immediately (NO RETRY)
 
 **Low Effort** (Direct execution):
 
-- ≤2 steps, clear scope, well-defined tasks
+- Single step, clear scope, well-defined tasks
 - Verification, confirmation, basic queries
 - Reversible actions within established boundaries
 
 ## Agent Delegation
 
-- **Security issues** → security agent (immediate)
-- **Code implementation** → language agent
-- **Infrastructure/deployment** → devops agent
-- **Domain expertise** → specialist agent
-- **Multi-step coordination** → orchestrator agent
-- **Quality review** → reviewer agent
+- **Security issues** → security agent (immediate, e.g., API key exposure)
+- **Code implementation** → language agent (e.g., React component development)
+- **Infrastructure/deployment** → devops agent (e.g., Docker setup)
+- **Domain expertise** → specialist agent (e.g., database optimization)
+- **Multi-step coordination** → orchestrator agent (e.g., full-stack app build)
+- **Quality review** → reviewer agent (e.g., code audit)
+- **≥2 step tasks** → Evaluate for appropriate specialist delegation
 
 ## Verification Framework
 
@@ -164,14 +139,7 @@ Security error: escalate immediately (NO RETRY)
 2. Structured Reasoning: Use sequential-thinking for complex problems
 3. Chain of Thought: Problem analysis, constraints, cross-platform considerations
 4. Chain of Draft: 3 alternatives, selected approach, YAGNI check
-   **Context Compaction Protocol:**
-
-- **Preserve**: Navigation context, architectural signals, learning patterns, error recovery paths
-- **Compress**: Redundant data, verbose logs, repeated patterns, low-signal noise
-- **Strategy**: If in-context learning is gradient descent, compaction is momentum - preserve learning trajectory
-- **Timing**: Compact after synthesis phase, before context handoffs to subagents
-- **Measurement**: Signal-to-noise ratio must improve, not just token count reduction
-
+5. Context Compaction: Preserve navigation context, compress redundant data
 6. Test Strategy: Unit/integration approach, staging endpoints only
 7. Implementation Plan: Task breakdown, agent delegation, rollback plan
 
