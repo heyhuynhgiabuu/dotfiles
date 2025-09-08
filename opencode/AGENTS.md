@@ -91,7 +91,7 @@ Security error: escalate immediately (NO RETRY)
 
 **High Effort** (Use sequential-thinking OR delegate):
 
-- ≥2 steps OR unknown scope OR multi-phase workflows
+- ≥1 step OR unknown scope OR multi-phase workflows
 - Auth/config/secrets/permissions requiring audit
 - System design choices with multiple alternatives
 
@@ -115,7 +115,7 @@ Security error: escalate immediately (NO RETRY)
 - **Domain expertise** → specialist agent (e.g., database optimization)
 - **Multi-step coordination** → orchestrator agent (e.g., full-stack app build)
 - **Quality review** → reviewer agent (e.g., code audit)
-- **≥2 step tasks** → Evaluate for appropriate specialist delegation
+- **≥1 step tasks** → Evaluate for appropriate specialist delegation
 
 ## Verification Framework
 

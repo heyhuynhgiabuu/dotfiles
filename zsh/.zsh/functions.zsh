@@ -4,33 +4,57 @@
 # OpenCode log viewer with filtering options
 logocode() {
     local log_dir="$HOME/.local/share/opencode/log"
-    local filter_plugins="$1"  # Pass 'plugins' to filter for plugins only
+    local filter_type="$1"  # 'plugins', 'errors', 'performance', or empty for all
     
     if [[ -d "$log_dir" ]]; then
         local latest_file
         latest_file=$(find "$log_dir" -type f -name "*.log" -exec ls -t {} + 2>/dev/null | head -n1)
         if [[ -n "$latest_file" ]]; then
-            if [[ "$filter_plugins" == "plugins" ]]; then
-                echo "📋 Plugin messages from: $latest_file"
-                echo "💡 Press Ctrl+C to stop following"
-                echo "🔍 Showing: Historical plugin messages + live plugin feed"
-                echo ""
-                # Show existing plugin messages first
-                grep -E "(service=notification-plugin|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|🔔|🌍|Context Engineering|Landscape:|Enhanced.*tool)" "$latest_file" 2>/dev/null || echo "No plugin messages found in history"
-                echo ""
-                echo "--- LIVE PLUGIN FEED ---"
-                # Follow new messages and filter for plugin content
-                tail -f "$latest_file" | grep --line-buffered -E "(service=notification-plugin|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|🔔|🌍|Context Engineering|Landscape:|Enhanced.*tool)"
-            else
-                echo "📋 Following OpenCode log: $latest_file"
-                echo "💡 Press Ctrl+C to stop following"
-                echo "💡 Use 'logocode plugins' to filter for plugin messages only"
-                if command -v bat >/dev/null 2>&1; then
-                    tail -f "$latest_file" | bat --style=plain --color=always --language=log
-                else
-                    tail -f "$latest_file"
-                fi
-            fi
+            case "$filter_type" in
+                "plugins")
+                    echo "🔌 Plugin messages from: $latest_file"
+                    echo "💡 Press Ctrl+C to stop following"
+                    echo "🔍 Showing: Plugin initialization, tech stack detection, notifications, and context engineering"
+                    echo ""
+                    # Enhanced plugin patterns for our improved logging
+                    local plugin_patterns="(service=notification-plugin|service=universal-context-engineering|🧭|📍|✨|🔍|🔒|🔔|🌍|Context Engineering|Landscape:|Enhanced.*tool|Tech stack detected|Framework guidance|Cache hit|Performance optimized|Plugin loaded|notification sent)"
+                    grep -E "$plugin_patterns" "$latest_file" 2>/dev/null || echo "No plugin messages found in history"
+                    echo ""
+                    echo "--- LIVE PLUGIN FEED ---"
+                    tail -f "$latest_file" | grep --line-buffered -E "$plugin_patterns"
+                    ;;
+                "errors")
+                    echo "🚨 Error messages from: $latest_file"
+                    echo "💡 Press Ctrl+C to stop following"
+                    echo ""
+                    grep -E "(ERROR|WARN|Failed|Exception|Error:|⚠️|❌)" "$latest_file" 2>/dev/null || echo "No errors found in history"
+                    echo ""
+                    echo "--- LIVE ERROR FEED ---"
+                    tail -f "$latest_file" | grep --line-buffered -E "(ERROR|WARN|Failed|Exception|Error:|⚠️|❌)"
+                    ;;
+                "performance")
+                    echo "⚡ Performance messages from: $latest_file"
+                    echo "💡 Press Ctrl+C to stop following"
+                    echo ""
+                    grep -E "(Performance|Cache|Optimized|slow|fast|duration|ms|seconds|memory|CPU)" "$latest_file" 2>/dev/null || echo "No performance messages found in history"
+                    echo ""
+                    echo "--- LIVE PERFORMANCE FEED ---"
+                    tail -f "$latest_file" | grep --line-buffered -E "(Performance|Cache|Optimized|slow|fast|duration|ms|seconds|memory|CPU)"
+                    ;;
+                *)
+                    echo "📋 Following OpenCode log: $latest_file"
+                    echo "💡 Press Ctrl+C to stop following"
+                    echo "💡 Available filters:"
+                    echo "   logocode plugins     - Show plugin activity"
+                    echo "   logocode errors      - Show errors and warnings"
+                    echo "   logocode performance - Show performance metrics"
+                    if command -v bat >/dev/null 2>&1; then
+                        tail -f "$latest_file" | bat --style=plain --color=always --language=log
+                    else
+                        tail -f "$latest_file"
+                    fi
+                    ;;
+            esac
         else
             echo "❌ No log files found in $log_dir"
         fi

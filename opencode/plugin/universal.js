@@ -6,8 +6,10 @@
 
 export const UniversalContextEngineering = async ({
   project,
-  directory,
   client,
+  $,
+  directory,
+  worktree,
 }) => {
   await client.app.log({
     body: {
@@ -17,67 +19,78 @@ export const UniversalContextEngineering = async ({
     },
   });
 
-  // Tech Stack Detection
+  // Performance caching
+  const techStackCache = new Map();
+
+  // Tech Stack Detection with caching
   const detectTechStack = (filePath) => {
-    if (!filePath)
-      return { language: "unknown", framework: null, buildSystem: null };
-
-    const fileExt = filePath.split(".").pop()?.toLowerCase();
-    const fileName = filePath.split("/").pop()?.toLowerCase();
-
-    // Java Ecosystem
-    if (
-      fileExt === "java" ||
-      fileName === "pom.xml" ||
-      fileName === "build.gradle"
-    ) {
-      return {
-        language: "java",
-        framework: detectJavaFramework(filePath),
-        buildSystem: fileName === "pom.xml" ? "maven" : "gradle",
-      };
+    if (techStackCache.has(filePath)) {
+      return techStackCache.get(filePath);
     }
 
-    // Go Ecosystem
-    if (fileExt === "go" || fileName === "go.mod" || fileName === "go.sum") {
-      return {
-        language: "go",
-        framework: detectGoFramework(filePath),
-        buildSystem: "go-modules",
-      };
+    let result;
+    if (!filePath) {
+      result = { language: "unknown", framework: null, buildSystem: null };
+    } else {
+      const fileExt = filePath.split(".").pop()?.toLowerCase();
+      const fileName = filePath.split("/").pop()?.toLowerCase();
+
+      // Java Ecosystem
+      if (
+        fileExt === "java" ||
+        fileName === "pom.xml" ||
+        fileName === "build.gradle"
+      ) {
+        result = {
+          language: "java",
+          framework: detectJavaFramework(filePath),
+          buildSystem: fileName === "pom.xml" ? "maven" : "gradle",
+        };
+      }
+      // Go Ecosystem
+      else if (
+        fileExt === "go" ||
+        fileName === "go.mod" ||
+        fileName === "go.sum"
+      ) {
+        result = {
+          language: "go",
+          framework: detectGoFramework(filePath),
+          buildSystem: "go-modules",
+        };
+      }
+      // JavaScript/TypeScript Ecosystem
+      else if (
+        ["js", "ts", "jsx", "tsx", "json"].includes(fileExt) ||
+        fileName === "package.json"
+      ) {
+        result = {
+          language:
+            fileExt === "ts" || fileExt === "tsx" ? "typescript" : "javascript",
+          framework: detectJSFramework(filePath),
+          buildSystem: "npm",
+        };
+      }
+      // Configuration & Infrastructure
+      else if (["yml", "yaml"].includes(fileExt)) {
+        result = {
+          language: "yaml",
+          framework: detectInfraFramework(filePath),
+          buildSystem: null,
+        };
+      } else if (fileExt === "dockerfile" || fileName === "dockerfile") {
+        result = {
+          language: "docker",
+          framework: null,
+          buildSystem: "docker",
+        };
+      } else {
+        result = { language: "generic", framework: null, buildSystem: null };
+      }
     }
 
-    // JavaScript/TypeScript Ecosystem
-    if (
-      ["js", "ts", "jsx", "tsx", "json"].includes(fileExt) ||
-      fileName === "package.json"
-    ) {
-      return {
-        language:
-          fileExt === "ts" || fileExt === "tsx" ? "typescript" : "javascript",
-        framework: detectJSFramework(filePath),
-        buildSystem: "npm",
-      };
-    }
-
-    // Configuration & Infrastructure
-    if (["yml", "yaml"].includes(fileExt)) {
-      return {
-        language: "yaml",
-        framework: detectInfraFramework(filePath),
-        buildSystem: null,
-      };
-    }
-
-    if (fileExt === "dockerfile" || fileName === "dockerfile") {
-      return {
-        language: "docker",
-        framework: null,
-        buildSystem: "docker",
-      };
-    }
-
-    return { language: "generic", framework: null, buildSystem: null };
+    techStackCache.set(filePath, result);
+    return result;
   };
 
   // Framework Detection Functions
