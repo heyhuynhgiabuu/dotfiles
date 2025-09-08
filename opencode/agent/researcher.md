@@ -11,10 +11,6 @@ tools:
   write: false
   patch: false
   webfetch: true
-  chrome_chrome_navigate: true
-  chrome_get_web_content: true
-  context7_resolve_library_id: true
-  context7_get_library_docs: true
 ---
 
 # Researcher Agent: Information Discovery & Synthesis

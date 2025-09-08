@@ -16,9 +16,6 @@ tools:
   edit: false
   write: false
   patch: false
-  serena_find_symbol: true
-  serena_search_for_pattern: true
-  chrome_chrome_get_web_content: true
 ---
 
 # Security Agent: Vulnerability Assessment

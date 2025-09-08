@@ -10,10 +10,6 @@ tools:
   edit: false
   write: false
   patch: false
-  serena_find_symbol: true
-  serena_search_for_pattern: true
-  context7_resolve_library_id: true
-  context7_get_library_docs: true
 ---
 
 # Specialist Agent: Domain Expertise & System Architecture

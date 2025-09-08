@@ -11,8 +11,6 @@ tools:
   write: false
   patch: false
   webfetch: true
-  context7_resolve_library_id: true
-  context7_get_library_docs: true
 ---
 
 # DevOps Agent: Infrastructure & Deployment
