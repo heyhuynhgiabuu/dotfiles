@@ -6,7 +6,7 @@ model: github-copilot/gpt-5
 temperature: 0.3
 max_tokens: 5000
 tools:
-  bash: true
+  bash: false
   edit: false
   write: false
   patch: false

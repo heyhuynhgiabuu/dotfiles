@@ -7,8 +7,8 @@ temperature: 0.1
 max_tokens: 6000
 tools:
   bash: false
-  edit: false
-  write: false
+  edit: true
+  write: true
   patch: false
   webfetch: true
   serena*: true

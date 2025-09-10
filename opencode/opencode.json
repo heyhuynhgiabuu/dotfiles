@@ -59,11 +59,11 @@
   "model": "opencode/grok-code",
   "small_model": "opencode/grok-code",
   "tools": {
-    "context7*": false,
-    "serena*": false,
-    "figma*": false,
-    "chrome*": false,
-    "sequential-thinking*": false
+    "context7*": true,
+    "serena*": true,
+    "figma*": true,
+    "chrome*": true,
+    "sequential-thinking*": true
   },
   "agent": {
     "build": {
