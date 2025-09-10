@@ -56,15 +56,22 @@
   },
   "share": "disabled",
   "autoupdate": true,
-  "model": "github-copilot/claude-sonnet-4",
+  "model": "opencode/grok-code",
   "small_model": "opencode/grok-code",
+  "tools": {
+    "context7*": false,
+    "serena*": false,
+    "figma*": false,
+    "chrome*": false,
+    "sequential-thinking*": false
+  },
   "agent": {
     "build": {
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.1,
       "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
       "mode": "primary",
-      "prompt": "{file:./base-prompt.txt}",
+      "prompt": "{file:./base-prompt.md}",
       "thinking": {
         "type": "enabled",
         "budget_tokens": 16000
@@ -75,6 +82,7 @@
       "temperature": 0.1,
       "description": "Autonomous daily development tasks with cross-platform compatibility",
       "mode": "primary",
+      "prompt": "{file:./base-prompt.md}",
       "max_tokens": 2048
     }
   },
@@ -134,6 +142,27 @@
           "name": "GLM-4.5 Air (Lightweight)"
         }
       }
+    },
+    "z-ai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://api.z.ai/api/coding/paas/v4"
+      },
+      "models": {
+        "glm-4.5": {
+          "name": "glm-4.5",
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cache_read": 0,
+            "cache_write": 0
+          },
+          "limit": {
+            "context": 128000,
+            "output": 96000
+          }
+        }
+      }
     }
   },
   "mcp": {
@@ -153,7 +182,9 @@
         "git+https://github.com/oraios/serena",
         "serena-mcp-server",
         "--context",
-        "ide-assistant"
+        "ide-assistant",
+        "--project",
+        "$(pwd)"
       ],
       "environment": {
         "SERENA_READ_ONLY": "true"
@@ -404,7 +435,9 @@
       "netstat -an": "allow",
       "which": "allow",
       "whereis": "allow",
-      "history": "allow"
+      "history": "allow",
+      "uvx": "allow",
+      "uvx --from git+https://github.com/github/spec-kit.git*": "allow"
     }
   },
   "$schema": "https://opencode.ai/config.json"

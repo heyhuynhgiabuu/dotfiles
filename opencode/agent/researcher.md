@@ -11,6 +11,8 @@ tools:
   write: false
   patch: false
   webfetch: true
+  chrome*: true
+  context7*: true
 ---
 
 # Researcher Agent: Information Discovery & Synthesis

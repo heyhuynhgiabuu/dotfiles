@@ -1,0 +1,47 @@
+# Global Serena Configuration
+# This file applies to all projects
+
+# Dashboard settings
+dashboard:
+  enabled: true
+  port: 24282
+  auto_open_browser: false
+
+# Tool settings
+tools:
+  record_tool_usage_stats: true
+  included_optional_tools:
+    - initial_instructions
+    - switch_modes
+    - get_current_config
+
+# Language server settings
+language_servers:
+  python:
+    enabled: true
+  typescript:
+    enabled: true
+  javascript:
+    enabled: true
+  go:
+    enabled: true
+  rust:
+    enabled: true
+
+# Project management
+projects:
+  # Projects will be auto-added here when activated
+  # You can also manually add them:
+  # dotfiles:
+  #   path: /Users/killerkidbo/dotfiles
+  #   name: dotfiles
+
+# Memory settings
+memories:
+  auto_create: true
+  max_per_project: 10
+
+# Logging
+logging:
+  level: INFO
+  file: ~/.serena/serena.log

@@ -16,6 +16,7 @@ tools:
   edit: false
   write: false
   patch: false
+  serena*: true
 ---
 
 # Security Agent: Vulnerability Assessment

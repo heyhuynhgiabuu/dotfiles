@@ -11,6 +11,8 @@ tools:
   write: false
   patch: false
   webfetch: true
+  serena*: true
+  context7*: true
 ---
 
 # Language Agent: Code Implementation & Optimization

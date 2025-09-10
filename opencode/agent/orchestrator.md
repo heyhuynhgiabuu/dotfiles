@@ -13,6 +13,8 @@ tools:
   task: true
   todowrite: true
   todoread: true
+  sequential-thinking*: true
+  context7*: true
 ---
 
 # Orchestrator Agent: Multi-Agent Coordination

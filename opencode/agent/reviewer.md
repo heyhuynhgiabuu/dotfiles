@@ -14,6 +14,8 @@ tools:
   grep: true
   read: true
   webfetch: true
+  serena*: true
+  chrome*: true
 ---
 
 # Reviewer Agent: Code Quality & Security Review

@@ -2,73 +2,76 @@
 
 ## Overview
 
-**Enterprise-grade security framework** for OpenCode plugins, fully consolidated into a single, maintainable location. This framework provides comprehensive security controls while preserving existing plugin functionality.
+**Simple, effective security framework** for OpenCode plugins. Provides essential security controls with minimal complexity.
 
 ## 📁 Framework Structure
 
 ```
-opencode/security-framework/
-├── 📄 README.md                    # This comprehensive guide
+security-framework/
+├── 📄 README.md                    # This guide
 ├── 🔒 secure-loader.js             # Main security wrapper
-├── 🧪 test-secure-plugin.js        # Integration test suite
-├── 🔍 security-verification.sh     # Comprehensive security tests
-├── 📁 audit/                       # Audit logging system
+├── 🧪 test-secure-plugin.js        # Basic integration test
+├── 🔍 security-verification.sh     # Security verification script
+├── 📁 audit/                       # Audit logging
 │   └── logger.js                   # Tamper-evident logging
-├── 📁 token/                       # Token lifecycle management
-│   ├── service.js                  # JWT-style capability tokens
-│   ├── keys.js                     # Cryptographic key management
+├── 📁 token/                       # Token management
+│   ├── service.js                  # JWT-style tokens
+│   ├── keys.js                     # Key management
 │   └── revocation_store.js         # Token revocation
-├── 📁 tools/                       # Signing and verification
-│   ├── sign-manifest.js            # Plugin manifest signing
+├── 📁 tools/                       # Signing tools
+│   ├── sign-manifest.js            # Plugin signing
 │   └── verify-manifest.js          # Signature verification
-├── 📁 keys/                        # Key management utilities
-│   └── key-management.sh           # Ed25519/RSA key generation
+├── 📁 keys/                        # Key utilities
+│   └── key-management.sh           # Key generation
 └── 📁 process-isolation/           # Process sandboxing
-    ├── worker_host.js              # Plugin process manager
-    ├── worker_child.js             # Isolated plugin runtime
+    ├── worker_host.js              # Process manager
+    ├── worker_child.js             # Isolated runtime
     ├── sandbox_utils.sh            # Resource limits
-    ├── test_isolation.js           # Test suite
-    └── README.md                   # Process isolation docs
+    ├── test_isolation.js           # Isolation tests
+    └── README.md                   # Isolation docs
 ```
 
 ## 🚀 Quick Start
 
 ### Test the Framework
+
 ```bash
-cd /Users/killerkidbo/dotfiles
-node opencode/security-framework/test-secure-plugin.js
+# Find and run the test from anywhere in your project
+node "$(find . -name "test-secure-plugin.js" -type f 2>/dev/null | head -1 || echo "./security-framework/test-secure-plugin.js")"
 ```
 
 ### Basic Usage
-```javascript
-// Import from consolidated location
-import { SecurePluginLoader, loadUnifiedPlugin } from './opencode/security-framework/secure-loader.js';
 
-// Quick usage - basic security
-const plugin = await loadUnifiedPlugin({
+```javascript
+// Dynamic import - works from any project location
+const frameworkPath = require('path').resolve(
+  require('fs').existsSync('./security-framework/secure-loader.js')
+    ? './security-framework/secure-loader.js'
+    : './opencode/security-framework/secure-loader.js'
+);
+
+import { SecurePluginLoader } from frameworkPath;
+
+// Simple usage - basic security
+const loader = new SecurePluginLoader({
   isolated: false,         // No process isolation
   verifySignatures: false, // Skip signature verification
-  auditLog: false         // Disable audit logging
-});
-
-// Full security
-const loader = new SecurePluginLoader({
-  isolated: true,         // Enable process isolation
-  verifySignatures: true, // Verify plugin signatures
-  auditLog: true          // Full audit logging
+  auditLog: true           // Enable audit logging
 });
 ```
 
 ## 🛡️ Security Features
 
 ### Core Security Components
+
 1. **🔐 Process Isolation** - Sandboxed plugin execution with resource limits
-2. **✍️ Cryptographic Signing** - Ed25519/RSA plugin authentication  
+2. **✍️ Cryptographic Signing** - Ed25519/RSA plugin authentication
 3. **🎫 Token Access Control** - JWT-style capability enforcement
 4. **📊 Audit Logging** - Tamper-evident operation tracking
 5. **🚫 File Access Control** - Block sensitive files (.env, secrets)
 
 ### Security Architecture
+
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │ OpenCode Client │───▶│ Secure Loader    │───▶│ Unified Plugin  │
@@ -81,7 +84,7 @@ const loader = new SecurePluginLoader({
                                 ▼                       ▼
                        ┌──────────────────┐    ┌─────────────────┐
                        │ Security Layer   │    │ Original Logic  │
-                       │ - File blocking  │    │ - Event handling│ 
+                       │ - File blocking  │    │ - Event handling│
                        │ - Token validation│    │ - Tool intercept│
                        │ - HMAC logging   │    │ - Notifications │
                        └──────────────────┘    └─────────────────┘
@@ -90,6 +93,7 @@ const loader = new SecurePluginLoader({
 ## 📋 Verification & Testing
 
 ### Comprehensive Testing
+
 ```bash
 # Main integration test
 node opencode/security-framework/test-secure-plugin.js
@@ -110,6 +114,7 @@ node process-isolation/test_isolation.js
 ```
 
 ### Expected Results
+
 ```
 🎉 Security Integration Test Completed Successfully!
 📋 Test Results:
@@ -123,50 +128,58 @@ node process-isolation/test_isolation.js
 ## 🔧 Production Deployment
 
 ### Recommended: Basic Security (Immediate Use)
+
 ```javascript
 const loader = new SecurePluginLoader({
-  isolated: false,         // In-process execution
+  isolated: false, // In-process execution
   verifySignatures: false, // File-based trust
-  auditLog: true          // Local audit logging
+  auditLog: true, // Local audit logging
 });
 ```
+
 **Benefits**: Immediate deployment, file access security, audit trails  
 **Trade-offs**: No process isolation, no cryptographic verification
 
 ### Enhanced: Process Isolation
+
 ```javascript
 const loader = new SecurePluginLoader({
-  isolated: true,          // Sandboxed execution
+  isolated: true, // Sandboxed execution
   verifySignatures: false, // File-based trust
-  auditLog: true          // Local audit logging
+  auditLog: true, // Local audit logging
 });
 ```
+
 **Benefits**: Process separation, resource limits, better isolation  
 **Trade-offs**: Performance overhead, complexity
 
 ### Enterprise: Full Security
+
 ```javascript
 const loader = new SecurePluginLoader({
-  isolated: true,         // Sandboxed execution
+  isolated: true, // Sandboxed execution
   verifySignatures: true, // Cryptographic verification
-  auditLog: true         // Full audit logging
+  auditLog: true, // Full audit logging
 });
 ```
+
 **Benefits**: Maximum security, plugin authenticity, comprehensive auditing  
 **Trade-offs**: Requires key management, signing workflow
 
 ## 🔄 Migration History
 
 ### Before (Scattered Files)
+
 ```
 ❌ security/audit/logger.js
-❌ security/token/{service.js, keys.js, revocation_store.js}  
+❌ security/token/{service.js, keys.js, revocation_store.js}
 ❌ tools/{sign-manifest.js, verify-manifest.js}
 ❌ scripts/keys/key-management.sh
 ❌ scripts/process_isolation/{worker_*.js, sandbox_utils.sh}
 ```
 
 ### After (Consolidated)
+
 ```
 ✅ opencode/security-framework/
    ├── All 14 components in organized subdirectories
@@ -178,16 +191,19 @@ const loader = new SecurePluginLoader({
 ## 🏗️ Integration Benefits
 
 ### ✅ **Single Location Maintenance**
+
 - All security components in one directory
 - Easy to backup, version, and deploy
 - No scattered files across multiple directories
 
 ### ✅ **Self-Contained Framework**
+
 - All dependencies use relative paths within framework
 - No external references to scattered directories
 - Framework can be moved or copied as a complete unit
 
 ### ✅ **Zero Breaking Changes**
+
 - Existing `unified.js` plugin works unchanged
 - Optional security - use features only when needed
 - Cross-platform compatibility (macOS and Linux)
@@ -195,6 +211,7 @@ const loader = new SecurePluginLoader({
 ## 🔍 Manual Verification Steps
 
 ### 1. Verify File Access Security
+
 ```bash
 # Test should block sensitive file access
 node -e "
@@ -202,7 +219,7 @@ const plugin = require('./opencode/plugin/unified.js');
 const instance = await plugin.UnifiedDotfilesPlugin({});
 try {
   await instance['tool.execute.before'](
-    {tool: 'read'}, 
+    {tool: 'read'},
     {args: {filePath: '.env'}}
   );
   console.log('❌ FAIL: Should block .env access');
@@ -213,17 +230,19 @@ try {
 ```
 
 ### 2. Verify Cross-Platform Compatibility
+
 ```bash
 # macOS test
 uname -s  # Should show: Darwin
 node opencode/security-framework/test-secure-plugin.js
 
 # Linux test (if available)
-uname -s  # Should show: Linux  
+uname -s  # Should show: Linux
 node opencode/security-framework/test-secure-plugin.js
 ```
 
 ### 3. Verify Audit Logging
+
 ```bash
 # Check audit logs are created
 ls -la ~/.opencode/logs/
@@ -235,6 +254,7 @@ tail -5 ~/.opencode/logs/audit.jsonl
 ```
 
 ### 4. Test Key Management
+
 ```bash
 # Generate test keys
 ./keys/key-management.sh gen-ed25519 test-integration
@@ -247,11 +267,13 @@ ls -la ~/.opencode/keys/test-integration*
 ## 🚨 Troubleshooting
 
 ### Common Issues
+
 - **Key Management**: Ed25519 PEM conversion requires manual steps
 - **Token Dependencies**: TokenService requires proper audit logger configuration
 - **Cross-Platform**: macOS uses `osascript`, Linux uses `notify-send` for notifications
 
 ### Solutions
+
 - Use RSA keys or update key management for proper Ed25519 PEM output
 - Initialize TokenService with proper audit logger or use simplified validation
 - Platform-specific notification handlers are built-in
@@ -268,14 +290,16 @@ ls -la ~/.opencode/keys/test-integration*
 ## 🔧 Integration with OpenCode Workflow
 
 ### Current State
+
 - ✅ `opencode/plugin/unified.js` continues to work unchanged
 - ✅ Security framework ready for integration
 - ✅ Cross-platform compatibility maintained
 - ✅ No new software dependencies required
 
 ### Next Steps for Full Integration
+
 1. **Update OpenCode plugin loader** - Integrate `SecurePluginLoader` with main OpenCode system
-2. **Configure capability policies** - Define specific permissions for plugin operations  
+2. **Configure capability policies** - Define specific permissions for plugin operations
 3. **Set up production keys** - Generate and distribute official signing keys
 4. **Enable audit monitoring** - Configure log analysis and alerting
 

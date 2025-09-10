@@ -15,6 +15,8 @@ tools:
   read: true
   list: true
   webfetch: true
+  chrome*: true
+  context7*: true
 ---
 
 # General Agent: Simple Task Execution & Research

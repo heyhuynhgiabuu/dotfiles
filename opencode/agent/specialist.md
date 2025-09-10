@@ -10,6 +10,9 @@ tools:
   edit: false
   write: false
   patch: false
+  serena*: true
+  context7*: true
+  chrome*: true
 ---
 
 # Specialist Agent: Domain Expertise & System Architecture

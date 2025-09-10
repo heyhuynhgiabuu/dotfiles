@@ -12,6 +12,8 @@ tools:
   patch: false
   todowrite: true
   todoread: true
+  sequential-thinking*: true
+  context7*: true
 ---
 
 # Plan Agent: Task Planning & Coordination

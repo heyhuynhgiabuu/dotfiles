@@ -51,24 +51,49 @@ patterns:
 
 ignore_all_files_in_gitignore: true
 ignored_paths:
-  - '.DS_Store'
-  - '*.log'
-  - 'node_modules/**'
-  - '.git/**'
-  - '.venv/**'
-  - 'venv/**'
-  - '__pycache__/**'
-  - '*.tmp'
-  - '*.temp'
+  - ".DS_Store"
+  - "*.log"
+  - "node_modules/**"
+  - ".git/**"
+  - ".venv/**"
+  - "venv/**"
+  - "__pycache__/**"
+  - "*.tmp"
+  - "*.temp"
 
-read_only: false
+read_only: true
 
-languages:
-  - shell
-  - lua
+# Keep existing languages list above
+
+# Serena-specific settings
+permissions:
+  execute_shell_commands: true
+  edit_files: true
+  create_files: true
+  delete_files: false # Be careful with deletions in dotfiles
+
+indexing:
+  enabled: true
+  exclude_patterns:
+    - "*.log"
+    - ".git/**"
+    - "node_modules/**"
+    - ".serena/**"
+    - ".DS_Store"
+
+testing:
+  enabled: false # No automated tests in dotfiles
+  commands: []
 
 initial_prompt: |
   You are working on a personal dotfiles project, primarily configuring shell and Lua for a cross-platform development environment (macOS & Linux).
   Prioritize simplicity, safety, recoverability, and automation.
   There is no complex backend code or frontend framework, only focus on optimizing the personal development environment.
   Always carefully check shell and Lua files for syntax errors and keep everything cross-platform.
+
+  Key considerations:
+  - Use absolute paths where possible for cross-platform compatibility
+  - Test configurations on both macOS and Linux
+  - Maintain backup copies of critical configurations
+  - Use POSIX-compatible shell syntax
+  - Document any platform-specific workarounds
