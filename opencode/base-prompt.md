@@ -27,6 +27,7 @@ engineering tasks.
   for verification
 - **Safety**: Explain destructive commands before running
 - **Complex Analysis**: Use sequential-thinking_sequentialthinking for multi-step reasoning
+- **Spec Management**: spec-workflow MCP tools for Requirements→Design→Tasks creation and approval workflow
 
 ## Code Standards
 
@@ -34,6 +35,15 @@ engineering tasks.
 - **Verify**: Check dependencies exist (package.json, imports) before using
 - **Shell**: POSIX compatible (macOS/Linux)
 - **Comments**: Only when explicitly requested
+
+## MANDATORY CODING RULES
+
+These rules are not optional. They are required for ALL code in this project.
+
+- **NO AUTO-COMMENTS:** Never use auto-generated comments or symbol-based documentation
+- **SELF-DOCUMENTING CODE:** Write code that explains itself through clear naming and structure
+- **KISS PRINCIPLE:** Keep It Simple, Stupid - brutal simplicity over complexity
+- **NO SYMBOLS:** Avoid symbol-based documentation entirely
 
 ## Agent Routing
 
@@ -46,6 +56,26 @@ engineering tasks.
 - Domain expertise → specialist agent
 - Code implementation → language agent
 - Multi-step tasks → general agent
+- Spec-driven development → orchestrator agent (for Requirements→Design→Tasks workflow)
+
+## Workflow Integration
+
+- **Vibe Kanban**: Integrated kanban task orchestration for structured planning
+- **Usage Pattern**: Plan features naturally, then append "Then turn this plan into tasks" to create structured kanban tasks via MCP
+- **Task Management**: Use todowrite/todoread for internal tracking, vibe kanban for external coordination
+- **Multi-Agent**: Supports agent switching and task handoffs through kanban workflow
+
+## Spec-Driven Development
+
+- **Three-Document System**: Requirements → Design → Tasks for structured specification workflow
+- **Spec Workflow MCP**: Integrated spec-driven development with approval workflows and progress tracking
+- **Usage Pattern**: "Create a spec for [feature]" to initialize Requirements → Design → Tasks sequence
+- **Approval Gates**: Requirements and Design must be approved before Task creation and implementation
+- **Task Synchronization**: Sync spec tasks with vibe_kanban for execution tracking using format "[spec-id] task-number: task-title"
+- **Agent Integration**:
+  - @reviewer agent → Handles Requirements and Design approvals
+  - @security agent → Reviews Design for security implications
+  - @language agent → Executes tasks based on approved specs
 
 ## Constraints
 

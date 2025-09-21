@@ -1,46 +1,73 @@
-# Dotfiles Project Guidelines
+# OpenCode Plugin Development Guidelines
 
-This file provides essential, supplementary context for the `dotfiles` repository. These guidelines work in conjunction with the global rules found in `opencode/AGENTS.md`.
+Essential coding standards for developing OpenCode plugins. Focus on reliability, performance, and security.
 
-## Project Context
-- **Project Type:** Personal configuration files (dotfiles). There are no build, lint, or automated test commands.
-- **Primary Requirement:** All configurations MUST be cross-platform (macOS & Linux).
-- **Commit Message Rule:** Do NOT include "Generated with opencode" or any AI attribution in commit messages.
-- **Verification:** All changes require simple, manual verification steps to be provided to the user.
-- **Dependencies:** Do not add new software dependencies without explicit permission.
+**Note:** Mandatory coding rules (NO AUTO-COMMENTS, SELF-DOCUMENTING CODE, KISS PRINCIPLE, NO SYMBOLS) are defined in base-prompt.md and apply to ALL code.
 
-## Development Commands
-```bash
-# No build/lint commands - this is a dotfiles repository
-# Testing: Manual verification only
-./scripts/verify.sh                     # Run all verification checks
-./scripts/verify.sh --nvim-only         # Check only NvChad configuration
+## Plugin Development Standards
 
-# Setup and maintenance
-./scripts/setup.sh                      # Initial setup
-./scripts/brew-apply-layer.sh min       # Apply minimal packages
-./scripts/brew-apply-layer.sh dev       # Apply development packages
-```
+### SST OpenCode Style
 
-## Code Style Guidelines
-- **Shell Scripts:** POSIX sh compatible, use `#!/usr/bin/env sh`
-- **Cross-Platform:** Always test commands on both macOS and Linux
-- **Error Handling:** Use `set -e` for exit on error
-- **Colors:** Use standardized color definitions from `scripts/common.sh`
-- **File Structure:** Source `scripts/common.sh` for shared utilities
-- **Permissions:** All scripts should be executable (`chmod +x`)
+- **Function Design:** Keep things in one function unless composable or reusable
+- **Variable Declarations:** AVOID unnecessary destructuring, AVOID `let` statements, PREFER single word variable names
+- **Control Flow:** DO NOT use `else` statements unless necessary, AVOID `else` statements
+- **Error Handling:** DO NOT use `try`/`catch` if it can be avoided, AVOID `try`/`catch` where possible
+- **Type Safety:** AVOID using `any` type
+- **File Operations:** Use as many Bun APIs as possible like `Bun.file()`
 
-## Configuration Standards
-- **Modularity:** Keep configurations in dedicated directories (zsh/, nvim/, tmux/)
-- **Symlinks:** Use relative paths for cross-platform compatibility
-- **Documentation:** Each major component should have a README.md
-- **Brewfiles:** Use layered approach (min, dev, gui, fonts)
-- **OpenCode Integration:** Commands in `opencode/command/` use simple prose format
+## Plugin Development Standards
 
-## Manual Verification Requirements
-All changes must include verification steps:
-1. Test configuration loads without errors
-2. Verify cross-platform compatibility 
-3. Check symlinks are correctly created
-4. Confirm no hardcoded paths or dependencies
-5. Validate script execution permissions
+### Core Requirements
+
+- **Location:** Place plugins in `.opencode/plugin/` directory
+- **Structure:** Export async function with `{ project, client, directory }` parameters
+- **Hooks:** Use `event`, `tool.execute.before`, `tool.execute.after` for integration
+- **Dependencies:** Avoid external dependencies; use built-in Node.js APIs
+- **Naming:** Use descriptive plugin names with clear functionality
+- **Cross-Platform:** Always test on both macOS and Linux environments
+
+### Performance & Reliability
+
+- **Caching:** Implement LRU caching (max 50 items, 30s TTL) for expensive operations
+- **Throttling:** Apply rate limiting to prevent API abuse
+- **Error Boundaries:** Never let plugin errors crash OpenCode - use graceful degradation
+- **Logging:** Use structured logging with service names, timestamps, and minimal noise
+
+### Security & Context Engineering
+
+- **Path Validation:** Block sensitive file access in `tool.execute.before` hooks with fast-path checks
+- **Context Enhancement:** Provide minimal, token-efficient metadata in tool responses
+- **Tool Filtering:** Only enhance tools that benefit from context (read, list, glob, grep)
+- **Path Extraction:** Extract paths from tool arguments, not output content (more reliable)
+- **Session Handling:** Avoid complex session detection - use simple fallbacks
+
+### SDK Integration
+
+- **Client Creation:** Use `createOpencodeClient()` with proper baseUrl
+- **Session Management:** Use `session.list()` and `session.get()` (no `session.current()`)
+- **Event Handling:** Access `event.properties.sessionID` for session-specific operations
+- **Tool Integration:** Implement hooks for `read`, `list`, `grep`, `find` tools
+- **Type Safety:** Import types from `@opencode-ai/sdk` for TypeScript plugins
+
+## Plugin Testing Checklist
+
+### Essential Verification
+
+- **Syntax Check:** Plugin loads without syntax errors
+- **Hook Testing:** Plugin hooks trigger correctly for supported tools
+- **SDK Connection:** Client connections work without errors
+- **Error Handling:** Plugin never crashes OpenCode session
+
+### Security & Performance
+
+- **Path Blocking:** Sensitive file access is properly blocked
+- **Context Enhancement:** Metadata is provided efficiently for supported tools
+- **Graceful Degradation:** Plugin fails silently when components break
+- **Caching:** Performance improves on repeated calls
+- **Logging:** Structured, minimal noise in logs
+
+### Cross-Platform Testing
+
+- **macOS:** Verify plugin works on macOS environment
+- **Linux:** Verify plugin works on Linux environment
+- **Path Handling:** Confirm no hardcoded paths or OS-specific assumptions

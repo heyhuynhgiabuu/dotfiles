@@ -2,7 +2,7 @@
 name: reviewer
 description: ALWAYS use this agent to review code, architecture, and APIs for quality, security, and best practices.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: zai/glm-4.5
 temperature: 0.1
 max_tokens: 4000
 tools:

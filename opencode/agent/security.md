@@ -8,7 +8,7 @@ description: >-
   practices. Trigger this agent after backend code or configuration changes, before deployment, or
   when onboarding new backend components.
 mode: subagent
-model: github-copilot/gpt-5
+model: zai/glm-4.5
 temperature: 0.1
 max_tokens: 4000
 tools:

@@ -49,33 +49,64 @@
     "messages_previous": "none",
     "messages_next": "none",
     "messages_layout_toggle": "none",
-    "messages_revert": "none"
+    "messages_revert": "none",
   },
   "tui": {
-    "scroll_speed": 3
+    "scroll_speed": 3,
   },
-  "share": "disabled",
+  "share": "manual",
   "autoupdate": true,
-  "model": "opencode/grok-code",
+  "model": "anthropic/claude-sonnet-4-20250514",
   "small_model": "opencode/grok-code",
   "tools": {
     "context7*": true,
     "serena*": true,
     "figma*": true,
     "chrome*": true,
-    "sequential-thinking*": true
+    "sequential-thinking*": true,
+    "vibe_kanban": true,
+    "spec-workflow": true,
   },
   "agent": {
     "build": {
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "temperature": 0.1,
+      "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
+      "mode": "primary",
+      "prompt": "{file:./base-prompt.md}",
+      "max_tokens": 2048,
+    },
+    "grok": {
+      "model": "opencode/grok-code",
+      "temperature": 0.1,
+      "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
+      "mode": "primary",
+      "prompt": "{file:./base-prompt.md}",
+      "max_tokens": 2048,
+    },
+    "codex": {
+      "model": "openai-proxy/gpt-5-codex",
+      "temperature": 0.1,
+      "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
+      "mode": "primary",
+      "prompt": "{file:./base-prompt.md}",
+      "max_tokens": 2048,
+    },
+    "zai": {
+      "model": "zai/glm-4.5",
+      "temperature": 0.1,
+      "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
+      "mode": "primary",
+      "prompt": "{file:./base-prompt.md}",
+      "max_tokens": 2048,
+    },
+    "claude": {
       "model": "github-copilot/claude-sonnet-4",
       "temperature": 0.1,
       "description": "Primary agent for deep analysis, architecture decisions, and intelligent workflow orchestration with advanced reasoning capabilities",
       "mode": "primary",
       "prompt": "{file:./base-prompt.md}",
-      "thinking": {
-        "type": "enabled",
-        "budget_tokens": 16000
-      }
+      "max_tokens": 2048,
     },
     "gpt": {
       "model": "github-copilot/gpt-5",
@@ -83,10 +114,53 @@
       "description": "Autonomous daily development tasks with cross-platform compatibility",
       "mode": "primary",
       "prompt": "{file:./base-prompt.md}",
-      "max_tokens": 2048
-    }
+      "max_tokens": 2048,
+    },
   },
   "provider": {
+    "openai-proxy": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenAI Proxy",
+      "options": {
+        "baseURL": "http://127.0.0.1:8111/v1",
+      },
+      "models": {
+        "gpt-5": {
+          "name": "gpt-5",
+          "options": {
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"],
+          },
+        },
+        "gpt-5-codex": {
+          "name": "gpt-5-codex",
+          "options": {
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"],
+          },
+          "stream": "true",
+          "responses_tools": [{ "type": "web_search_preview" }],
+          "responses_tool_choice": "auto",
+        },
+        "codex-mini": {
+          "name": "codex-mini",
+        },
+      },
+    },
+    "anthropic": {
+      "models": {
+        "claude-sonnet-4-20250514": {
+          "limit": {
+            "context": 200000,
+            "output": 64000,
+          },
+        },
+      },
+    },
     "github-copilot": {
       "models": {
         "gpt-5": {
@@ -94,24 +168,24 @@
             "reasoningEffort": "high",
             "textVerbosity": "low",
             "reasoningSummary": "auto",
-            "include": ["reasoning.encrypted_content"]
-          }
+            "include": ["reasoning.encrypted_content"],
+          },
         },
         "gpt-5-mini": {
           "options": {
             "reasoningEffort": "medium",
             "textVerbosity": "low",
             "reasoningSummary": "auto",
-            "include": ["reasoning.encrypted_content"]
-          }
+            "include": ["reasoning.encrypted_content"],
+          },
         },
         "claude-sonnet-4": {
           "options": {
             "thinking": {
               "type": "enabled",
-              "budget_tokens": 16000
-            }
-          }
+              "budget_tokens": 16000,
+            },
+          },
         },
         "grok-code-fast-1": {
           "name": "Grok Code Fast 1",
@@ -121,58 +195,98 @@
           "tool_call": true,
           "limit": {
             "context": 256000,
-            "output": 32000
-          }
-        }
-      }
+            "output": 32000,
+          },
+        },
+      },
     },
     "zai": {
       "npm": "@ai-sdk/anthropic",
-      "options": {
-        "baseURL": "https://api.z.ai/api/anthropic/v1"
-      },
-      "models": {
-        "glm-4.5-flash": {
-          "name": "GLM-4.5 Flash (FREE)"
-        },
-        "glm-4.5": {
-          "name": "GLM-4.5 (Flagship)"
-        },
-        "glm-4.5-air": {
-          "name": "GLM-4.5 Air (Lightweight)"
-        }
-      }
-    },
-    "z-ai": {
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
-        "baseURL": "https://api.z.ai/api/coding/paas/v4"
-      },
       "models": {
         "glm-4.5": {
-          "name": "glm-4.5",
+          "id": "glm-4.5",
+          "name": "GLM-4.5",
+          "attachment": true,
+          "tool_call": true,
           "cost": {
             "input": 0,
             "output": 0,
             "cache_read": 0,
-            "cache_write": 0
+            "cache_write": 0,
+          },
+        },
+        "limit": {
+          "context": 131072,
+          "output": 98304,
+        },
+        "options": {
+          "thinking": {
+            "type": "enabled",
+            "budget_tokens": 16000,
+          },
+        },
+      },
+      "options": {
+        "baseURL": "https://api.z.ai/api/anthropic/v1",
+      },
+    },
+    "zhipuai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://api.z.ai/api/coding/paas/v4",
+      },
+      "models": {
+        "glm-4.5-flash": {
+          "name": "GLM-4.5 Flash",
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budget_tokens": 8000,
+            },
+          },
+        },
+        "glm-4.5": {
+          "id": "glm-4.5",
+          "name": "GLM-4.5",
+          "attachment": true,
+          "tool_call": true,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cache_read": 0,
+            "cache_write": 0,
           },
           "limit": {
             "context": 128000,
-            "output": 96000
-          }
-        }
-      }
-    }
+            "output": 96000,
+          },
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budget_tokens": 16000,
+            },
+          },
+        },
+        "glm-4.5-air": {
+          "name": "GLM-4.5 Air",
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budget_tokens": 12000,
+            },
+          },
+        },
+      },
+    },
   },
   "mcp": {
     "context7": {
       "type": "local",
       "command": ["npx", "-y", "@upstash/context7-mcp@latest"],
       "environment": {
-        "DEFAULT_MINIMUM_TOKENS": "2000"
+        "DEFAULT_MINIMUM_TOKENS": "2000",
       },
-      "enabled": true
+      "enabled": true,
     },
     "serena": {
       "type": "local",
@@ -184,12 +298,12 @@
         "--context",
         "ide-assistant",
         "--project",
-        "$(pwd)"
+        "$(pwd)",
       ],
       "environment": {
-        "SERENA_READ_ONLY": "true"
+        "SERENA_READ_ONLY": "true",
       },
-      "enabled": true
+      "enabled": true,
     },
     "figma": {
       "type": "local",
@@ -198,33 +312,49 @@
         "-y",
         "figma-developer-mcp",
         "figd_1J7K1kkGLLaC8WGQTSd-I2KsbyIDj1ED3XfUqGBB",
-        "--stdio"
+        "--stdio",
       ],
       "environment": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
       },
-      "enabled": true
+      "enabled": true,
     },
     "chrome": {
       "type": "local",
       "command": [
         "node",
-        "/Users/killerkidbo/.nvm/versions/node/v22.14.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
+        "/Users/killerkidbo/.nvm/versions/node/v22.14.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js",
       ],
-      "enabled": true
+      "enabled": true,
     },
     "sequential-thinking": {
       "type": "local",
       "command": [
         "npx",
         "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
+        "@modelcontextprotocol/server-sequential-thinking",
       ],
       "environment": {
-        "DISABLE_THOUGHT_LOGGING": "false"
+        "DISABLE_THOUGHT_LOGGING": "false",
       },
-      "enabled": true
-    }
+      "enabled": true,
+    },
+    "vibe_kanban": {
+      "type": "local",
+      "command": ["npx", "-y", "vibe-kanban@latest", "--mcp"],
+      "enabled": true,
+    },
+    "spec-workflow": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@pimzino/spec-workflow-mcp@latest",
+        "~/dev/projects/ocsight",
+        "--AutoStartDashboard",
+      ],
+      "enabled": true,
+    },
   },
   "formatter": {
     "prettier": {
@@ -241,16 +371,16 @@
         ".md",
         ".json",
         ".yaml",
-        ".yml"
-      ]
+        ".yml",
+      ],
     },
     "java-formatter": {
       "command": ["google-java-format", "--replace", "$FILE"],
       "environment": {
-        "JAVA_HOME": "/Users/killerkidbo/.sdkman/candidates/java/current"
+        "JAVA_HOME": "/Users/killerkidbo/.sdkman/candidates/java/current",
       },
-      "extensions": [".java"]
-    }
+      "extensions": [".java"],
+    },
   },
   "lsp": {
     "typescript": {
@@ -263,19 +393,19 @@
         ".mjs",
         ".cjs",
         ".mts",
-        ".cts"
+        ".cts",
       ],
       "initialization": {
         "preferences": {
           "includeInlayParameterNameHints": "all",
           "includeInlayVariableTypeHints": true,
           "includeInlayFunctionParameterTypeHints": true,
-          "includeInlayPropertyDeclarationTypeHints": true
-        }
-      }
+          "includeInlayPropertyDeclarationTypeHints": true,
+        },
+      },
     },
     "eslint": {
-      "disabled": true
+      "disabled": true,
     },
     "lua": {
       "command": ["lua-language-server"],
@@ -290,23 +420,23 @@
               "it",
               "assert",
               "before_each",
-              "after_each"
-            ]
+              "after_each",
+            ],
           },
           "workspace": {
             "library": ["${3rd}/luv/library", "${3rd}/busted/library"],
-            "checkThirdParty": false
+            "checkThirdParty": false,
           },
           "telemetry": {
-            "enable": false
+            "enable": false,
           },
           "hint": {
             "enable": true,
             "paramType": true,
-            "setType": true
-          }
-        }
-      }
+            "setType": true,
+          },
+        },
+      },
     },
     "gopls": {
       "command": ["gopls", "serve"],
@@ -318,7 +448,7 @@
         "analyses": {
           "unusedparams": true,
           "shadow": true,
-          "fieldalignment": true
+          "fieldalignment": true,
         },
         "hints": {
           "assignVariableTypes": true,
@@ -327,18 +457,18 @@
           "constantValues": true,
           "functionTypeParameters": true,
           "parameterNames": true,
-          "rangeVariableTypes": true
-        }
-      }
+          "rangeVariableTypes": true,
+        },
+      },
     },
     "bash": {
       "command": ["bash-language-server", "start"],
       "extensions": [".sh", ".bash", ".zsh"],
       "initialization": {
         "bashIde": {
-          "globPattern": "**/*@(.sh|.inc|.bash|.command|.zsh)"
-        }
-      }
+          "globPattern": "**/*@(.sh|.inc|.bash|.command|.zsh)",
+        },
+      },
     },
     "marksman": {
       "command": ["marksman", "server"],
@@ -346,10 +476,10 @@
       "initialization": {
         "marksman": {
           "toc": {
-            "enable": true
-          }
-        }
-      }
+            "enable": true,
+          },
+        },
+      },
     },
     "json": {
       "command": ["vscode-json-language-server", "--stdio"],
@@ -357,13 +487,13 @@
       "initialization": {
         "json": {
           "validate": {
-            "enable": true
+            "enable": true,
           },
           "format": {
-            "enable": true
-          }
-        }
-      }
+            "enable": true,
+          },
+        },
+      },
     },
     "yaml": {
       "command": ["yaml-language-server", "--stdio"],
@@ -376,18 +506,18 @@
           "format": {
             "enable": true,
             "singleQuote": false,
-            "bracketSpacing": true
+            "bracketSpacing": true,
           },
           "schemas": {
             "https://json.schemastore.org/github-workflow.json": "/.github/workflows/*",
             "https://json.schemastore.org/pre-commit-config.json": "/.pre-commit-config.yaml",
             "https://json.schemastore.org/docker-compose.json": [
               "/docker-compose*.yml",
-              "/docker-compose*.yaml"
-            ]
-          }
-        }
-      }
+              "/docker-compose*.yaml",
+            ],
+          },
+        },
+      },
     },
     "jdtls": {
       "command": ["jdtls"],
@@ -395,18 +525,57 @@
       "initialization": {
         "java": {
           "configuration": {
-            "updateBuildConfiguration": "automatic"
+            "updateBuildConfiguration": "automatic",
           },
           "completion": {
             "enabled": true,
-            "guessMethodArguments": true
+            "guessMethodArguments": true,
           },
           "saveActions": {
-            "organizeImports": true
-          }
-        }
-      }
-    }
+            "organizeImports": true,
+          },
+        },
+      },
+    },
+    "ruby-lsp": {
+      "command": ["/opt/homebrew/lib/ruby/gems/3.4.0/bin/ruby-lsp"],
+      "extensions": [".rb", ".rake", ".gemspec", ".ru"],
+      "initialization": {
+        "enabledFeatures": {
+          "codeActions": true,
+          "codeLens": true,
+          "completion": true,
+          "definition": true,
+          "diagnostics": true,
+          "documentHighlights": true,
+          "documentLink": true,
+          "documentSymbols": true,
+          "foldingRanges": true,
+          "formatting": true,
+          "hover": true,
+          "inlayHint": true,
+          "onTypeFormatting": true,
+          "selectionRanges": true,
+          "semanticHighlighting": true,
+          "signatureHelp": true,
+          "typeHierarchy": true,
+          "workspaceSymbol": true,
+        },
+        "featuresConfiguration": {
+          "inlayHint": {
+            "implicitHashValue": true,
+            "implicitRescue": true,
+          },
+        },
+        "indexing": {
+          "excludedPatterns": ["**/spec/**/*.rb", "**/test/**/*.rb"],
+          "excludedGems": ["rubocop"],
+        },
+        "formatter": "auto",
+        "linters": [],
+        "experimentalFeaturesEnabled": false,
+      },
+    },
   },
   "permission": {
     "edit": "allow",
@@ -437,8 +606,8 @@
       "whereis": "allow",
       "history": "allow",
       "uvx": "allow",
-      "uvx --from git+https://github.com/github/spec-kit.git*": "allow"
-    }
+      "uvx --from git+https://github.com/github/spec-kit.git*": "allow",
+    },
   },
-  "$schema": "https://opencode.ai/config.json"
+  "$schema": "https://opencode.ai/config.json",
 }

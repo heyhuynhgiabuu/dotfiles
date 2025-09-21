@@ -76,3 +76,25 @@ export HERD_PHP_83_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 
 # Herd injected PHP 8.4 configuration.
 export HERD_PHP_84_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/84/"
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+
+
+# Herd injected PHP 8.5 configuration.
+export HERD_PHP_85_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/85/"
+
+
+# Herd injected PHP 8.2 configuration.
+export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/82/"
+
+
+# Herd injected PHP 7.4 configuration.
+export HERD_PHP_74_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/74/"
+
+# Opencode
+export PATH="/Users/killerkidbo/.bun/bin:$PATH"
+
+# opencode
+# export PATH=/Users/killerkidbo/.opencode/bin:$PATH
+
+# bun completions
+[ -s "/Users/killerkidbo/.oh-my-zsh/completions/_bun" ] && source "/Users/killerkidbo/.oh-my-zsh/completions/_bun"

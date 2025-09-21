@@ -19,7 +19,12 @@ export JASYPT_ENCRYPTOR_PASSWORD="$(pass dev/halo-jasypt 2>/dev/null || echo '')
 export FIGMA_API_KEY="$(pass dev/figma-tung-pat 2>/dev/null || echo '')"
 export OPENROUTER_API_KEY="$(pass dev/openrouter-api-key 2>/dev/null || echo '')"
 export XAI_API_KEY="$(pass dev/xai-api-key 2>/dev/null || echo '')"
+export XAI_API_KEY_TEST="$(pass dev/xai-api-key-test 2>/dev/null || echo '')"
 export DNS_OVER_HTTPS=1
 
 # OpenCode MCP Configuration
 export MCP_CHROME_PATH="/Users/killerkidbo/.nvm/versions/node/v22.14.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
+export DATABASE_URL="postgresql://postgres@localhost:5433/ocusage"
+
+export OPENCODE_DISABLE_AUTOCOMPACT=true  # Disable broken compaction
+export OPENCODE_DISABLE_PRUNE=false        # Disable potentially buggy pruning

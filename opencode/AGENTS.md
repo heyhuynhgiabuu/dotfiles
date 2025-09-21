@@ -27,7 +27,7 @@
 - **Verification**: bash → read → task (for complex)
 - **Complex Reasoning**: sequential-thinking_sequentialthinking (for multi-step analysis)
 - **Web Research**: webfetch → chrome*\* → context7*\* (documentation + live validation)
-- **Project Management**: todowrite → todoread (task tracking)
+- **Project Management**: todowrite → todoread (task tracking) + vibe_kanban MCP (kanban orchestration)
 - **Memory**: serena_write_memory → serena_read_memory (persistent context)
 
 ## Core Constraints

@@ -180,6 +180,7 @@ alias grep='grep -i --color'
 alias sshconfig='cat ~/.ssh/config'
 alias hosts='ansible-inventory --graph'
 alias pip='pip3'
+alias ports='lsof -i -P | grep LISTEN'
 
 # Zoxide shortcuts
 alias zz='z -'
