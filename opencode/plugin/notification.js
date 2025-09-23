@@ -1,23 +1,19 @@
 /**
- * OpenCode Notification Plugin - v0.6.5 SDK Enhanced
- * Uses new toast API + proper event handling
+ * OpenCode Notification Plugin - v0.10.4 Compatible
+ * Fixed for current OpenCode API
  */
 
-export const NotificationPlugin = async ({
-  project,
-  client,
-  $,
-  directory,
-  worktree,
-}) => {
-  // Log plugin initialization
-  await client.app.log({
-    body: {
-      service: "notification-plugin",
-      level: "info",
-      message: `🔔 Notification Plugin loaded for: ${project?.name || directory}`,
-    },
-  });
+export const NotificationPlugin = async ({ project, client, $, directory }) => {
+  // Log plugin initialization (non-blocking - don't await during init)
+  client.app
+    .log({
+      body: {
+        service: "notification-plugin",
+        level: "info",
+        message: `🔔 Notification Plugin loaded for: ${project?.name || directory}`,
+      },
+    })
+    .catch(() => {}); // Non-blocking with error handling
 
   const extractSummary = (text) => {
     if (!text) return null;
@@ -37,35 +33,47 @@ export const NotificationPlugin = async ({
     if (!summary || summary.length < 3) return;
 
     try {
-      // Toast + sound
-      await client.tui.showToast({
-        body: { message: summary, variant: "success" },
-      });
+      // Use OpenCode toast notification (proper SDK way)
+      client.tui
+        .showToast({
+          body: { message: summary, variant: "success" },
+        })
+        .catch(() => {});
 
-      // Log successful notification
-      await client.app.log({
-        body: {
-          service: "notification-plugin",
-          level: "info",
-          message: `✅ Notification sent: ${summary.slice(0, 50)}...`,
-        },
-      });
-
-      // Just play sound
+      // Also use native notification as backup
       if (process.platform === "darwin") {
-        await $`afplay /System/Library/Sounds/Glass.aiff`;
+        $`osascript -e 'display notification "${summary}" with title "OpenCode"'`.catch(
+          () => {},
+        );
+        // Play sound asynchronously to avoid blocking
+        $`afplay /System/Library/Sounds/Glass.aiff`.catch(() => {});
       } else {
-        await $`paplay /usr/share/sounds/alsa/Front_Right.wav 2>/dev/null || true`;
+        // Linux notification
+        $`notify-send "OpenCode" "${summary}"`.catch(() => {});
+        $`paplay /usr/share/sounds/alsa/Front_Right.wav`.catch(() => {});
       }
+
+      // Log success (non-blocking)
+      client.app
+        .log({
+          body: {
+            service: "notification-plugin",
+            level: "info",
+            message: `✅ Notification sent: ${summary.slice(0, 50)}...`,
+          },
+        })
+        .catch(() => {});
     } catch (error) {
-      // Log notification errors
-      await client.app.log({
-        body: {
-          service: "notification-plugin",
-          level: "warn",
-          message: `⚠️ Notification failed: ${error.message}`,
-        },
-      });
+      // Log error (non-blocking)
+      client.app
+        .log({
+          body: {
+            service: "notification-plugin",
+            level: "warn",
+            message: `⚠️ Notification failed: ${error.message}`,
+          },
+        })
+        .catch(() => {});
     }
   };
 
@@ -104,14 +112,16 @@ export const NotificationPlugin = async ({
           }
         }
       } catch (error) {
-        // Log event handling errors
-        await client.app.log({
-          body: {
-            service: "notification-plugin",
-            level: "error",
-            message: `❌ Event handling failed: ${error.message}`,
-          },
-        });
+        // Log event handling errors (non-blocking)
+        client.app
+          .log({
+            body: {
+              service: "notification-plugin",
+              level: "error",
+              message: `❌ Event handling failed: ${error.message}`,
+            },
+          })
+          .catch(() => {});
       }
     },
   };

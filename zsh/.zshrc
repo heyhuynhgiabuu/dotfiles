@@ -91,7 +91,7 @@ export HERD_PHP_82_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 export HERD_PHP_74_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/74/"
 
 # Opencode
-export PATH="/Users/killerkidbo/.bun/bin:$PATH"
+# export PATH="/Users/killerkidbo/.bun/bin:$PATH"
 
 # opencode
 # export PATH=/Users/killerkidbo/.opencode/bin:$PATH

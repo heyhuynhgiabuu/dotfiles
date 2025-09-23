@@ -8,14 +8,14 @@ end
 
 -- === ENVIRONMENT VARIABLES FOR COLOR SUPPORT ===
 config.set_environment_variables = {
-  -- Enable colors for all terminal programs by default
-  FORCE_COLOR = "1",
-  CLICOLOR = "1", 
-  CLICOLOR_FORCE = "1",
-  -- Ensure proper terminal capabilities
-  COLORTERM = "truecolor",
-  -- OpenCode specific - ensure colored logging
-  OPENCODE_COLOR = "always",
+	-- Enable colors for all terminal programs by default
+	FORCE_COLOR = "1",
+	CLICOLOR = "1",
+	CLICOLOR_FORCE = "1",
+	-- Ensure proper terminal capabilities
+	COLORTERM = "truecolor",
+	-- OpenCode specific - ensure colored logging
+	OPENCODE_COLOR = "always",
 }
 
 -- === THEME & APPEARANCE ===
@@ -30,36 +30,36 @@ config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
 -- === FONT CONFIGURATION ===
 -- JetBrains Mono - reliable and widely supported
-config.font = wezterm.font {
-  family = "JetBrains Mono",
-  weight = "Regular",
-}
+config.font = wezterm.font({
+	family = "JetBrains Mono",
+	weight = "Regular",
+})
 
 -- Configure font rules for text formatting variants
 config.font_rules = {
-  {
-    intensity = "Bold",
-    font = wezterm.font {
-      family = "JetBrains Mono",
-      weight = "Bold",
-    },
-  },
-  {
-    italic = true,
-    font = wezterm.font {
-      family = "JetBrains Mono",
-      style = "Italic",
-    },
-  },
-  {
-    intensity = "Bold",
-    italic = true,
-    font = wezterm.font {
-      family = "JetBrains Mono",
-      weight = "Bold",
-      style = "Italic",
-    },
-  },
+	{
+		intensity = "Bold",
+		font = wezterm.font({
+			family = "JetBrains Mono",
+			weight = "Bold",
+		}),
+	},
+	{
+		italic = true,
+		font = wezterm.font({
+			family = "JetBrains Mono",
+			style = "Italic",
+		}),
+	},
+	{
+		intensity = "Bold",
+		italic = true,
+		font = wezterm.font({
+			family = "JetBrains Mono",
+			weight = "Bold",
+			style = "Italic",
+		}),
+	},
 }
 
 config.font_size = 16.0
@@ -160,25 +160,25 @@ config.keys = {
 		mods = "CMD|SHIFT",
 		action = wezterm.action.SendKey({ key = "w", mods = "CTRL" }),
 	},
-  -- Delete next word (Cmd+Alt+D sends Alt+D)
-  {
-    key = 'd',
-    mods = 'CMD|ALT',
-    action = wezterm.action.SendKey { key = 'd', mods = 'ALT' },
-  },
+	-- Delete next word (Cmd+Alt+D sends Alt+D)
+	{
+		key = "d",
+		mods = "CMD|ALT",
+		action = wezterm.action.SendKey({ key = "d", mods = "ALT" }),
+	},
 
-  -- === OPENCODE COMPATIBILITY ===
-  -- Pass through Ctrl+] and Ctrl+\ to applications (for OpenCode session navigation)
-  {
-    key = ']',
-    mods = 'CTRL',
-    action = wezterm.action.SendKey { key = ']', mods = 'CTRL' },
-  },
-  {
-    key = '\\',
-    mods = 'CTRL', 
-    action = wezterm.action.SendKey { key = '\\', mods = 'CTRL' },
-  },
+	-- === OPENCODE COMPATIBILITY ===
+	-- Pass through Ctrl+] and Ctrl+\ to applications (for OpenCode session navigation)
+	{
+		key = "]",
+		mods = "CTRL",
+		action = wezterm.action.SendKey({ key = "]", mods = "CTRL" }),
+	},
+	{
+		key = "\\",
+		mods = "CTRL",
+		action = wezterm.action.SendKey({ key = "\\", mods = "CTRL" }),
+	},
 }
 
 -- === PERFORMANCE TWEAKS ===
@@ -211,6 +211,11 @@ table.insert(config.keys, {
 	key = "2",
 	mods = "CMD",
 	action = wezterm.action.SwitchToWorkspace({ name = "ops" }),
+})
+table.insert(config.keys, {
+	key = "3",
+	mods = "CMD",
+	action = wezterm.action.SwitchToWorkspace({ name = "main" }),
 })
 
 -- === SSH DOMAINS (Optional) ===

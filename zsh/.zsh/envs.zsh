@@ -26,5 +26,5 @@ export DNS_OVER_HTTPS=1
 export MCP_CHROME_PATH="/Users/killerkidbo/.nvm/versions/node/v22.14.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"
 export DATABASE_URL="postgresql://postgres@localhost:5433/ocusage"
 
-export OPENCODE_DISABLE_AUTOCOMPACT=true  # Disable broken compaction
-export OPENCODE_DISABLE_PRUNE=false        # Disable potentially buggy pruning
+export OPENCODE_DISABLE_AUTOCOMPACT=1  # Disable broken compaction
+export OPENCODE_DISABLE_PRUNE=1        # Disable potentially buggy pruning

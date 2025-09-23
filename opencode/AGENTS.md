@@ -9,26 +9,29 @@
 
 ## Agent Selection (First Match Wins)
 
-1. Security issues → security agent
-2. Infrastructure/Docker → devops agent
-3. Code/architecture review → reviewer agent
-4. Complex planning (≥3 phases) → plan agent
-5. Multi-agent workflows → orchestrator agent
-6. Web research/discovery → researcher agent
-7. Database/frontend/network → specialist agent
-8. Code implementation → language agent
-9. Multi-step autonomous → general agent
+Security issues → security agent
+Infrastructure/Docker → devops agent
+Code/architecture review → reviewer agent
+Complex planning (≥3 phases) → plan agent
+Spec-driven development → orchestrator agent
+Multi-agent workflows → orchestrator agent
+Web research/discovery → researcher agent
+Database/frontend/network → specialist agent
+Code implementation → language agent
+Multi-step autonomous → general agent
 
 ## Tool Orchestration
 
-- **Discovery**: glob → grep → serena_find_symbol → read
-- **Code Analysis**: serena_get_symbols_overview → serena_search_for_pattern → serena_find_referencing_symbols
-- **Modification**: edit → bash+sed → write (last resort)
+- **Discovery**: glob → grep → read
+- **Directory**: list → read (for exploration)
+- **Modification**: edit → patch → write (last resort)
 - **Verification**: bash → read → task (for complex)
-- **Complex Reasoning**: sequential-thinking_sequentialthinking (for multi-step analysis)
-- **Web Research**: webfetch → chrome*\* → context7*\* (documentation + live validation)
-- **Project Management**: todowrite → todoread (task tracking) + vibe_kanban MCP (kanban orchestration)
-- **Memory**: serena_write_memory → serena_read_memory (persistent context)
+- **Task Management**: todowrite → todoread (internal tracking)
+- **Complex Reasoning**: sequential-thinking (for multi-step analysis)
+- **Documentation**: context7 (library docs and references)
+- **Web Research**: webfetch → context7 (fetch + docs)
+- **Project Management**: vibe_kanban (task orchestration)
+- **Spec Planning**: sequential-thinking → write → vibe_kanban (Requirements→Design→Tasks)
 
 ## Core Constraints
 
@@ -48,7 +51,7 @@
 - **Read once**: Don't re-read unchanged files
 - **Batch tools**: Multiple independent calls together
 - **Context limit**: Max 2000 lines per response
-- **Signal preservation**: Keep navigation paths, compress noise
+- **3-MCP Focus**: context7 + sequential-thinking + vibe_kanban only
 
 ## Summary Format
 

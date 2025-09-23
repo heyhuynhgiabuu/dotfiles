@@ -2,7 +2,7 @@
 name: researcher
 description: ALWAYS use this agent to find and synthesize information from the web and codebase, locate files and patterns, and perform comprehensive architecture mapping. Combines deep research capabilities with codebase navigation and discovery.
 mode: subagent
-model: github-copilot/gpt-5
+model: anthropic/claude-sonnet-4-20250514
 temperature: 0.3
 max_tokens: 5000
 tools:

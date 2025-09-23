@@ -23,6 +23,7 @@ path_add "$HOME/bin"
 path_add "$HOME/.bin"
 
 # Development tools
+path_add "$HOME/.bun/bin"
 path_add "$HOME/.krew/bin"
 path_add "$HOME/apache-maven-3.8.8/bin"
 path_add "$HOME/go/bin"
