@@ -40,6 +40,19 @@ else
     compinit -C -d ~/.zcompdump
 fi
 
-# Basic completion caching
+# Advanced completion caching and optimization
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*' accept-exact '*(N)'  # Accept exact matches immediately
+zstyle ':completion:*' accept-exact-dirs true  # Speed up directory completion
+zstyle ':completion:*' list-colors ''  # Disable colors for speed
+zstyle ':completion:*' menu select=0  # Instant menu selection
+zstyle ':completion:*' group-name ''  # Disable grouping for speed
+zstyle ':completion:*' verbose false  # Reduce verbose output
+
+# Skip aliases in completion for performance
+setopt COMPLETE_ALIASES
+
+# Disable correction for speed
+unsetopt CORRECT
+unsetopt CORRECT_ALL

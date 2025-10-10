@@ -2,226 +2,349 @@
 
 ## Overview
 
-Essential custom tools to enhance OpenCode's built-in capabilities with higher-level abstractions and batch operations.
+Essential custom tools to fill genuine gaps in OpenCode's built-in capabilities, focusing on batch operations and higher-level abstractions.
 
-## Tool 1: Project Analyzer
+## Analysis: OpenCode Built-in Coverage
 
-**File**: `.opencode/tool/analyze.ts`
-**Name**: `analyze`
+**Existing Tools (Comprehensive):**
 
-### Purpose
+- File operations: `read`, `write`, `edit`, `multiedit`
+- Search: `grep` (with ripgrep), `glob` (pattern matching)
+- Execution: `bash`, `task` (agent delegation)
+- LSP: `lsp-hover`, `lsp-diagnostics`
+- Management: `todo`, `patch`, `webfetch`
 
-Deep project structure analysis combining glob + grep + read for comprehensive overview.
+**Identified Gaps:**
 
-### Arguments
+1. Batch fix operations across multiple files
+2. Large file summarization for context management
+3. Dependency analysis and management
+4. Template/boilerplate generation
 
-```typescript
-{
-  depth: tool.schema.number().optional().describe("Analysis depth (1-3, default: 2)"),
-  focus: tool.schema.enum(["structure", "dependencies", "patterns", "all"]).optional().describe("Analysis focus area"),
-  exclude: tool.schema.array(tool.schema.string()).optional().describe("Patterns to exclude")
-}
-```
+## Tool 1: Project Analyzer ✅ IMPLEMENTED
 
-### Implementation Strategy
+**Status**: Already implemented in `opencode/tool/analyze.ts`
+**Value**: Comprehensive project analysis with security, performance, architecture insights
+**Action**: Keep as-is, working well with analyze-enhancer plugin
 
-1. **Structure Analysis**: Use glob to map directory tree
-2. **Dependency Analysis**: Parse package.json, imports, requires
-3. **Pattern Analysis**: Use grep to identify common patterns
-4. **Context Extraction**: Use read for key files (README, config)
+## Tool 2: Quick Fix Applier
 
-### Output Format
-
-```typescript
-{
-  structure: { directories: string[], files: number, depth: number },
-  dependencies: { external: string[], internal: string[] },
-  patterns: { frameworks: string[], languages: string[] },
-  keyFiles: { path: string, purpose: string }[]
-}
-```
-
-## Tool 2: Smart Code Search
-
-**File**: `.opencode/tool/search.ts`
-**Name**: `search`
-
-### Purpose
-
-Enhanced code search with context extraction and intelligent filtering.
-
-### Arguments
-
-```typescript
-{
-  pattern: tool.schema.string().describe("Search pattern (regex supported)"),
-  context: tool.schema.number().optional().describe("Lines of context around matches (default: 3)"),
-  fileTypes: tool.schema.array(tool.schema.string()).optional().describe("File extensions to search"),
-  exclude: tool.schema.array(tool.schema.string()).optional().describe("Paths to exclude")
-}
-```
-
-### Implementation Strategy
-
-1. **Smart Filtering**: Use glob for file type filtering
-2. **Pattern Matching**: Use grep with context lines
-3. **Result Enhancement**: Use read to extract function/class context
-4. **Relevance Ranking**: Score matches by context relevance
-
-### Output Format
-
-```typescript
-{
-  matches: {
-    file: string,
-    line: number,
-    content: string,
-    context: { before: string[], after: string[] },
-    scope: string // function/class name if applicable
-  }[],
-  summary: { totalMatches: number, filesSearched: number }
-}
-```
-
-## Tool 3: Quick Fix Applier
-
-**File**: `.opencode/tool/fix.ts`
+**File**: `opencode/tool/fix.ts`
 **Name**: `fix`
+**Priority**: HIGH - Addresses genuine gap in batch operations
 
 ### Purpose
 
-Apply common fixes across multiple files with batch operations.
+Apply common fixes across multiple files with batch operations. OpenCode has `edit`/`multiedit` but no intelligent batch fixing.
+
+### Gap Analysis
+
+- **Current**: Manual `grep` → `read` → `edit` for each file
+- **Needed**: Single command for common fix patterns across project
+- **Value**: 10-20x faster for common maintenance tasks
 
 ### Arguments
 
 ```typescript
-{
-  type: tool.schema.enum(["imports", "formatting", "lint", "unused", "deprecated"]).describe("Fix type to apply"),
-  files: tool.schema.array(tool.schema.string()).optional().describe("Specific files (default: auto-detect)"),
-  dryRun: tool.schema.boolean().optional().describe("Preview changes without applying"),
-  backup: tool.schema.boolean().optional().describe("Create backup before changes")
-}
+import { z } from "zod";
+
+const fixArgsSchema = z.object({
+  type: z.enum(["imports", "formatting", "lint", "unused", "deprecated"], {
+    description: "Fix type to apply",
+  }),
+  files: z
+    .array(z.string())
+    .optional()
+    .describe("Specific files (default: auto-detect)"),
+  dryRun: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe("Preview changes without applying"),
+  backup: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe("Create backup before changes"),
+});
+
+type FixArgs = z.infer<typeof fixArgsSchema>;
 ```
 
 ### Implementation Strategy
 
-1. **Detection**: Use grep to find fixable patterns
-2. **Validation**: Use read to verify context before changes
-3. **Application**: Use edit for targeted fixes
-4. **Verification**: Use bash to run formatters/linters
+1. **Detection**: Use existing `grep` tool to find fixable patterns
+2. **Validation**: Use existing `read` tool to verify context
+3. **Application**: Use existing `edit`/`multiedit` tools for changes
+4. **Verification**: Use existing `bash` tool for linters/formatters
 
 ### Fix Types
 
-- **imports**: Organize, remove unused, add missing
-- **formatting**: Apply consistent code style
-- **lint**: Fix common linting issues
-- **unused**: Remove unused variables/imports
-- **deprecated**: Update deprecated API usage
+- **imports**: Organize, remove unused, add missing imports
+- **formatting**: Apply consistent code style (prettier, eslint --fix)
+- **lint**: Fix common linting issues automatically
+- **unused**: Remove unused variables/imports/functions
+- **deprecated**: Update deprecated API usage patterns
 
-### Output Format
+### OpenCode Integration
 
 ```typescript
-{
-  changes: {
-    file: string,
-    type: string,
-    description: string,
-    applied: boolean
-  }[],
-  summary: { filesChanged: number, errorsFixed: number }
-}
+// Uses existing tools internally
+await grep({ pattern: "import.*from", include: "*.ts" });
+await read({ filePath: matchedFile });
+await edit({
+  filePath: matchedFile,
+  oldString: oldImport,
+  newString: newImport,
+});
+await bash({ command: "eslint --fix " + filePath });
 ```
 
-## Tool 4: Context Compressor
+## Tool 3: Context Compressor
 
-**File**: `.opencode/tool/compress.ts`
+**File**: `opencode/tool/compress.ts`
 **Name**: `compress`
+**Priority**: MEDIUM-HIGH - Addresses token limit issues
 
 ### Purpose
 
-Compress large files for context while preserving essential information.
+Compress large files for context while preserving essential information. OpenCode's `read` tool hits token limits on large files.
+
+### Gap Analysis
+
+- **Current**: `read` tool returns full file content, often too large
+- **Problem**: Token limits prevent analyzing large files (>2000 lines)
+- **Needed**: Intelligent summarization preserving key information
+- **Value**: Enable analysis of large codebases within token constraints
 
 ### Arguments
 
 ```typescript
-{
-  file: tool.schema.string().describe("File path to compress"),
-  strategy: tool.schema.enum(["functions", "classes", "exports", "smart"]).optional().describe("Compression strategy"),
-  maxLines: tool.schema.number().optional().describe("Maximum output lines (default: 100)")
-}
+import { z } from "zod";
+
+const compressArgsSchema = z.object({
+  file: z.string().describe("File path to compress"),
+  strategy: z
+    .enum(["functions", "classes", "exports", "smart"])
+    .optional()
+    .default("smart")
+    .describe("Compression strategy"),
+  maxLines: z
+    .number()
+    .int()
+    .positive()
+    .optional()
+    .default(100)
+    .describe("Maximum output lines"),
+});
+
+type CompressArgs = z.infer<typeof compressArgsSchema>;
 ```
 
 ### Implementation Strategy
 
-1. **Content Analysis**: Use read to get full file content
-2. **Structure Extraction**: Parse for functions, classes, exports
-3. **Importance Scoring**: Rank elements by usage/complexity
+1. **Content Analysis**: Use existing `read` tool to get full content
+2. **Structure Extraction**: Parse for functions, classes, exports using regex/AST
+3. **Importance Scoring**: Rank by exports, usage patterns, complexity
 4. **Smart Compression**: Keep signatures, remove implementation details
 
 ### Compression Strategies
 
-- **functions**: Extract function signatures and docstrings
-- **classes**: Extract class definitions and public methods
-- **exports**: Focus on exported interfaces and types
-- **smart**: Adaptive based on file type and content
+- **functions**: Extract function signatures, JSDoc, remove bodies
+- **classes**: Extract class definitions, public methods, remove private implementation
+- **exports**: Focus on exported interfaces, types, public APIs
+- **smart**: Adaptive based on file extension and content patterns
 
-### Output Format
+### OpenCode Integration
 
 ```typescript
-{
-  original: { lines: number, size: number },
-  compressed: { lines: number, compressionRatio: number },
-  content: string,
-  preserved: string[] // List of preserved elements
-}
+// Uses existing read tool
+const content = await read({ filePath: file });
+// Process and compress content
+// Return compressed version following OpenCode output format
 ```
+
+## Tool 4: Dependency Manager
+
+**File**: `opencode/tool/deps.ts`
+**Name**: `deps`
+**Priority**: MEDIUM - Security and maintenance value
+
+### Purpose
+
+Analyze and manage project dependencies across different package managers.
+
+### Gap Analysis
+
+- **Current**: Manual `read package.json` → external tools for vulnerability checking
+- **Needed**: Integrated dependency analysis, security scanning, update suggestions
+- **Value**: Automated security and maintenance insights
+
+### Arguments
+
+```typescript
+import { z } from "zod";
+
+const depsArgsSchema = z.object({
+  action: z
+    .enum(["analyze", "outdated", "vulnerabilities", "update"])
+    .describe("Action to perform"),
+  packageManager: z
+    .enum(["npm", "yarn", "pnpm", "pip", "cargo", "auto"])
+    .optional()
+    .default("auto")
+    .describe("Package manager (auto-detect by default)"),
+  severity: z
+    .enum(["low", "moderate", "high", "critical"])
+    .optional()
+    .default("moderate")
+    .describe("Minimum severity for vulnerabilities"),
+});
+
+type DepsArgs = z.infer<typeof depsArgsSchema>;
+```
+
+### Implementation Strategy
+
+1. **Detection**: Use `glob` to find package files (package.json, requirements.txt, Cargo.toml)
+2. **Analysis**: Use `bash` to run package manager commands (npm audit, pip check)
+3. **Parsing**: Use `read` to parse dependency files and command outputs
+4. **Reporting**: Structured output with actionable recommendations
 
 ## Implementation Guidelines
 
-### Error Handling
+### OpenCode Integration Principles
 
-- Graceful fallbacks for missing files/permissions
-- Clear error messages with suggested fixes
-- Partial results when possible
+1. **Leverage Existing Tools**: All custom tools use existing OpenCode built-ins internally
+2. **Follow Tool Patterns**: Use `Tool.define()` with proper `{title, metadata, output}` format
+3. **Zod Validation**: ALL tool arguments MUST use Zod schemas for type safety and runtime validation
+4. **Respect Permissions**: Work within agent permission constraints
+5. **Error Handling**: Graceful fallbacks, clear error messages, partial results with Zod error formatting
+
+### Architecture
+
+```typescript
+import { Tool } from "@opencode-ai/sdk";
+import { z } from "zod";
+
+// Define Zod schema for arguments
+const fixArgsSchema = z.object({
+  type: z.enum(["imports", "formatting", "lint", "unused", "deprecated"]),
+  files: z.array(z.string()).optional(),
+  dryRun: z.boolean().optional().default(false),
+  backup: z.boolean().optional().default(false),
+});
+
+// Custom tools are higher-level orchestrators
+export const FixTool = Tool.define({
+  name: "fix",
+  description: "Apply common fixes across multiple files",
+  args: fixArgsSchema,
+
+  async execute(args) {
+    // Zod validation happens automatically before execute()
+    const { type, files, dryRun, backup } = args;
+
+    try {
+      // Use existing tools internally
+      const matches = await GrepTool.execute({ pattern: "import.*" });
+      const content = await ReadTool.execute({ filePath: matches[0].file });
+
+      if (dryRun) {
+        return { preview: true, changes: [...] };
+      }
+
+      const result = await EditTool.execute({
+        filePath: matches[0].file,
+        oldString,
+        newString
+      });
+
+      return {
+        title: `Fixed ${type} in ${matches.length} files`,
+        metadata: { filesModified: matches.length, type },
+        output: formatOutput(result),
+      };
+    } catch (error) {
+      // Zod validation errors are caught before execute()
+      // Handle tool execution errors here
+      throw new Error(`Fix failed: ${error.message}`);
+    }
+  },
+});
+```
+
+### Zod Validation Best Practices
+
+```typescript
+import { z } from "zod";
+
+// 1. Use descriptive error messages
+const schema = z.object({
+  prompt: z
+    .string()
+    .min(10, "Prompt must be at least 10 characters")
+    .max(1000, "Prompt too long (max 1000 characters)"),
+});
+
+// 2. Use refinements for complex validation
+const imageKeysSchema = z
+  .array(z.string())
+  .min(1, "At least 1 image required")
+  .max(3, "Maximum 3 images allowed")
+  .refine(
+    (keys) => keys.every((k) => k.startsWith("uploads/")),
+    "Invalid image key format",
+  );
+
+// 3. Use transforms for data normalization
+const aspectRatioSchema = z
+  .enum(["1:1", "16:9", "9:16", "4:3", "3:4"])
+  .default("1:1")
+  .transform((val) => val.toLowerCase());
+
+// 4. Handle validation errors gracefully
+function handleValidationError(error: z.ZodError) {
+  return {
+    error: "Validation failed",
+    details: error.errors.map((e) => ({
+      field: e.path.join("."),
+      message: e.message,
+    })),
+  };
+}
+```
 
 ### Performance
 
-- Batch operations where possible
-- Cache results for repeated operations
-- Limit resource usage with configurable timeouts
+- Batch operations using existing `multiedit` tool
+- Leverage existing caching in built-in tools
+- Respect existing timeout and resource limits
+- Zod validation adds <1ms overhead (negligible)
 
-### Integration
+## Implementation Priority
 
-- Work seamlessly with existing built-in tools
-- Follow OpenCode's tool orchestration patterns
-- Support agent routing and permissions
-
-### Testing
-
-- Unit tests for each tool function
-- Integration tests with real project structures
-- Performance benchmarks for large codebases
+1. **Quick Fix Applier** - Immediate impact, addresses common pain points
+2. **Context Compressor** - Solves token limit issues for large files
+3. **Dependency Manager** - Security and maintenance value
 
 ## Usage Examples
 
 ```bash
-# Analyze project structure
-@build analyze the project structure
+# Fix import issues across TypeScript files
+fix --type imports --files "src/**/*.ts" --dryRun
 
-# Search for authentication patterns
-@build search for "auth" patterns with context
+# Compress large config file for analysis
+compress webpack.config.js --strategy smart --maxLines 50
 
-# Fix import issues across the project
-@build fix import issues in TypeScript files
-
-# Compress large config file for context
-@build compress webpack.config.js for analysis
+# Check for vulnerable dependencies
+deps --action vulnerabilities --severity high
 ```
 
 ## Benefits
 
-1. **Efficiency**: Reduce multi-step operations to single commands
-2. **Intelligence**: Context-aware analysis and fixes
-3. **Consistency**: Standardized approaches to common tasks
-4. **Scalability**: Handle large codebases effectively
-5. **Integration**: Seamless workflow with existing tools
+1. **Efficiency**: Reduce 5-10 step workflows to single commands
+2. **Intelligence**: Higher-level abstractions over existing primitives
+3. **Integration**: Built on existing OpenCode tool ecosystem
+4. **Scalability**: Handle large codebases within existing constraints
+5. **Maintenance**: Automated fixes and security insights

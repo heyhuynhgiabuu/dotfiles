@@ -134,7 +134,9 @@ lspconfig.gopls.setup {
 -- Setup JDTLS as required by nvim-java after require('java').setup()
 lspconfig.jdtls.setup({})
 
--- 
+-- TypeScript is handled by typescript-tools.nvim plugin
+-- See: ~/.config/nvim/lua/custom/plugins/typescript-tools.lua
+
 -- Python LSP server (pyright)
 lspconfig.pyright.setup {
   on_attach = on_attach,

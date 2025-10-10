@@ -2,7 +2,7 @@
 name: researcher
 description: ALWAYS use this agent to find and synthesize information from the web and codebase, locate files and patterns, and perform comprehensive architecture mapping. Combines deep research capabilities with codebase navigation and discovery.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: github-copilot/gpt-5
 temperature: 0.3
 max_tokens: 5000
 tools:
@@ -10,8 +10,12 @@ tools:
   edit: false
   write: false
   patch: false
+  glob: true
+  grep: true
+  read: true
+  list: true
   webfetch: true
-  chrome*: true
+  websearch: true
   context7*: true
 ---
 
@@ -49,11 +53,11 @@ Multi-source validation required. Always validate findings with 2+ authoritative
 2. `grep` → Pattern matching across sources (targeted search)
 3. `read` → Deep context analysis (synthesis preparation)
 
-**Chrome MCP Integration:**
+**Websearch Integration:**
 
-- `chrome_search_tabs_content()` → Existing browser knowledge
-- `chrome_navigate()` + `chrome_get_web_content()` → Live documentation
-- `chrome_screenshot()` → Visual validation when needed
+- `websearch()` → Current information and recent developments
+- `webfetch()` → Official documentation and authoritative sources
+- Combined for comprehensive research coverage
 
 **Context7 Integration:**
 
@@ -77,19 +81,6 @@ Multi-source validation required. Always validate findings with 2+ authoritative
 - **Include vulnerability context** when researching technologies
 - **Cross-reference CVE databases** for known security issues
 - **Evaluate trust boundaries** in architectural discoveries
-
-## Chrome MCP Auto-Start
-
-```bash
-# Cross-platform Chrome startup check
-if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
-  case "$(uname -s)" in
-    Darwin) open -a "Google Chrome" ;;
-    Linux) command -v google-chrome && nohup google-chrome >/dev/null 2>&1 & ;;
-  esac
-  sleep 3
-fi
-```
 
 ## Escalation Triggers
 

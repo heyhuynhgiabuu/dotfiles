@@ -8,21 +8,23 @@ return {
 	},
 	config = function()
 		require("go").setup({
-			-- Enhanced Go development features
-			goimport = "gopls", -- Use gopls for imports
-			gofmt = "gofumpt", -- Use gofumpt for formatting
+			goimport = "gopls",
+			gofmt = "gofumpt",
 			max_line_len = 120,
 			tag_transform = false,
-			test_template = "", -- Default test template
-			test_template_dir = "", -- Default test template directory
+			test_template = "",
+			test_template_dir = "",
 			comment_placeholder = "   ",
 			icons = { breakpoint = "🧘", currentpos = "🏃" },
 			verbose = false,
 			log_path = vim.fn.expand("$HOME") .. "/tmp/gonvim.log",
-			lsp_cfg = false, -- We handle LSP config separately
-			lsp_gofumpt = false, -- Disable auto-formatting to avoid conflicts
-			lsp_on_attach = false, -- We handle this in lsp-config
+			lsp_cfg = false,
+			lsp_gofumpt = false,
+			lsp_on_attach = false,
+			lsp_codelens = false,
 			dap_debug = true,
+			-- FIX: Disable treesitter textobjects to avoid outdated query errors
+			textobjects = false,
 		})
 	end,
 	event = { "CmdlineEnter" },

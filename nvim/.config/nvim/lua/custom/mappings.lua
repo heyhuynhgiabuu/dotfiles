@@ -45,6 +45,18 @@ map("n", "<leader>fn", function()
   end)
 end, { desc = "Open or create note" })
 
+-- OpenCode tmux integration (replaces sidekick.nvim approach)
+map("n", "<leader>oc", function()
+	local result = vim.fn.system(
+		"tmux select-window -t opencode 2>/dev/null || tmux new-window -n opencode 'cd ~/dotfiles && opencode'"
+	)
+	if vim.v.shell_error == 0 then
+		print("OpenCode window ready")
+	else
+		print("OpenCode launch failed: " .. result)
+	end
+end, { desc = "Toggle OpenCode Window" })
+
 -- Diagnostics and utilities
 map("n", "<leader>ce", function()
   local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })

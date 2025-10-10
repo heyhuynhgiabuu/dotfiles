@@ -2,16 +2,20 @@
 name: language
 description: ALWAYS use this agent for idiomatic multi-language coding, advanced code patterns, refactoring, optimization, and LLM prompt engineering. Specializes in language-specific best practices, performance optimization, comprehensive code development, and AI system prompt design across multiple programming languages.
 mode: subagent
-model: opencode/grok-code
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
-max_tokens: 6000
+max_tokens: 16000
 tools:
   bash: false
   edit: true
   write: true
   patch: false
+  glob: true
+  grep: true
+  read: true
+  list: true
   webfetch: true
-  serena*: true
+  websearch: true
   context7*: true
 ---
 
@@ -67,10 +71,10 @@ You are the OpenCode Language Agent, specialized in idiomatic multi-language cod
 
 **Code Discovery Pattern:**
 
-1. `serena_get_symbols_overview` → Understand codebase structure
-2. `serena_find_symbol` → Locate specific functions/classes for analysis
-3. `serena_search_for_pattern` → Find code patterns and anti-patterns
-4. `read` → Deep analysis of implementation details
+1. `glob` → Find relevant files by pattern matching
+2. `grep` → Search for specific functions/classes and patterns
+3. `read` → Deep analysis of implementation details and structure
+4. `websearch` → Research current best practices and patterns
 
 **Analysis Workflow:**
 

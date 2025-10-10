@@ -42,6 +42,14 @@ alias sos='source ~/.zshrc'
 # OPENCODE
 # =============================================================================
 alias oc="FORCE_COLOR=1 opencode"
+alias ocd="FORCE_COLOR=1 opencode --directory"
+
+# =============================================================================
+# ENV FILES
+# =============================================================================
+# Manual .env sourcing (better than annoying auto-prompts)
+alias loadenv='[ -f .env ] && export $(cat .env | grep -v "^#" | xargs) && echo "✅ Loaded .env" || echo "❌ No .env file found"'
+alias showenv='[ -f .env ] && cat .env || echo "❌ No .env file found"'
 
 # =============================================================================
 # FUZZY FINDER (FZF)

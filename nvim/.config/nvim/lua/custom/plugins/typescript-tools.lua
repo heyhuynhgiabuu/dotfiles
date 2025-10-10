@@ -3,6 +3,7 @@
 
 local typescript_tools_config = {
   "pmizio/typescript-tools.nvim",
+  event = { "BufReadPre", "BufNewFile" },
   ft = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
   config = function()

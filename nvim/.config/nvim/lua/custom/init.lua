@@ -1,6 +1,9 @@
 -- Custom NvChad configuration theo cách cũ
 -- This file integrates your existing configs with NvChad
 
+-- Load filetype detection first (must come before other configs)
+require "custom.filetype"
+
 -- Load custom configurations
 require "custom.options"
 require "custom.mappings"

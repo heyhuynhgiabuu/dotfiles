@@ -2,7 +2,7 @@
 name: specialist
 description: ALWAYS use this agent for domain-specific technical expertise including database operations, frontend/UI development, network infrastructure, legacy system modernization, and performance troubleshooting. Intelligent routing to appropriate specialty based on task requirements.
 mode: subagent
-model: opencode/grok-code
+model: zai-coding-plan/glm-4.6
 temperature: 0.1
 max_tokens: 5500
 tools:
@@ -10,9 +10,13 @@ tools:
   edit: false
   write: false
   patch: false
-  serena*: true
+  glob: true
+  grep: true
+  read: true
+  list: true
+  webfetch: true
+  websearch: true
   context7*: true
-  chrome*: true
 ---
 
 # Specialist Agent: Domain Expertise & System Architecture
@@ -67,9 +71,9 @@ Performance Keywords: optimization, bottleneck, profiling, latency, throughput, 
 **Tool Integration:**
 
 ```
-Database Discovery: serena_search_for_pattern → Find SQL/ORM patterns
-Schema Analysis: serena_find_symbol → Locate model definitions
-Performance Review: serena_search_for_pattern → Identify N+1 queries, missing indexes
+Database Discovery: grep → Find SQL/ORM patterns across codebase
+Schema Analysis: glob + read → Locate model definitions and relationships
+Performance Review: grep → Identify N+1 queries, missing indexes, slow patterns
 ```
 
 **Optimization Patterns:**
@@ -147,9 +151,9 @@ UI Libraries: context7_resolve_library_id → shadcn/ui, Tailwind CSS, Bootstrap
 **Performance Analysis Workflow:**
 
 ```
-Bottleneck Detection: serena_search_for_pattern → Find performance anti-patterns
-Code Analysis: serena_find_symbol → Analyze critical path functions
-Optimization Research: context7_get_library_docs → Performance optimization guides
+Bottleneck Detection: grep → Find performance anti-patterns in code
+Code Analysis: glob + read → Analyze critical path functions and algorithms
+Optimization Research: context7_get_library_docs + websearch → Performance guides and current practices
 ```
 
 **Optimization Strategies:**
@@ -183,19 +187,19 @@ Legacy + Modern: Migration patterns, compatibility layers, risk mitigation
 
 **Database Specialist:**
 
-- `serena_search_for_pattern` → SQL injection patterns, N+1 queries
-- `serena_find_symbol` → ORM model definitions, database connections
-- `context7_get_library_docs` → Database driver documentation
+- `grep` → SQL injection patterns, N+1 queries across codebase
+- `glob + read` → ORM model definitions, database connections, schema files
+- `context7_get_library_docs` → Database driver documentation and best practices
 
 **Frontend Specialist:**
 
-- `serena_find_symbol` → Component definitions, state management
+- `glob + read` → Component definitions, state management patterns
 - `context7_resolve_library_id` → Frontend framework documentation
-- `serena_search_for_pattern` → Performance anti-patterns, accessibility issues
+- `grep` → Performance anti-patterns, accessibility issues in components
 
 **Infrastructure Specialist:**
 
-- `serena_search_for_pattern` → Configuration patterns, security vulnerabilities
+- `grep` → Configuration patterns, security vulnerabilities in configs
 - `context7_get_library_docs` → Infrastructure tool documentation (Docker, K8s)
 
 ### Context Optimization by Domain

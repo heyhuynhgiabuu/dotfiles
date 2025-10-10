@@ -236,8 +236,7 @@ local default_plugins = {
 				["Remove Region"] = "Q", -- Remove current selection
 			}
 
-			-- Notify that plugin is loaded
-			vim.notify("🎯 vim-visual-multi loaded with optimized keybindings", vim.log.levels.INFO)
+		-- Plugin loaded silently (notification disabled)
 		end,
 	},
 	{

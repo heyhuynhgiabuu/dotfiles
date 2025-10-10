@@ -2,9 +2,9 @@
 name: reviewer
 description: ALWAYS use this agent to review code, architecture, and APIs for quality, security, and best practices.
 mode: subagent
-model: zai/glm-4.5
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
-max_tokens: 4000
+max_tokens: 16000
 tools:
   bash: false
   edit: false
@@ -13,9 +13,10 @@ tools:
   glob: true
   grep: true
   read: true
+  list: true
   webfetch: true
-  serena*: true
-  chrome*: true
+  websearch: true
+  context7*: true
 ---
 
 # Reviewer Agent: Code Quality & Security Review
@@ -69,19 +70,6 @@ Security-first code review with risk-based prioritization. Provide actionable re
 - **Implementation fixes** → language agent for code remediation
 - **Architecture concerns** → specialist agent for design review
 - **Unknown vulnerabilities** → researcher agent for threat analysis
-
-## Chrome MCP Auto-Start
-
-```bash
-# Cross-platform Chrome startup check
-if ! pgrep -f "Google Chrome\|google-chrome\|chromium" >/dev/null 2>&1; then
-  case "$(uname -s)" in
-    Darwin) open -a "Google Chrome" ;;
-    Linux) command -v google-chrome && nohup google-chrome >/dev/null 2>&1 & ;;
-  esac
-  sleep 3
-fi
-```
 
 ## Output Format
 

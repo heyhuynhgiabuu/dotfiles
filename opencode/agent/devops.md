@@ -2,7 +2,7 @@
 name: devops
 description: Expert guidance on Docker containerization, deployment workflows, infrastructure configuration, and developer experience optimization. Emphasizes minimal, secure, and maintainable setups while improving developer productivity.
 mode: subagent
-model: zai/glm-4.5
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.2
 max_tokens: 4500
 tools:
@@ -10,8 +10,12 @@ tools:
   edit: false
   write: false
   patch: false
+  glob: true
+  grep: true
+  read: true
+  list: true
   webfetch: true
-  chrome*: true
+  websearch: true
   context7*: true
 ---
 
@@ -68,8 +72,8 @@ securityContext:
 
 ## Research Strategy
 
-- **Known tech**: WebFetch official docs
-- **New tech**: Chrome navigate + visual verification
+- **Known tech**: websearch + webfetch official docs
+- **New tech**: websearch current practices + context7 documentation
 - **Complex**: Multiple sources + synthesis
 
 ## Escalation Triggers

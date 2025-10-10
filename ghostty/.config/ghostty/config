@@ -1,0 +1,108 @@
+# Ghostty Configuration
+# Converted from Wezterm config for OpenCode compatibility
+
+# === THEME & APPEARANCE ===
+theme = Tokyo Night
+background-opacity = 0.85
+background-blur-radius = 25
+
+# === FONT CONFIGURATION ===
+font-family = JetBrains Mono
+font-size = 16
+
+# Font features for better rendering
+font-feature = -calt
+font-feature = -liga
+
+# === WINDOW SETTINGS ===
+window-decoration = false
+window-padding-x = 4
+window-padding-y = 4
+window-padding-balance = true
+
+# macOS specific
+macos-titlebar-style = tabs
+macos-option-as-alt = true
+
+# === PERFORMANCE ===
+# Ghostty is already optimized for TUI apps
+# These are the defaults but explicitly set for clarity
+resize-overlay = never
+mouse-hide-while-typing = true
+
+# === CURSOR ===
+cursor-style = block
+cursor-style-blink = true
+
+# === COLORS (Tokyo Night theme colors) ===
+# These match your Wezterm Tokyo Night theme
+background = 1a1b26
+foreground = c0caf5
+cursor-color = c0caf5
+
+# Normal colors
+palette = 0=#15161e
+palette = 1=#f7768e
+palette = 2=#9ece6a
+palette = 3=#e0af68
+palette = 4=#7aa2f7
+palette = 5=#bb9af7
+palette = 6=#7dcfff
+palette = 7=#a9b1d6
+
+# Bright colors
+palette = 8=#414868
+palette = 9=#f7768e
+palette = 10=#9ece6a
+palette = 11=#e0af68
+palette = 12=#7aa2f7
+palette = 13=#bb9af7
+palette = 14=#7dcfff
+palette = 15=#c0caf5
+
+# === SHELL INTEGRATION ===
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+# === KEYBINDINGS ===
+# Most macOS defaults work out of box in Ghostty
+# Only add custom ones if needed
+
+# Copy/Paste (already work by default)
+# keybind = cmd+c=copy_to_clipboard
+# keybind = cmd+v=paste_from_clipboard
+
+# New tab/window (already work by default)
+# keybind = cmd+t=new_tab
+# keybind = cmd+n=new_window
+
+# Close tab/window
+keybind = cmd+w=close_surface
+
+# Clear screen (like Wezterm's Cmd+K)
+keybind = cmd+k=clear_screen
+
+# === SCROLLBACK ===
+scrollback-limit = 10000
+
+# === CLIPBOARD ===
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+
+# === ADVANCED ===
+# Enable true color support (24-bit color)
+term = xterm-256color
+
+# Auto-update check
+auto-update = check
+
+# Quit behavior
+quit-after-last-window-closed = true
+confirm-close-surface = false
+
+# === OPENCODE SPECIFIC ===
+# These environment variables ensure OpenCode renders properly
+# NOTE: Ghostty doesn't support custom env vars in config
+# You'll need to set these in your shell profile instead
+# See instructions below

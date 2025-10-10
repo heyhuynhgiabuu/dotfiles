@@ -4,21 +4,26 @@
 # Platform detection (import from paths.zsh)
 PLATFORM="${PLATFORM:-$(detect_platform)}"
 
-## NVM - Lazy loading for performance
+## NVM - Load immediately for consistent Node access
 export NVM_DIR="$HOME/.nvm"
-nvm() {
-    unset -f nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-    nvm "$@"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+
+# Auto-load default Node version (creates .nvmrc support)
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    # Load default version or use latest LTS
+    nvm use default --silent 2>/dev/null || nvm use --lts --silent 2>/dev/null
+fi
+
+## SDKMAN - LAZY loading (only when 'sdk' command is used)
+export SDKMAN_DIR="$HOME/.sdkman"
+sdk() {
+    unset -f sdk
+    [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+    sdk "$@"
 }
 
-## SDKMAN - Immediate loading for Java management
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
-
-## Zoxide - Modern cd replacement
-command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+## Zoxide - Loaded via cache-integrations.zsh (no eval here)
 
 ## TheFuck - Lazy loading
 fuck() {
@@ -47,17 +52,25 @@ if [[ "$PLATFORM" == "macos" ]]; then
     export HERD_PHP_74_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/74/"
 fi
 
-## Conda (conditional loading)
+## Conda - LAZY loading (only when 'conda' command is used)
 if [[ -d "$HOME/miniconda3" ]]; then
-    __conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    elif [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        source "$HOME/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/miniconda3/bin:$PATH"
-    fi
-    unset __conda_setup
+    # Add to PATH immediately, but defer conda initialization
+    export PATH="$HOME/miniconda3/bin:$PATH"
+    
+    # Lazy conda initialization
+    conda() {
+        unset -f conda
+        
+        __conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
+        elif [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+            source "$HOME/miniconda3/etc/profile.d/conda.sh"
+        fi
+        unset __conda_setup
+        
+        conda "$@"
+    }
 fi
 
 ## WezTerm Shell Integration
@@ -97,23 +110,38 @@ if [[ "$TERM_PROGRAM" == "WezTerm" ]]; then
     }
 fi
 
-## GPG Agent
+## GPG Agent - LAZY initialization (only when needed)
+# Export GPG_TTY immediately (fast), but defer agent startup
 if command -v gpg-agent >/dev/null; then
-    if ! pgrep -x gpg-agent >/dev/null; then
-        gpg-agent --daemon --enable-ssh-support >/dev/null 2>&1
-    fi
     export GPG_TTY=$(tty)
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     
-    if [ -f "${HOME}/.gpg-agent-info" ]; then
-        . "${HOME}/.gpg-agent-info"
-        export GPG_AGENT_INFO
-        export SSH_AUTH_SOCK
-    fi
+    # Lazy function that starts GPG agent on first use
+    _ensure_gpg_agent() {
+        if ! pgrep -x gpg-agent >/dev/null 2>&1; then
+            gpg-agent --daemon --enable-ssh-support >/dev/null 2>&1
+        fi
+        export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket 2>/dev/null)
+        
+        if [ -f "${HOME}/.gpg-agent-info" ]; then
+            . "${HOME}/.gpg-agent-info"
+            export GPG_AGENT_INFO
+            export SSH_AUTH_SOCK
+        fi
+    }
+    
+    # Wrap GPG commands to ensure agent is running
+    gpg() {
+        _ensure_gpg_agent
+        command gpg "$@"
+    }
+    
+    pass() {
+        _ensure_gpg_agent
+        command pass "$@"
+    }
 fi
 
-## GitHub Copilot CLI
-command -v github-copilot-cli >/dev/null && eval "$(github-copilot-cli alias -- "$0")"
+## GitHub Copilot CLI - Loaded via cache-integrations.zsh (no eval here)
 
 ## FZF - Load last to avoid conflicts
 [[ -f "$ZSH_CONFIG_DIR/fzf.zsh" ]] && source "$ZSH_CONFIG_DIR/fzf.zsh"

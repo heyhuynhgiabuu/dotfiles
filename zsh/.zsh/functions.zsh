@@ -225,6 +225,245 @@ logocode() {
     fi
 }
 
+# List all active OpenCode sessions with their log files
+logocodes() {
+    local log_dir="$HOME/.local/share/opencode/log"
+    
+    if [[ ! -d "$log_dir" ]]; then
+        echo "❌ Log directory not found: $log_dir"
+        return 1
+    fi
+    
+    echo "📊 Active OpenCode Sessions"
+    echo ""
+    
+    local found_active=false
+    local count=1
+    local pids=$(pgrep -f "opencode" 2>/dev/null)
+    
+    for pid in $pids; do
+        local cmd=$(ps -p "$pid" -o command= 2>/dev/null)
+        
+        if [[ -z "$cmd" ]]; then
+            continue
+        fi
+        
+        local tmux_info=""
+        if command -v tmux >/dev/null 2>&1; then
+            local pane_info=$(tmux list-panes -a -F "#{pane_pid} #{session_name}:#{window_index}.#{pane_index} #{window_name}" 2>/dev/null | grep "^$pid " || echo "")
+            if [[ -n "$pane_info" ]]; then
+                local pane_id=$(echo "$pane_info" | awk '{print $2}')
+                local window_name=$(echo "$pane_info" | awk '{$1=$2=""; print $0}' | xargs)
+                tmux_info=" [tmux: $pane_id ${window_name:+($window_name)}]"
+            fi
+        fi
+        
+        local log_files=$(lsof -p "$pid" 2>/dev/null | grep "\.log$" | awk '{print $NF}' | grep "$log_dir")
+        
+        if [[ -n "$log_files" ]]; then
+            found_active=true
+            echo "[$count] PID: $pid$tmux_info"
+            echo "    📁 Log: $log_files"
+            echo "    📏 Size: $(du -h "$log_files" 2>/dev/null | cut -f1)"
+            echo "    📅 Modified: $(stat -f "%Sm" -t "%H:%M:%S" "$log_files" 2>/dev/null)"
+            echo ""
+            count=$((count + 1))
+        fi
+    done
+    
+    if [[ "$found_active" == false ]]; then
+        echo "❌ No active OpenCode sessions found"
+        echo "💡 Available log files:"
+        ls -lht "$log_dir"/*.log 2>/dev/null | head -5 | while read -r line; do
+            echo "    $line"
+        done
+        return 1
+    fi
+    
+    echo "💡 Usage: logotmux [number] to view specific session"
+    echo "💡 Usage: logotmux to auto-detect current tmux pane"
+}
+
+# View OpenCode logs for tmux sessions (auto-detect or select)
+logotmux() {
+    local log_dir="$HOME/.local/share/opencode/log"
+    local follow=true
+    local filter_type="all"
+    local lines=50
+    local session_num=""
+    
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --static|-s)
+                follow=false
+                shift
+                ;;
+            --lines|-n)
+                lines="$2"
+                shift 2
+                ;;
+            [0-9]*)
+                session_num="$1"
+                shift
+                ;;
+            plugins|errors|performance|hooks|sessions|api|all)
+                filter_type="$1"
+                shift
+                ;;
+            *)
+                echo "Usage: logotmux [session_number] [filter] [options]"
+                echo "Filters: plugins, errors, performance, hooks, sessions, api, all"
+                echo "Options:"
+                echo "  --lines N, -n N    Lines to show (default: 50)"
+                echo "  --static, -s       Static output instead of follow"
+                echo ""
+                echo "Run 'logocodes' to see all active sessions"
+                return 1
+                ;;
+        esac
+    done
+    
+    local target_log=""
+    
+    if [[ -n "$session_num" ]]; then
+        local count=1
+        local pids=$(pgrep -f "opencode" 2>/dev/null)
+        for pid in $pids; do
+            local log_file=$(lsof -p "$pid" 2>/dev/null | grep "\.log$" | awk '{print $NF}' | grep "$log_dir" | head -1)
+            if [[ -n "$log_file" ]]; then
+                if [[ "$count" == "$session_num" ]]; then
+                    target_log="$log_file"
+                    break
+                fi
+                count=$((count + 1))
+            fi
+        done
+        
+        if [[ -z "$target_log" ]]; then
+            echo "❌ Session #$session_num not found"
+            echo "💡 Run 'logocodes' to see available sessions"
+            return 1
+        fi
+    else
+        if [[ -n "$TMUX" ]]; then
+            local current_pane_pid=$(tmux display-message -p "#{pane_pid}")
+            local opencode_pid=$(pgrep -P "$current_pane_pid" -f "opencode" | head -1)
+            
+            if [[ -z "$opencode_pid" ]]; then
+                opencode_pid=$(ps -o pid,ppid,command | grep opencode | grep -v grep | awk -v ppid="$current_pane_pid" '$2 == ppid {print $1}' | head -1)
+            fi
+            
+            if [[ -n "$opencode_pid" ]]; then
+                target_log=$(lsof -p "$opencode_pid" 2>/dev/null | grep "\.log$" | awk '{print $NF}' | grep "$log_dir" | head -1)
+            fi
+        fi
+        
+        if [[ -z "$target_log" ]]; then
+            target_log=$(find "$log_dir" -type f -name "*.log" -exec ls -t {} + 2>/dev/null | head -n1)
+            echo "⚠️ Auto-detection failed, using latest log file"
+        else
+            echo "✅ Detected current tmux pane's OpenCode session"
+        fi
+    fi
+    
+    if [[ -z "$target_log" || ! -f "$target_log" ]]; then
+        echo "❌ No log file found"
+        return 1
+    fi
+    
+    local filter_pattern=""
+    case "$filter_type" in
+        "plugins")
+            filter_pattern="(service=notification-plugin|service=test-forge|🧭|📍|✨|🔍|🔒|🔔|🌍|Context Engineering|Plugin loaded)"
+            ;;
+        "errors")
+            filter_pattern="(ERROR|WARN|Failed|Exception|⚠️|❌)"
+            ;;
+        "performance")
+            filter_pattern="(Performance|Cache|Optimized|duration|ms|memory)"
+            ;;
+        "hooks")
+            filter_pattern="(tool\.execute\.|hook|Hook|triggered)"
+            ;;
+        "sessions")
+            filter_pattern="(session|Session|ses_|msg_)"
+            ;;
+        "api")
+            filter_pattern="(method=|path=|status|request|response)"
+            ;;
+        *)
+            filter_pattern=".*"
+            ;;
+    esac
+    
+    echo "📋 OpenCode Tmux Log Viewer"
+    echo "📁 File: $target_log"
+    echo "🔍 Filter: $filter_type"
+    echo "📏 Lines: $lines"
+    if [[ "$follow" == true ]]; then
+        echo "🔄 Mode: Follow (Ctrl+C to stop)"
+    else
+        echo "🔄 Mode: Static"
+    fi
+    echo ""
+    
+    if [[ "$follow" == true ]]; then
+        if [[ "$filter_pattern" != ".*" ]]; then
+            grep -E "$filter_pattern" "$target_log" | tail -n $lines | sed \
+                -e "s/\(ERROR\)/\x1b[31m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(WARN\)/\x1b[33m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(INFO\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(❌\)/\x1b[31m\1\x1b[0m/g" \
+                -e "s/\(✅\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(⚠️\)/\x1b[33m\1\x1b[0m/g"
+            echo ""
+            echo "--- LIVE FEED ---"
+            tail -f "$target_log" | grep --line-buffered -E "$filter_pattern" | sed \
+                -e "s/\(ERROR\)/\x1b[31m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(WARN\)/\x1b[33m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(INFO\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(❌\)/\x1b[31m\1\x1b[0m/g" \
+                -e "s/\(✅\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(⚠️\)/\x1b[33m\1\x1b[0m/g"
+        else
+            tail -n $lines "$target_log" | sed \
+                -e "s/\(ERROR\)/\x1b[31m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(WARN\)/\x1b[33m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(INFO\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(❌\)/\x1b[31m\1\x1b[0m/g" \
+                -e "s/\(✅\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(⚠️\)/\x1b[33m\1\x1b[0m/g"
+            echo ""
+            echo "--- LIVE FEED ---"
+            tail -f "$target_log" | sed \
+                -e "s/\(ERROR\)/\x1b[31m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(WARN\)/\x1b[33m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(INFO\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(❌\)/\x1b[31m\1\x1b[0m/g" \
+                -e "s/\(✅\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(⚠️\)/\x1b[33m\1\x1b[0m/g"
+        fi
+    else
+        if [[ "$filter_pattern" != ".*" ]]; then
+            grep -E "$filter_pattern" "$target_log" | tail -n $lines | sed \
+                -e "s/\(ERROR\)/\x1b[31m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(WARN\)/\x1b[33m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(INFO\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(❌\)/\x1b[31m\1\x1b[0m/g" \
+                -e "s/\(✅\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(⚠️\)/\x1b[33m\1\x1b[0m/g"
+        else
+            tail -n $lines "$target_log" | sed \
+                -e "s/\(ERROR\)/\x1b[31m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(WARN\)/\x1b[33m\x1b[1m\1\x1b[0m/g" \
+                -e "s/\(INFO\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(❌\)/\x1b[31m\1\x1b[0m/g" \
+                -e "s/\(✅\)/\x1b[32m\1\x1b[0m/g" \
+                -e "s/\(⚠️\)/\x1b[33m\1\x1b[0m/g"
+        fi
+    fi
+}
+
 # Git clean merged branches
 git_clean_merged() {
     echo "🧹 Cleaning merged branches..."

@@ -1,6 +1,0 @@
-- Editor: Neovim/NvChad với tích hợp LSP
-- Terminal: WezTerm + Tmux
-- Shell: Zsh
-- Ngôn ngữ chính: Go, Java, JavaScript/TypeScript
-- Debug: DAP (Debug Adapter Protocol)
-- Window Manager (macOS): AeroSpace

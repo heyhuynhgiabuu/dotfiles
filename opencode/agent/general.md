@@ -2,9 +2,9 @@
 name: general
 description: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks autonomously
 mode: subagent
-model: zai/glm-4.5
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.3
-max_tokens: 5500
+max_tokens: 16000
 tools:
   bash: false
   edit: false
@@ -15,7 +15,7 @@ tools:
   read: true
   list: true
   webfetch: true
-  chrome*: true
+  websearch: true
   context7*: true
 ---
 

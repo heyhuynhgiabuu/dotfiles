@@ -1,7 +1,19 @@
 ---
 description: ALWAYS use this when writing docs
 mode: subagent
-model: zai/glm-4.5
+model: github-copilot/gpt-5-mini
+tools:
+  bash: false
+  edit: false
+  write: false
+  patch: false
+  glob: true
+  grep: true
+  read: true
+  list: true
+  webfetch: true
+  websearch: true
+  context7*: true
 ---
 
 You are an expert technical documentation writer

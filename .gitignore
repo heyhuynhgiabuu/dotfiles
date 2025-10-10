@@ -24,6 +24,10 @@ Thumbs.db
 .aws/credentials
 .netrc
 
+# Claude Code local settings
+.claude/settings.local.json
+.claude/transcripts/
+
 .serena/cache/
 # Deprecated files and old configurations
 deprecated/
@@ -42,7 +46,7 @@ review_artifacts/
 .zcompdump*
 
 # Image files
-*.png
+# *.png
 *.jpg
 *.jpeg
 *.gif

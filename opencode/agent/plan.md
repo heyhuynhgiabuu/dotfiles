@@ -1,8 +1,8 @@
 ---
 name: plan
 description: Plan agent for complex task planning and coordination (≥3 phases)
-mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+mode: primary
+model: github-copilot/gpt-5
 temperature: 0.2
 max_tokens: 6000
 tools:
@@ -10,9 +10,14 @@ tools:
   edit: false
   write: false
   patch: false
+  glob: true
+  grep: true
+  read: true
+  list: true
+  webfetch: true
+  websearch: true
   todowrite: true
   todoread: true
-  sequential-thinking*: true
   context7*: true
 ---
 

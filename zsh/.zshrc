@@ -23,18 +23,16 @@ setopt extended_history
 
 # Load modular configurations
 [[ -f "$ZSH_CONFIG_DIR/paths.zsh" ]] && source "$ZSH_CONFIG_DIR/paths.zsh"
+[[ -f "$ZSH_CONFIG_DIR/cache-secrets.zsh" ]] && source "$ZSH_CONFIG_DIR/cache-secrets.zsh"
 [[ -f "$ZSH_CONFIG_DIR/envs.zsh" ]] && source "$ZSH_CONFIG_DIR/envs.zsh"
 
-# Prompt setup
-[[ -f "$ZSH_CONFIG_DIR/starship.zsh" ]] && source "$ZSH_CONFIG_DIR/starship.zsh"
+# Prompt setup (cached for performance)
 export STARSHIP_CONFIG="$ZSH_CONFIG_DIR/starship.toml"
-eval "$(starship init zsh)"
+[[ -f "$ZSH_CONFIG_DIR/starship.zsh" ]] && source "$ZSH_CONFIG_DIR/starship.zsh"
+[[ -f "$ZSH_CONFIG_DIR/cache-integrations.zsh" ]] && source "$ZSH_CONFIG_DIR/cache-integrations.zsh"
 
-# Oh-my-zsh (minimal setup)
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME=""  # Using Starship instead
-plugins=(brew dotenv)
-source $ZSH/oh-my-zsh.sh
+# Oh-my-zsh REMOVED - using pure Zinit instead
+# Zinit handles OMZ plugins via OMZP:: syntax without framework bloat
 
 # Zinit (if available)
 if [[ -f "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]]; then
@@ -45,8 +43,9 @@ if [[ -f "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]]; then
         zdharma-continuum/zinit-annex-as-monitor \
         zdharma-continuum/zinit-annex-bin-gem-node
     
-    # Lazy-loaded completions and tools
-    zinit wait'1' lucid for \
+    # Lazy-loaded completions and tools (reduced wait time for speed)
+    zinit wait'0' lucid for \
+        OMZP::brew \
         OMZP::golang \
         OMZP::docker \
         OMZP::kubectl \
@@ -76,7 +75,7 @@ export HERD_PHP_83_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 
 # Herd injected PHP 8.4 configuration.
 export HERD_PHP_84_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/Herd/config/php/84/"
-export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+# PostgreSQL path managed in paths.zsh to maintain proper priority
 
 
 # Herd injected PHP 8.5 configuration.
@@ -98,3 +97,4 @@ export HERD_PHP_74_INI_SCAN_DIR="/Users/killerkidbo/Library/Application Support/
 
 # bun completions
 [ -s "/Users/killerkidbo/.oh-my-zsh/completions/_bun" ] && source "/Users/killerkidbo/.oh-my-zsh/completions/_bun"
+export ZAI_API_KEY="your-api-key-here"

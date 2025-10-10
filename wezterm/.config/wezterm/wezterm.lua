@@ -29,40 +29,57 @@ end
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
 -- === FONT CONFIGURATION ===
--- JetBrains Mono - reliable and widely supported
-config.font = wezterm.font({
-	family = "JetBrains Mono",
-	weight = "Regular",
+-- JetBrains Mono with proper fallback for symbols, emojis, and international text
+config.font = wezterm.font_with_fallback({
+	"JetBrains Mono",
+	"Nerd Font Symbols", -- For terminal icons and symbols
+	"SF Pro Display", -- macOS system font for better glyph coverage
+	"Apple Color Emoji", -- macOS emoji support
+	"Noto Color Emoji", -- Cross-platform emoji fallback
+	"Hiragino Sans", -- Japanese text support
+	"PingFang SC", -- Simplified Chinese support
+	"PingFang TC", -- Traditional Chinese support
+	"Apple SD Gothic Neo", -- Korean text support
 })
 
--- Configure font rules for text formatting variants
+-- Configure font rules for text formatting variants with fallback
 config.font_rules = {
 	{
 		intensity = "Bold",
-		font = wezterm.font({
-			family = "JetBrains Mono",
-			weight = "Bold",
+		font = wezterm.font_with_fallback({
+			{ family = "JetBrains Mono", weight = "Bold" },
+			"Nerd Font Symbols",
+			"SF Pro Display",
+			"Apple Color Emoji",
+			"Noto Color Emoji",
 		}),
 	},
 	{
 		italic = true,
-		font = wezterm.font({
-			family = "JetBrains Mono",
-			style = "Italic",
+		font = wezterm.font_with_fallback({
+			{ family = "JetBrains Mono", style = "Italic" },
+			"Nerd Font Symbols",
+			"SF Pro Display",
+			"Apple Color Emoji",
+			"Noto Color Emoji",
 		}),
 	},
 	{
 		intensity = "Bold",
 		italic = true,
-		font = wezterm.font({
-			family = "JetBrains Mono",
-			weight = "Bold",
-			style = "Italic",
+		font = wezterm.font_with_fallback({
+			{ family = "JetBrains Mono", weight = "Bold", style = "Italic" },
+			"Nerd Font Symbols",
+			"SF Pro Display",
+			"Apple Color Emoji",
+			"Noto Color Emoji",
 		}),
 	},
 }
 
 config.font_size = 16.0
+-- Improve fallback font scaling for better visual consistency
+config.use_cap_height_to_scale_fallback_fonts = true
 config.window_background_opacity = 0.85
 config.macos_window_background_blur = 25
 

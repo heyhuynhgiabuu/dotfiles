@@ -70,23 +70,22 @@ local load_order_info = {
 	-- User experience
 	"better-escape",
 	"vim-visual-multi",
-	"augment",
+	"sidekick",
 	"comment",
 }
 
--- Add load order information as comments for debugging
-vim.defer_fn(function()
-	local loaded_count = #plugins
-	local expected_count = #load_order_info
-	if loaded_count ~= expected_count then
-		vim.notify(
-			string.format("Plugin loader: %d/%d plugins loaded", loaded_count, expected_count),
-			vim.log.levels.INFO
-		)
-	else
-		vim.notify(string.format("✅ All %d plugins loaded successfully", loaded_count), vim.log.levels.INFO)
-	end
-end, 2000)
+-- Plugin load verification (silent mode)
+-- Uncomment below to debug plugin loading issues:
+-- vim.defer_fn(function()
+-- 	local loaded_count = #plugins
+-- 	local expected_count = #load_order_info
+-- 	if loaded_count ~= expected_count then
+-- 		vim.notify(
+-- 			string.format("Plugin loader: %d/%d plugins loaded", loaded_count, expected_count),
+-- 			vim.log.levels.WARN
+-- 		)
+-- 	end
+-- end, 2000)
 
 return plugins
 

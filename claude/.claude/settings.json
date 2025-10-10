@@ -1,0 +1,21 @@
+{
+  "alwaysThinkingEnabled": true,
+  "includeCoAuthoredBy": false,
+  "outputStyle": "terse",
+  "permissions": {
+    "deny": [
+      "**/.env*",
+      "**/secrets/**",
+      "**/secrets.json",
+      "**/*.key",
+      "**/*.pem",
+      "**/*credentials*",
+      "**/*secret*",
+      "**/.aws/credentials",
+      "**/.netrc",
+      "**/.local/**",
+      "**/.serena/cache/**",
+      "**/.serena/memories/**"
+    ]
+  }
+}

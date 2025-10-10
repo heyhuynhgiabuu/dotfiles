@@ -8,15 +8,21 @@ description: >-
   practices. Trigger this agent after backend code or configuration changes, before deployment, or
   when onboarding new backend components.
 mode: subagent
-model: zai/glm-4.5
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
-max_tokens: 4000
+max_tokens: 16000
 tools:
   bash: false
   edit: false
   write: false
   patch: false
-  serena*: true
+  glob: true
+  grep: true
+  read: true
+  list: true
+  webfetch: true
+  websearch: true
+  context7*: true
 ---
 
 # Security Agent: Vulnerability Assessment
