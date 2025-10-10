@@ -1,5 +1,5 @@
 {
-  "theme": "kanagawa",
+  "theme": "opencode",
   "keybinds": {
     "leader": "ctrl+x",
     "app_help": "<leader>h",
